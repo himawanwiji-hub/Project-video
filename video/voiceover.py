@@ -5,7 +5,7 @@ Voice: espeak-ng + MBROLA Indonesian male voice (mb-id1):
     sudo apt-get install espeak-ng mbrola mbrola-id1
 
 Steps:
-    python3 video/voiceover.py plan   # synthesize cues, write video/timing.json (stretches the timeline to fit)
+    python3 video/voiceover.py plan [--keep]   # synthesize cues (--keep: use existing recordings), write video/timing.json (stretches the timeline to fit)
     node video/render.js --out output/fisika-3d-soal-2-dan-4-dosen.mp4 --silent   # render the stretched video
     python3 video/voiceover.py mux    # mix the cues and put them on the video
 
@@ -23,6 +23,7 @@ OUT = os.path.join(ROOT, 'output', 'fisika-3d-soal-2-dan-4-dosen.mp4')
 VOICE, PITCH, SPEED = 'mb-id1', '40', 150
 PAD = 0.45          # silence kept after each cue before the window closes
 BASE = 150.0        # authored timeline length
+KEEP = '--keep' in sys.argv   # use existing output/vo/cueNN.wav (e.g. real recordings) instead of TTS
 os.makedirs(WORK, exist_ok=True)
 
 
@@ -38,7 +39,8 @@ def plan():
     knots, T, prev = [[0.0, 0.0]], 0.0, 0.0
     starts = []
     for i, c in enumerate(CUES):
-        subprocess.run(['espeak-ng', '-v', VOICE, '-s', str(SPEED), '-p', PITCH, '-g', '4', '-w', cue_path(i), c['text']], check=True)
+        if not KEEP:
+            subprocess.run(['espeak-ng', '-v', VOICE, '-s', str(SPEED), '-p', PITCH, '-g', '4', '-w', cue_path(i), c['text']], check=True)
         d = dur(cue_path(i))
         T += c['t'] - prev                       # gap before the cue keeps its length
         knots.append([c['t'], round(T, 4)]); starts.append(round(T, 4))
@@ -77,4 +79,4 @@ def mux():
 
 
 if __name__ == '__main__':
-    {'plan': plan, 'mux': mux}[sys.argv[1] if len(sys.argv) > 1 else 'plan']()
+    {'plan': plan, 'mux': mux}[next((a for a in sys.argv[1:] if not a.startswith('--')), 'plan')]()

@@ -53,6 +53,6 @@ python3 video/voiceover.py mux         # gabungkan suara → output/fisika-3d-so
 
 `video/scene.html` membaca `video/timing.json`. Hapus atau ganti nama file itu untuk merender versi 150 detik tanpa
 peregangan. Kalau ingin memakai rekaman suara asli, rekam per kalimat sesuai `narasi.json`, simpan sebagai
-`output/vo/cueNN.wav`, lalu jalankan `plan` (dengan sintesis dilewati) dan `mux`.
+`output/vo/cueNN.wav`, lalu jalankan `python3 video/voiceover.py plan --keep`, render, dan `mux`.
 
 Animasi bersifat kualitatif; skala waktu dan ukuran disesuaikan agar mudah dilihat.
