@@ -1,0 +1,949 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>Motor & Generator 3D</title>
+<style>
+  :root {
+    --amber: #f5b041;
+    --teal: #2dd4bf;
+    --ink: #eaf0fa;
+    --muted: #a3b3cc;
+    --panel: rgba(9, 15, 29, 0.82);
+    --line: rgba(255, 255, 255, 0.12);
+    --accent: var(--amber);
+  }
+  html, body {
+    margin: 0; width: 1920px; height: 1080px; overflow: hidden;
+    background: #070b16; color: var(--ink);
+    font-family: Inter, "DejaVu Sans", sans-serif;
+  }
+  #stage { position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 70% at 45% 42%, #18284a 0%, #0c1426 55%, #060a14 100%); }
+  canvas#gl { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+  .ov { position: absolute; opacity: 0; }
+
+  #tag { left: 80px; top: 58px; }
+  #tag .k { font-size: 20px; letter-spacing: .16em; font-weight: 700; color: var(--accent); }
+  #tag .t { font-size: 46px; font-weight: 700; margin-top: 10px; max-width: 1050px; line-height: 1.15;
+    text-shadow: 0 2px 24px rgba(0,0,0,.7); }
+
+  #legend { left: 80px; top: 196px; display: flex; gap: 22px; font-size: 21px; color: var(--muted); }
+  #legend span { display: inline-flex; align-items: center; gap: 9px; }
+  #legend i { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+
+  #caption { left: 80px; bottom: 50px; width: 1020px; background: var(--panel);
+    border-left: 6px solid var(--accent); padding: 22px 30px; border-radius: 10px;
+    font-size: 29px; line-height: 1.4; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+
+  #right { position: absolute; right: 70px; top: 58px; width: 560px; display: flex; flex-direction: column; gap: 18px; }
+  #right > div { position: relative; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 22px 26px; }
+  .card .h { font-size: 17px; letter-spacing: .12em; font-weight: 700; color: var(--accent); margin-bottom: 12px; }
+  .card .f { font-family: "DejaVu Sans Mono", monospace; font-size: 21px; line-height: 1.6; }
+  .card .n { font-size: 20px; color: var(--muted); margin-top: 10px; line-height: 1.4; }
+
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; }
+  .tile .l { font-size: 15px; letter-spacing: .08em; color: var(--muted); font-weight: 600; white-space: nowrap; }
+  .tile .v { white-space: nowrap; font-size: 30px; font-weight: 700; margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .tile.hot .v { color: #ff7a59; }
+  .tile.ok .v { color: #5eead4; }
+  .hudnote { font-size: 17px; color: var(--muted); margin-top: 10px; }
+
+  #graphWrap { right: 70px; bottom: 50px; width: 640px; height: 262px; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 12px; }
+  #graph { position: absolute; inset: 0; }
+
+  #titlecard, #endcard { left: 0; right: 0; top: 0; bottom: 0; display: flex; flex-direction: column;
+    justify-content: center; padding: 0 160px; background: linear-gradient(90deg, rgba(6,10,20,.92) 0%, rgba(6,10,20,.65) 55%, rgba(6,10,20,.1) 100%); }
+  #titlecard .k, #endcard .k { font-size: 22px; letter-spacing: .2em; font-weight: 700; color: var(--amber); }
+  #titlecard h1, #endcard h1 { font-size: 92px; line-height: 1.05; margin: 22px 0 26px; max-width: 1200px; letter-spacing: -.01em; }
+  #titlecard .s, #endcard .s { font-size: 34px; color: var(--muted); max-width: 1150px; line-height: 1.4; }
+  #titlecard .chips { display: flex; gap: 18px; margin-top: 40px; }
+  #titlecard .chip { font-size: 28px; font-weight: 700; padding: 14px 24px; border-radius: 999px; border: 2px solid; }
+  #endcard .small { font-size: 21px; color: var(--muted); margin-top: 48px; max-width: 1150px; line-height: 1.5; }
+
+  #fade { position: absolute; inset: 0; background: #04070e; opacity: 0; pointer-events: none; }
+</style>
+<script type="importmap">
+  { "imports": { "three": "/node_modules/three/build/three.module.js", "three/addons/": "/node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="stage"></div>
+<canvas id="gl" width="1920" height="1080"></canvas>
+
+<div id="tag" class="ov"></div>
+<div id="legend" class="ov"></div>
+<div id="right">
+  <div id="card" class="ov card"></div>
+  <div id="hud" class="ov"></div>
+</div>
+<div id="graphWrap" class="ov"><canvas id="graph" width="640" height="262"></canvas></div>
+<div id="caption" class="ov"></div>
+
+<div id="titlecard" class="ov">
+  <div class="k">FISIKA LISTRIK · PEMBAHASAN UTS VERSI LATIHAN · TEKNIK MESIN UMY</div>
+  <h1>Motor &amp; generator,<br>dilihat dalam 3D</h1>
+  <div class="s">Animasi tiga dimensi untuk dua soal: bagaimana arus dan magnet memutar motor, dan bagaimana putaran menghasilkan listrik AC.</div>
+  <div class="chips">
+    <div class="chip" style="color:#f5b041;border-color:#f5b041">Soal 2 · Motor</div>
+    <div class="chip" style="color:#2dd4bf;border-color:#2dd4bf">Soal 4 · Generator AC</div>
+  </div>
+</div>
+
+<div id="endcard" class="ov">
+  <div class="k">INTINYA</div>
+  <h1>Motor dan generator adalah mesin yang sama.</h1>
+  <div class="s">Listrik masuk, poros berputar. Poros diputar, listrik keluar, dan putarannya terasa berat (Hukum Lenz).</div>
+  <div class="small">Pembahasan UTS Fisika Listrik · Rela Adi Himarosa · Program Studi Teknik Mesin, Universitas Muhammadiyah Yogyakarta.<br>Animasi bersifat kualitatif; skala waktu dan ukuran disesuaikan agar mudah dilihat.</div>
+</div>
+
+<div id="fade"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+// ---------------------------------------------------------------- basics
+const W = 1920, H = 1080;
+const DURATION = 150;
+const TAU = Math.PI * 2;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const smooth = (a, b, x) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+const fmt = (x, d = 1) => x.toFixed(d).replace('.', ',');
+const wrapPi = (a) => { a = (a + Math.PI) % TAU; if (a < 0) a += TAU; return a - Math.PI; };
+
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x0c1426, 20, 42);
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+const camera = new THREE.PerspectiveCamera(36, W / H, 0.1, 100);
+
+scene.add(new THREE.HemisphereLight(0xc4d6ff, 0x1a140c, 0.7));
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(5, 9, 7); scene.add(key);
+const rim = new THREE.DirectionalLight(0x7fa4ff, 0.9); rim.position.set(-7, 4, -5); scene.add(rim);
+
+// ---------------------------------------------------------------- materials
+const M = {
+  copper: new THREE.MeshStandardMaterial({ color: 0xd98a52, metalness: 0.9, roughness: 0.3 }),
+  steel: new THREE.MeshStandardMaterial({ color: 0x9aa4b1, metalness: 0.85, roughness: 0.35 }),
+  dark: new THREE.MeshStandardMaterial({ color: 0x232b3b, metalness: 0.3, roughness: 0.7 }),
+  base: new THREE.MeshStandardMaterial({ color: 0x1a2232, metalness: 0.1, roughness: 0.85 }),
+  yoke: new THREE.MeshStandardMaterial({ color: 0x3a4252, metalness: 0.7, roughness: 0.45 }),
+  north: new THREE.MeshStandardMaterial({ color: 0xd8473f, metalness: 0.25, roughness: 0.42 }),
+  south: new THREE.MeshStandardMaterial({ color: 0x3b6fd8, metalness: 0.25, roughness: 0.42 }),
+  brush: new THREE.MeshStandardMaterial({ color: 0x2c2c30, metalness: 0.2, roughness: 0.9 }),
+  wire: new THREE.MeshStandardMaterial({ color: 0x3a3f4a, metalness: 0.2, roughness: 0.6 }),
+  wireRed: new THREE.MeshStandardMaterial({ color: 0xc0392b, metalness: 0.2, roughness: 0.6 }),
+  insul: new THREE.MeshStandardMaterial({ color: 0x14161c, metalness: 0.1, roughness: 0.8 }),
+};
+const coilMat = new THREE.MeshStandardMaterial({ color: 0xd98a52, metalness: 0.9, roughness: 0.28, emissive: 0xff3300, emissiveIntensity: 0 });
+
+function mesh(geo, mat, x = 0, y = 0, z = 0) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); return m; }
+function tube(points, r, mat, closed = false, seg = 120) {
+  const curve = new THREE.CatmullRomCurve3(points.map(p => new THREE.Vector3(...p)), closed, 'catmullrom', 0.2);
+  return new THREE.Mesh(new THREE.TubeGeometry(curve, seg, r, 10, closed), mat);
+}
+
+// label sprite
+function makeLabel(text, { color = '#ffffff', bg = null, size = 64, h = 0.5, weight = 700, pad = 18, border = null } = {}) {
+  const c = document.createElement('canvas');
+  const ctx = c.getContext('2d');
+  const font = `${weight} ${size}px Inter, "DejaVu Sans", sans-serif`;
+  ctx.font = font;
+  const w = Math.ceil(ctx.measureText(text).width) + pad * 2;
+  const hh = Math.ceil(size * 1.35) + pad;
+  c.width = w * 2; c.height = hh * 2;
+  ctx.scale(2, 2);
+  if (bg) {
+    ctx.fillStyle = bg;
+    const r = hh / 2.6;
+    ctx.beginPath(); ctx.roundRect(1, 1, w - 2, hh - 2, r); ctx.fill();
+    if (border) { ctx.strokeStyle = border; ctx.lineWidth = 3; ctx.stroke(); }
+  }
+  ctx.font = font; ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, w / 2, hh / 2 + size * 0.04);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  const mat = new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true, fog: false });
+  const s = new THREE.Sprite(mat);
+  s.scale.set(h * w / hh, h, 1);
+  s.renderOrder = 20;
+  return s;
+}
+
+// arrow made of meshes
+const UP = new THREE.Vector3(0, 1, 0);
+function makeArrow(color, radius = 0.05) {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.55, roughness: 0.4, metalness: 0.1 });
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, 1, 14), mat);
+  const head = new THREE.Mesh(new THREE.ConeGeometry(radius * 2.7, radius * 6.5, 18), mat);
+  g.add(shaft, head);
+  g.userData = { shaft, head, radius, mat };
+  return g;
+}
+function setArrow(a, origin, dir, len) {
+  const { shaft, head, radius } = a.userData;
+  if (len < 0.02) { a.visible = false; return; }
+  a.visible = true;
+  const hl = Math.min(radius * 6.5, len * 0.55);
+  a.position.copy(origin);
+  a.quaternion.setFromUnitVectors(UP, dir.clone().normalize());
+  const sl = Math.max(len - hl, 0.001);
+  shaft.scale.set(1, sl, 1); shaft.position.y = sl / 2;
+  head.scale.set(1, hl / (radius * 6.5), 1); head.position.y = sl + hl / 2;
+}
+
+// ---------------------------------------------------------------- floor
+const grid = new THREE.GridHelper(60, 60, 0x2a3b5c, 0x17233a);
+grid.position.y = -3.1; grid.material.transparent = true; grid.material.opacity = 0.45;
+scene.add(grid);
+
+// ---------------------------------------------------------------- magnet rig (shared by motor, Lorentz, generator)
+const R = 1.55;        // coil half-width (radius of coil sides)
+const L = 3.0;         // coil length along axis
+const magnetRig = new THREE.Group(); scene.add(magnetRig);
+magnetRig.add(mesh(new THREE.BoxGeometry(9.2, 0.26, 8.6), M.base, 0, -2.95, 0.6));
+magnetRig.add(mesh(new THREE.BoxGeometry(7.4, 0.62, 3.8), M.yoke, 0, -2.51, 0));
+const magN = mesh(new THREE.BoxGeometry(1.4, 4.4, 3.8), M.north, -3.0, 0, 0);
+const magS = mesh(new THREE.BoxGeometry(1.4, 4.4, 3.8), M.south, 3.0, 0, 0);
+magnetRig.add(magN, magS);
+const labU = makeLabel('U', { bg: '#d8473f', h: 0.62, size: 72 }); labU.position.set(-3.0, 1.2, 2.0);
+const labS = makeLabel('S', { bg: '#3b6fd8', h: 0.62, size: 72 }); labS.position.set(3.0, 1.2, 2.0);
+magnetRig.add(labU, labS);
+
+// field lines B along +x
+const fieldGroup = new THREE.Group(); magnetRig.add(fieldGroup);
+const fieldLines = [];
+const FIELD_BASE = new THREE.Color(0x7fb2ff), FIELD_HI = new THREE.Color(0xffd84a);
+{
+  const lineGeo = new THREE.CylinderGeometry(0.014, 0.014, 4.6, 6); lineGeo.rotateZ(Math.PI / 2);
+  const coneGeo = new THREE.ConeGeometry(0.065, 0.2, 12); coneGeo.rotateZ(-Math.PI / 2);
+  const ys = [-1.6, -1.2, -0.8, -0.4, 0, 0.4, 0.8, 1.2, 1.6];
+  const zs = [-1.2, -0.4, 0.4, 1.2];
+  let i = 0;
+  for (const y of ys) for (const z of zs) {
+    const mat = new THREE.MeshBasicMaterial({ color: FIELD_BASE.clone(), transparent: true, opacity: 0.3, depthWrite: false });
+    const cmat = new THREE.MeshBasicMaterial({ color: FIELD_BASE.clone(), transparent: true, opacity: 0.7, depthWrite: false });
+    const line = mesh(lineGeo, mat, 0, y, z);
+    const cones = [mesh(coneGeo, cmat, 0, y, z), mesh(coneGeo, cmat, 0, y, z)];
+    fieldGroup.add(line, ...cones);
+    fieldLines.push({ y, z, mat, cmat, cones, phase: ((i * 0.37) % 1) });
+    i++;
+  }
+}
+const labB = makeLabel('B', { color: '#9cc4ff', h: 0.5, size: 64 }); labB.position.set(0, 2.15, 2.1); magnetRig.add(labB);
+
+// ---------------------------------------------------------------- armature (coil + shaft)
+const armature = new THREE.Group(); scene.add(armature);
+// pedestals + bearings (static)
+armature.add(mesh(new THREE.BoxGeometry(0.5, 2.6, 0.4), M.dark, 0, -1.52, -2.25));
+armature.add(mesh(new THREE.BoxGeometry(0.5, 2.6, 0.4), M.dark, 0, -1.52, 3.35));
+{ const g = new THREE.CylinderGeometry(0.2, 0.2, 0.42, 20); g.rotateX(Math.PI / 2);
+  armature.add(mesh(g, M.dark, 0, 0, -2.25), mesh(g, M.dark, 0, 0, 3.35)); }
+
+const rotorSpin = new THREE.Group(); armature.add(rotorSpin);   // rotates about z
+{ const g = new THREE.CylinderGeometry(0.09, 0.09, 5.9, 16); g.rotateX(Math.PI / 2);
+  rotorSpin.add(mesh(g, M.steel, 0, 0, 0.5)); }
+
+function roundedRect(hx, hz, y, cr, n = 6) {
+  const pts = [];
+  const corners = [[hx - cr, hz - cr, 0], [-hx + cr, hz - cr, Math.PI / 2], [-hx + cr, -hz + cr, Math.PI], [hx - cr, -hz + cr, 1.5 * Math.PI]];
+  for (const [cx, cz, a0] of corners) for (let k = 0; k <= n; k++) {
+    const a = a0 + (k / n) * Math.PI / 2;
+    pts.push([cx + cr * Math.cos(a), y, cz + cr * Math.sin(a)]);
+  }
+  return pts;
+}
+// three turns, stacked along local y (coil normal)
+for (const yo of [-0.075, 0, 0.075]) {
+  const pts = roundedRect(R, L / 2, yo, 0.16);
+  const curve = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)), true, 'catmullrom', 0.05);
+  rotorSpin.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 260, 0.05, 10, true), coilMat));
+}
+// leads to commutator / rings
+rotorSpin.add(tube([[0.2, 0, L / 2], [0.2, 0, 1.9], [0.24, 0, 2.3]], 0.035, M.copper, false, 20));
+rotorSpin.add(tube([[-0.2, 0, L / 2], [-0.2, 0, 1.9], [-0.24, 0, 2.3]], 0.035, M.copper, false, 20));
+
+// current path in coil-local coordinates (dots travel along it)
+const ZC = 2.55;
+const currentPath = [[0.2, 0, ZC], [0.2, 0, L / 2], [R, 0, L / 2], [R, 0, -L / 2], [-R, 0, -L / 2], [-R, 0, L / 2], [-0.2, 0, L / 2], [-0.2, 0, ZC]]
+  .map(p => new THREE.Vector3(...p));
+const pathLen = []; { let acc = 0; pathLen.push(0); for (let i = 1; i < currentPath.length; i++) { acc += currentPath[i].distanceTo(currentPath[i - 1]); pathLen.push(acc); } }
+const PATH_TOTAL = pathLen[pathLen.length - 1];
+function pathPoint(u, out) {
+  const d = (((u % 1) + 1) % 1) * PATH_TOTAL;
+  let i = 1; while (i < pathLen.length - 1 && pathLen[i] < d) i++;
+  const k = (d - pathLen[i - 1]) / (pathLen[i] - pathLen[i - 1]);
+  return out.copy(currentPath[i - 1]).lerp(currentPath[i], k);
+}
+const dotGroup = new THREE.Group(); rotorSpin.add(dotGroup);
+const dots = [];
+{ const g = new THREE.SphereGeometry(0.075, 12, 10);
+  const m = new THREE.MeshBasicMaterial({ color: 0xffe14d });
+  for (let i = 0; i < 30; i++) { const d = new THREE.Mesh(g, m); d.position.y = 0.13; dots.push(d); dotGroup.add(d); } }
+
+// commutator (split ring) - part of rotorSpin
+const commGroup = new THREE.Group(); rotorSpin.add(commGroup);
+const halfA_mat = new THREE.MeshStandardMaterial({ color: 0xd98a52, metalness: 0.85, roughness: 0.3, emissive: 0xff2a2a, emissiveIntensity: 0 });
+const halfB_mat = new THREE.MeshStandardMaterial({ color: 0xd98a52, metalness: 0.85, roughness: 0.3, emissive: 0x2a6aff, emissiveIntensity: 0 });
+{
+  const gap = 0.32;
+  const gA = new THREE.CylinderGeometry(0.34, 0.34, 0.5, 32, 1, false, gap / 2, Math.PI - gap); gA.rotateX(Math.PI / 2);
+  const gB = new THREE.CylinderGeometry(0.34, 0.34, 0.5, 32, 1, false, Math.PI + gap / 2, Math.PI - gap); gB.rotateX(Math.PI / 2);
+  commGroup.add(mesh(gA, halfA_mat, 0, 0, ZC), mesh(gB, halfB_mat, 0, 0, ZC));
+  const core = new THREE.CylinderGeometry(0.3, 0.3, 0.52, 24); core.rotateX(Math.PI / 2);
+  commGroup.add(mesh(core, M.insul, 0, 0, ZC));
+}
+// slip rings - part of rotorSpin
+const slipGroup = new THREE.Group(); rotorSpin.add(slipGroup);
+const Z1 = 2.38, Z2 = 2.78;
+{
+  const g = new THREE.CylinderGeometry(0.34, 0.34, 0.16, 32); g.rotateX(Math.PI / 2);
+  const core = new THREE.CylinderGeometry(0.26, 0.26, 0.7, 24); core.rotateX(Math.PI / 2);
+  slipGroup.add(mesh(g, M.copper, 0, 0, Z1), mesh(g, M.copper, 0, 0, Z2), mesh(core, M.insul, 0, 0, (Z1 + Z2) / 2));
+}
+
+// brushes (static)
+const commBrushes = new THREE.Group(); armature.add(commBrushes);
+{ const g = new THREE.BoxGeometry(0.5, 0.2, 0.32);
+  commBrushes.add(mesh(g, M.brush, -0.6, 0, ZC), mesh(g, M.brush, 0.6, 0, ZC));
+  const lp = makeLabel('+', { bg: '#d8473f', h: 0.36, size: 60, pad: 12 }); lp.position.set(0.8, 0.45, ZC + 0.2);
+  const lm = makeLabel('−', { bg: '#3b6fd8', h: 0.36, size: 60, pad: 12 }); lm.position.set(-0.8, 0.45, ZC + 0.2);
+  commBrushes.add(lp, lm); }
+const slipBrushes = new THREE.Group(); armature.add(slipBrushes);
+{ const g = new THREE.BoxGeometry(0.2, 0.5, 0.12);
+  slipBrushes.add(mesh(g, M.brush, 0, -0.6, Z1), mesh(g, M.brush, 0, -0.6, Z2)); }
+
+// battery + wires (motor). + terminal on the left end (x = 1.75), − on the right end.
+const BX = 2.5, BY = -2.48, BZ = 3.35;
+const batteryRig = new THREE.Group(); armature.add(batteryRig);
+{
+  const g = new THREE.CylinderGeometry(0.34, 0.34, 1.3, 28); g.rotateZ(Math.PI / 2);
+  batteryRig.add(mesh(g, new THREE.MeshStandardMaterial({ color: 0x2e3440, metalness: 0.5, roughness: 0.4 }), BX, BY, BZ));
+  const band = new THREE.CylinderGeometry(0.35, 0.35, 0.42, 28); band.rotateZ(Math.PI / 2);
+  batteryRig.add(mesh(band, new THREE.MeshStandardMaterial({ color: 0xe8a33d, metalness: 0.4, roughness: 0.4 }), BX - 0.42, BY, BZ));
+  const tip = new THREE.CylinderGeometry(0.1, 0.1, 0.12, 16); tip.rotateZ(Math.PI / 2);
+  batteryRig.add(mesh(tip, M.steel, BX - 0.71, BY, BZ));
+  const l9 = makeLabel('Baterai 9 V', { bg: 'rgba(10,16,30,.85)', h: 0.34, size: 46, weight: 600 }); l9.position.set(BX + 0.2, BY + 0.75, BZ + 0.2);
+  batteryRig.add(l9);
+}
+const wiresComm = new THREE.Group(); armature.add(wiresComm);
+wiresComm.add(tube([[0.84, 0, ZC], [1.35, -0.4, ZC + 0.25], [1.6, -1.9, 3.3], [BX - 0.78, BY, BZ]], 0.04, M.wireRed, false, 60));
+wiresComm.add(tube([[-0.84, 0, ZC], [-1.25, -1.0, 2.8], [-0.9, -2.72, 3.95], [2.4, -2.76, 4.05], [BX + 0.66, BY, BZ]], 0.04, M.wire, false, 80));
+const wiresSlipBatt = new THREE.Group(); armature.add(wiresSlipBatt);
+wiresSlipBatt.add(tube([[0, -0.86, Z1], [0.8, -1.5, Z1 + 0.35], [1.5, -2.2, 3.25], [BX - 0.78, BY, BZ]], 0.04, M.wireRed, false, 60));
+wiresSlipBatt.add(tube([[0, -0.86, Z2], [-0.4, -1.8, 3.2], [-0.4, -2.74, 3.95], [2.4, -2.76, 4.05], [BX + 0.66, BY, BZ]], 0.04, M.wire, false, 80));
+
+// lamp + wires (generator)
+const lampRig = new THREE.Group(); armature.add(lampRig);
+const bulbMat = new THREE.MeshStandardMaterial({ color: 0xfff3cf, emissive: 0xffc34d, emissiveIntensity: 0, roughness: 0.15, metalness: 0, transparent: true, opacity: 0.92 });
+const lampLight = new THREE.PointLight(0xffc34d, 0, 8, 1.4);
+{
+  const bx = 2.6, bz = 3.35, by = -0.75;
+  lampRig.add(mesh(new THREE.CylinderGeometry(0.34, 0.4, 0.2, 24), M.dark, bx, -2.72, bz));
+  lampRig.add(mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.75, 12), M.steel, bx, -1.75, bz));
+  lampRig.add(mesh(new THREE.CylinderGeometry(0.17, 0.2, 0.3, 20), M.steel, bx, by - 0.4, bz));
+  lampRig.add(mesh(new THREE.SphereGeometry(0.42, 28, 20), bulbMat, bx, by, bz));
+  lampLight.position.set(bx, by, bz); lampRig.add(lampLight);
+  lampRig.add(tube([[0, -0.86, Z1], [0.8, -1.5, Z1 + 0.35], [1.9, -2.4, 3.2], [bx - 0.25, -2.62, bz]], 0.04, M.wireRed, false, 60));
+  lampRig.add(tube([[0, -0.86, Z2], [0.6, -1.8, 3.2], [1.9, -2.66, 3.75], [bx + 0.1, -2.62, bz + 0.25]], 0.04, M.wire, false, 60));
+  const ll = makeLabel('Lampu', { bg: 'rgba(10,16,30,.85)', h: 0.32, size: 44, weight: 600 }); ll.position.set(bx + 0.85, by + 0.1, bz);
+  lampRig.add(ll);
+}
+
+// brake (hold shaft)
+const brake = new THREE.Group(); armature.add(brake);
+const brakeTop = mesh(new THREE.BoxGeometry(0.6, 0.3, 0.26), new THREE.MeshStandardMaterial({ color: 0xe0503a, metalness: 0.3, roughness: 0.5 }), 0, 1.4, 1.98);
+const brakeBot = mesh(new THREE.BoxGeometry(0.6, 0.3, 0.26), brakeTop.material, 0, -1.4, 1.98);
+brake.add(brakeTop, brakeBot);
+const brakeLabel = makeLabel('Poros ditahan', { bg: '#e0503a', h: 0.36, size: 46 }); brakeLabel.position.set(0, 1.35, 2.3); brake.add(brakeLabel);
+
+// force / velocity / arm arrows (world space)
+const motorArrows = new THREE.Group(); scene.add(motorArrows);
+const fA = makeArrow(0x4ade80, 0.06), fB = makeArrow(0x4ade80, 0.06);
+motorArrows.add(fA, fB);
+const fLabA = makeLabel('F', { color: '#4ade80', h: 0.44, size: 64 }), fLabB = makeLabel('F', { color: '#4ade80', h: 0.44, size: 64 });
+motorArrows.add(fLabA, fLabB);
+const armGroup = new THREE.Group(); scene.add(armGroup);
+const armMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.75 });
+const armGeo = new THREE.CylinderGeometry(0.022, 0.022, 1, 8);
+const armA = new THREE.Mesh(armGeo, armMat), armB = new THREE.Mesh(armGeo, armMat);
+armGroup.add(armA, armB);
+const armLabel = makeLabel('lengan putar', { color: '#ffffff', h: 0.3, size: 44, weight: 600 }); armGroup.add(armLabel);
+const velArrows = new THREE.Group(); scene.add(velArrows);
+const vA = makeArrow(0x38e1ff, 0.05), vB = makeArrow(0x38e1ff, 0.05); velArrows.add(vA, vB);
+const vLabA = makeLabel('v', { color: '#38e1ff', h: 0.44, size: 64 }), vLabB = makeLabel('v', { color: '#38e1ff', h: 0.44, size: 64 });
+velArrows.add(vLabA, vLabB);
+const genTagMax = makeLabel('Φ maks · ε = 0', { bg: 'rgba(10,16,30,.9)', border: '#ffd84a', color: '#ffd84a', h: 0.42, size: 50 });
+const genTagZero = makeLabel('Φ = 0 · ε maks', { bg: 'rgba(10,16,30,.9)', border: '#ff9f43', color: '#ff9f43', h: 0.42, size: 50 });
+genTagMax.position.set(0, 3.05, 1.2); genTagZero.position.set(0, 3.05, 1.2);
+scene.add(genTagMax, genTagZero);
+
+// ---------------------------------------------------------------- Lorentz rig (2A)
+const lorentz = new THREE.Group(); scene.add(lorentz);
+const lzWire = new THREE.Group(); lorentz.add(lzWire);
+{ const g = new THREE.CylinderGeometry(0.07, 0.07, 3.4, 18); g.rotateZ(Math.PI / 2); lzWire.add(mesh(g, M.copper)); }
+const lzIArrow = makeArrow(0xffe14d, 0.05); lzWire.add(lzIArrow);
+setArrow(lzIArrow, new THREE.Vector3(0.9, 0.22, 0), new THREE.Vector3(1, 0, 0), 0.9);
+const lzDots = [];
+{ const g = new THREE.SphereGeometry(0.06, 10, 8), m = new THREE.MeshBasicMaterial({ color: 0xffe14d });
+  for (let i = 0; i < 9; i++) { const d = new THREE.Mesh(g, m); d.position.y = 0.11; lzWire.add(d); lzDots.push(d); } }
+const lzIlabel = makeLabel('I = 5 A', { color: '#ffe14d', h: 0.36, size: 52 }); lorentz.add(lzIlabel);
+const lzF = makeArrow(0x4ade80, 0.08); lorentz.add(lzF);
+const lzFlabel = makeLabel('F', { color: '#4ade80', h: 0.5, size: 64 }); lorentz.add(lzFlabel);
+const lzArcMat = new THREE.MeshBasicMaterial({ color: 0xf5b041, transparent: true, opacity: 0.85, side: THREE.DoubleSide, depthWrite: false });
+let lzArc = new THREE.Mesh(new THREE.BufferGeometry(), lzArcMat); lzArc.position.y = 0.01; lorentz.add(lzArc);
+const lzRef = makeArrow(0x9cc4ff, 0.035); lorentz.add(lzRef);
+setArrow(lzRef, new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0), 2.1);
+let lzThetaLabel = null, lzThetaText = '';
+
+// ---------------------------------------------------------------- rotor / stator rig (4C)
+const rotorRig = new THREE.Group(); scene.add(rotorRig);
+{
+  const shape = new THREE.Shape(); shape.absarc(0, 0, 2.75, 0, TAU, false);
+  const hole = new THREE.Path(); hole.absarc(0, 0, 2.05, 0, TAU, true); shape.holes.push(hole);
+  const g = new THREE.ExtrudeGeometry(shape, { depth: 2.4, bevelEnabled: false, curveSegments: 72 }); g.translate(0, 0, -1.2);
+  const statorMat = new THREE.MeshStandardMaterial({ color: 0x8590a0, metalness: 0.7, roughness: 0.4, transparent: true, opacity: 0.32, depthWrite: false });
+  rotorRig.add(new THREE.Mesh(g, statorMat));
+  rotorRig.add(mesh(new THREE.BoxGeometry(0.62, 0.44, 2.4), M.yoke, 0, 1.86, 0));
+  for (let k = 0; k < 5; k++) {
+    const pts = roundedRect(0.4, 1.28, 1.7 + k * 0.075, 0.08);
+    const curve = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)), true, 'catmullrom', 0.05);
+    rotorRig.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 120, 0.035, 8, true), M.copper));
+  }
+  rotorRig.add(tube([[0.4, 1.75, 1.28], [1.2, 2.2, 1.6], [2.9, 2.5, 1.8]], 0.035, M.copper, false, 30));
+  rotorRig.add(tube([[-0.4, 2.0, 1.28], [0.6, 2.55, 1.6], [2.9, 2.75, 1.8]], 0.035, M.copper, false, 30));
+  const sl = makeLabel('kumparan stator', { bg: 'rgba(10,16,30,.85)', h: 0.34, size: 46, weight: 600 }); sl.position.set(3.9, 2.65, 1.8);
+  rotorRig.add(sl);
+  const st = makeLabel('stator', { color: '#c9d3e3', h: 0.3, size: 44, weight: 600 }); st.position.set(-2.9, 1.9, 1.3);
+  rotorRig.add(st);
+  const g2 = new THREE.CylinderGeometry(0.16, 0.16, 4.2, 16); g2.rotateX(Math.PI / 2);
+  rotorRig.add(mesh(g2, M.steel, 0, 0, 0));
+}
+const RR = 1.25;
+function buildRotor(p) {
+  const g = new THREE.Group();
+  const body = new THREE.CylinderGeometry(RR, RR, 2.3, 64); body.rotateX(Math.PI / 2);
+  g.add(mesh(body, M.yoke));
+  const poles = [];
+  const arc = TAU / p;
+  for (let k = 0; k < p; k++) {
+    const a = Math.PI / 2 + k * arc;
+    const isN = k % 2 === 0;
+    const mat = (isN ? M.north : M.south).clone(); mat.emissive = new THREE.Color(isN ? 0xff4a3a : 0x4a7aff); mat.emissiveIntensity = 0;
+    const w = Math.min(2 * RR * Math.sin(arc / 2) * 0.82, 1.3);
+    const pm = mesh(new THREE.BoxGeometry(w, 0.3, 2.3), mat);
+    pm.position.set((RR + 0.13) * Math.cos(a), (RR + 0.13) * Math.sin(a), 0);
+    pm.rotation.z = a - Math.PI / 2;
+    g.add(pm);
+    poles.push({ a, mat });
+    if (p <= 4) {
+      const lab = makeLabel(isN ? 'U' : 'S', { bg: isN ? '#d8473f' : '#3b6fd8', h: 0.4, size: 60, pad: 12 });
+      lab.position.set((RR - 0.2) * Math.cos(a), (RR - 0.2) * Math.sin(a), 1.3);
+      g.add(lab);
+    }
+  }
+  g.userData.poles = poles; g.userData.p = p;
+  return g;
+}
+const rotor4 = buildRotor(4), rotor24 = buildRotor(24);
+rotorRig.add(rotor4, rotor24);
+
+// ---------------------------------------------------------------- load bars (4D)
+const barsRig = new THREE.Group(); scene.add(barsRig);
+const KW = 0.28, Y0 = -2.2;
+const loads = [
+  { name: 'Lampu + kulkas', kw: 4, color: 0xf5b041 },
+  { name: 'Pompa', kw: 3, color: 0x2dd4bf },
+  { name: 'AC', kw: 6, color: 0xa78bfa },
+];
+{
+  barsRig.add(mesh(new THREE.BoxGeometry(3.4, 0.2, 3.4), M.base, 0, Y0 - 0.1, 0));
+  const ghost = (w, h, color, op) => {
+    const g = new THREE.BoxGeometry(w, h, w); g.translate(0, h / 2, 0);
+    const grp = new THREE.Group();
+    grp.add(new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ color, transparent: true, opacity: op })));
+    grp.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.04, depthWrite: false })));
+    grp.position.y = Y0; return grp;
+  };
+  barsRig.add(ghost(2.3, 20 * KW, 0x9fb0c8, 0.35));
+  barsRig.add(ghost(1.95, 16 * KW, 0xeaf0fa, 0.8));
+  const l20 = makeLabel('20 kVA · daya semu', { color: '#9fb0c8', h: 0.32, size: 46, weight: 600 }); l20.position.set(2.75, Y0 + 20 * KW, 0); barsRig.add(l20);
+  const l16 = makeLabel('16 kW · daya nyata', { color: '#eaf0fa', h: 0.32, size: 46, weight: 600 }); l16.position.set(2.65, Y0 + 16 * KW, 0); barsRig.add(l16);
+}
+const safePlaneMat = new THREE.MeshBasicMaterial({ color: 0xff5a4a, transparent: true, opacity: 0.18, side: THREE.DoubleSide, depthWrite: false });
+const safePlane = mesh(new THREE.PlaneGeometry(2.9, 2.9), safePlaneMat, 0, Y0 + 12.8 * KW, 0); safePlane.rotation.x = -Math.PI / 2;
+barsRig.add(safePlane);
+{ const e = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(2.9, 2.9)), new THREE.LineBasicMaterial({ color: 0xff7a6a }));
+  e.rotation.x = -Math.PI / 2; e.position.y = Y0 + 12.8 * KW; barsRig.add(e);
+  const ls = makeLabel('12,8 kW · batas aman 80%', { color: '#ff8a7a', h: 0.32, size: 46, weight: 700 }); ls.position.set(3.0, Y0 + 12.8 * KW, 0); barsRig.add(ls); }
+for (const ld of loads) {
+  const g = new THREE.BoxGeometry(1.6, 1, 1.6); g.translate(0, 0.5, 0);
+  ld.mat = new THREE.MeshStandardMaterial({ color: ld.color, metalness: 0.15, roughness: 0.45, emissive: 0xff2a1a, emissiveIntensity: 0 });
+  ld.mesh = new THREE.Mesh(g, ld.mat); barsRig.add(ld.mesh);
+  ld.label = makeLabel(`${ld.name} · ${ld.kw} kW`, { bg: 'rgba(10,16,30,.85)', h: 0.32, size: 44, weight: 600, color: '#' + ld.color.toString(16).padStart(6, '0') });
+  barsRig.add(ld.label);
+}
+
+// ---------------------------------------------------------------- simulation (precomputed, deterministic)
+const SR = 600;                       // samples per second
+const NS = Math.ceil(DURATION * SR) + 2;
+const phiM = new Float32Array(NS), omM = new Float32Array(NS), flowM = new Float32Array(NS), sM = new Int8Array(NS);
+const phiG = new Float32Array(NS), omG = new Float32Array(NS), flowG = new Float32Array(NS);
+const thR = new Float32Array(NS);
+const OM_RUN1 = TAU * 0.4, OM_RUN2 = TAU * 0.5;
+const OMG1 = TAU / 3.2;
+let HOLD_T = 50.2;
+const genSpeed = (t) => (t >= 140 ? 1 : 1 + smooth(98, 100.5, t));
+const rpmAt = (t) => (t < 116.5 ? 1500 : t < 124.5 ? 250 : 1470);
+const polesAt = (t) => (t < 116.5 ? 4 : t < 124.5 ? 24 : 4);
+const commOn = (t) => !(t >= 32.6 && t < 44);
+const motorI = (om) => (9 - 7.5 * clamp(Math.abs(om) / OM_RUN2, 0, 1)) / 3;
+{
+  let phi = 0.35, om = -OM_RUN1, flow = 0, holding = false;
+  let pg = -Math.PI / 2 + 0.2, fg = 0, th = 0;
+  const dt = 1 / SR;
+  for (let i = 0; i < NS; i++) {
+    const t = i * dt;
+    // --- motor
+    let s;
+    if (t < 32.6) { om += (-OM_RUN1 - om) * dt / 0.6; }
+    else if (t < 44) { om += (9 * Math.cos(phi) - 1.25 * om) * dt; }
+    else if (!holding) {
+      om += (-OM_RUN2 - om) * dt / 0.7;
+      if (t > 49.9 && Math.abs(Math.sin(phi)) < 0.05) { holding = true; HOLD_T = t; }
+    } else { om += (0 - om) * dt / 0.08; }
+    phi += om * dt;
+    s = commOn(t) ? (Math.cos(phi) >= 0 ? 1 : -1) : -1;
+    const Ivis = t >= 44 ? motorI(om) : 0.5;
+    flow += s * Ivis * dt * 0.9;
+    phiM[i] = phi; omM[i] = om; flowM[i] = flow; sM[i] = s;
+    // --- generator
+    const og = OMG1 * genSpeed(t);
+    pg += og * dt;
+    const eps = (og / OMG1) * Math.cos(pg);
+    fg += eps * dt * 0.55;
+    phiG[i] = pg; omG[i] = og; flowG[i] = fg;
+    // --- rotor
+    th += (rpmAt(t) / 1500) * 0.5 * TAU * dt;
+    thR[i] = th;
+  }
+}
+const sample = (arr, t) => { const x = clamp(t, 0, DURATION) * SR; const i = Math.floor(x); const k = x - i; return arr[i] + (arr[Math.min(i + 1, NS - 1)] - arr[i]) * k; };
+const sampleI = (arr, t) => arr[Math.round(clamp(t, 0, DURATION) * SR)];
+
+// ---------------------------------------------------------------- timeline: camera
+const CAM = [
+  [0, [11, 7.5, 15], [-0.6, -0.6, 0.6]],
+  [6, [8.2, 6.6, 14.2], [0.6, -0.7, 0.6]],
+  [10, [6.6, 5.9, 13.6], [1.4, -0.75, 0.5]],
+  [22.5, [6.0, 5.6, 13.8], [1.4, -0.75, 0.6]],
+  [24.5, [4.4, 3.0, 8.6], [1.0, -0.5, 2.3]],
+  [32.4, [4.0, 2.8, 8.4], [0.95, -0.5, 2.3]],
+  [34.5, [1.8, 3.4, 14.4], [1.9, -0.5, 0]],
+  [44, [1.9, 3.5, 14.4], [1.9, -0.5, 0]],
+  [46, [6.4, 5.8, 13.6], [1.4, -0.75, 0.8]],
+  [58, [6.8, 6.0, 13.6], [1.4, -0.75, 0.8]],
+  [58, [2.6, 10.5, 9.6], [1.4, -1.0, 0.0]],
+  [72, [3.6, 10.0, 9.8], [1.4, -1.0, 0.0]],
+  [72, [9.5, 6.8, 15.5], [0.8, -0.5, 0.8]],
+  [76.5, [5.6, 4.6, 14.4], [2.3, -0.1, 0.6]],
+  [98, [4.6, 4.2, 14.6], [2.3, -0.1, 0.6]],
+  [108, [5.0, 4.4, 14.4], [2.3, -0.1, 0.6]],
+  [108, [0.6, 0.9, 14.5], [2.9, 0.45, 0]],
+  [130, [1.8, 1.4, 14.0], [2.9, 0.45, 0]],
+  [130, [9.0, 3.8, 11.5], [2.9, 0.6, 0]],
+  [145, [7.8, 3.2, 12.4], [2.9, 0.6, 0]],
+  [145, [10.5, 6.8, 15], [-0.6, -0.6, 0.6]],
+  [150, [12.5, 7.2, 12.5], [-0.6, -0.6, 0.6]],
+];
+const _cp = new THREE.Vector3(), _ct = new THREE.Vector3();
+function cameraAt(t) {
+  for (let i = 0; i < CAM.length - 1; i++) {
+    const a = CAM[i], b = CAM[i + 1];
+    if (b[0] > a[0] && t >= a[0] && t < b[0]) {
+      const k = smooth(a[0], b[0], t);
+      _cp.set(lerp(a[1][0], b[1][0], k), lerp(a[1][1], b[1][1], k), lerp(a[1][2], b[1][2], k));
+      _ct.set(lerp(a[2][0], b[2][0], k), lerp(a[2][1], b[2][1], k), lerp(a[2][2], b[2][2], k));
+      return;
+    }
+  }
+  const z = CAM[CAM.length - 1]; _cp.set(...z[1]); _ct.set(...z[2]);
+}
+
+// ---------------------------------------------------------------- timeline: overlays
+const CUTS = [58, 72, 108, 116.5, 124.5, 130, 145];
+const TAGS = [
+  [6, 58, 'SOAL 2 · 20 POIN', 'Arus + magnet = gaya yang memutar motor'],
+  [58, 72, 'SOAL 2A · GAYA LORENTZ', 'Gaya pada kawat berarus: F = BIL sin θ'],
+  [72, 108, 'SOAL 4 · 20 POIN', 'Dari putaran ke listrik AC'],
+  [108, 130, 'SOAL 4C · FREKUENSI', 'Kutub, putaran, dan frekuensi'],
+  [130, 145, 'SOAL 4D · GENSET 20 kVA, FAKTOR DAYA 0,8', 'kVA bukan kW'],
+].map(([t0, t1, k, t]) => ({ t0, t1, html: `<div class="k">${k}</div><div class="t">${t}</div>` }));
+
+const chip = (c, txt) => `<span><i style="background:${c}"></i>${txt}</span>`;
+const LEGENDS = [
+  { t0: 6, t1: 58, html: chip('#7fb2ff', 'B · medan magnet') + chip('#ffe14d', 'I · arus') + chip('#4ade80', 'F · gaya') },
+  { t0: 58, t1: 72, html: chip('#7fb2ff', 'B · medan magnet') + chip('#ffe14d', 'I · arus') + chip('#4ade80', 'F · gaya') + chip('#f5b041', 'θ · sudut kawat–medan') },
+  { t0: 72, t1: 108, html: chip('#7fb2ff', 'B · medan') + chip('#ffd84a', 'garis yang menembus kumparan') + chip('#38e1ff', 'v · gerak sisi kumparan') },
+  { t0: 108, t1: 130, html: chip('#d8473f', 'kutub U') + chip('#3b6fd8', 'kutub S') + chip('#d98a52', 'kumparan stator') },
+];
+
+const CAPTIONS = [
+  [6, 10.5, 'Kumparan tembaga di antara kutub U dan S, diberi baterai 9 V. Hambatan kumparan 3 Ω.'],
+  [10.5, 16.5, 'Dua sisi kumparan dialiri arus berlawanan, jadi didorong berlawanan: satu ke atas, satu ke bawah.'],
+  [16.5, 22.5, 'Pasangan gaya ini memutar kumparan. Titik kuning adalah arus, panah hijau gaya, garis biru medan magnet.'],
+  [22.5, 27.5, 'Komutator membalik arus tiap setengah putaran supaya dorongan selalu searah.'],
+  [27.5, 32.4, 'Perhatikan sikat: tiap kali kumparan tegak, sikat pindah ke belahan cincin yang lain dan arus di kumparan berbalik.'],
+  [32.6, 37.5, 'Coba lepas komutatornya (diganti cincin geser): arus di kumparan tidak lagi dibalik.'],
+  [37.5, 44, 'Kumparan berayun lalu berhenti tegak. Di posisi itu gayanya segaris dengan lengan putar, jadi torsinya nol.'],
+  [44, 50.6, 'Kumparan yang berputar di dalam magnet juga menjadi generator kecil. Muncul GGL balik yang melawan baterai, jadi arusnya kecil: 0,5 A.'],
+  [50.6, 58, 'Tahan poros: GGL balik hilang, arus naik ke 3 A, panas naik 36 kali. Itu sebabnya dinamo yang macet cepat panas.'],
+  [58, 62, 'B = 0,4 T, I = 5 A, L = 0,3 m. Kawat tegak lurus medan (θ = 90°): F = BIL = 0,60 N.'],
+  [62, 66.6, 'Putar kawat ke θ = 30°: F = 0,60 × sin 30° = 0,30 N.'],
+  [66.6, 72, 'Kawat sejajar medan (θ = 0°): gayanya nol. Jangan lupa sin θ.'],
+  [72.4, 76.5, 'Batubara, air, panas bumi, angin, solar: bahan bakarnya beda, tugasnya sama, yaitu memutar kumparan di dalam medan magnet.'],
+  [76.5, 81.5, 'Garis medan yang menembus kumparan disorot kuning. Jumlahnya naik-turun saat kumparan berputar: itulah fluks Φ (garis putus-putus).'],
+  [81.5, 86.5, 'GGL tidak ditentukan banyaknya garis, tapi seberapa cepat garis itu dipotong.'],
+  [86.5, 92, 'Kumparan tegak: garis yang menembus paling banyak, tapi sisi kumparan bergerak sejajar garis. Tidak memotong apa-apa, jadi GGL = 0.'],
+  [92, 98, 'Kumparan mendatar: fluks nol, tapi sisi kumparan bergerak tegak lurus garis dan memotongnya paling cepat. GGL maksimum.'],
+  [98, 108, 'Putar lebih cepat: gelombang GGL makin tinggi dan makin rapat. Itu sebabnya ω ada di rumus.'],
+  [108.4, 112.5, 'Rotor 4 kutub berputar di dalam stator. Setiap kali satu pasang kutub (U lalu S) lewat di bawah kumparan stator, terbentuk satu gelombang penuh.'],
+  [112.5, 116.4, 'Rotor p kutub memberi p/2 gelombang per putaran. Dikali putaran per detik (n/60): f = n·p/120.'],
+  [116.9, 124.4, 'PLTA berputar pelan (250 rpm), jadi butuh banyak kutub: 250 × 24 / 120 = 50 Hz. Frekuensinya tetap sama.'],
+  [124.9, 130, 'Genset turun ke 1470 rpm, frekuensi ikut turun: 1470 × 4 / 120 = 49 Hz. Governor yang menjaganya tetap 50 Hz.'],
+  [130.4, 135, 'Daya nyata yang bisa dipakai: kW = kVA × faktor daya = 20 × 0,8 = 16 kW. Batas aman 80% = 12,8 kW.'],
+  [135, 139.2, 'Lampu + kulkas 4 kW, pompa 3 kW, AC 6 kW: total 13 kW = 81%. Melewati batas aman.'],
+  [139.2, 142, 'Matikan pompa: 10 kW = 63%. Batangnya turun di bawah garis.'],
+  [142, 145, 'Rantai energinya: kimia (solar dibakar) → mekanik (poros berputar) → listrik (AC 220/380 V).'],
+].map(([t0, t1, html]) => ({ t0, t1, html }));
+
+const card = (h, f, n) => `<div class="h">${h}</div>${f ? `<div class="f">${f.join('<br>')}</div>` : ''}${n ? `<div class="n">${n}</div>` : ''}`;
+const CARDS = [
+  { t0: 6, t1: 22.5, html: card('SOAL 2 · DATA', ['V = 9 V (baterai)', 'R = 3 Ω (kumparan)'], 'Sisi kumparan berarus di dalam medan B didorong gaya Lorentz F = BIL.') },
+  { t0: 22.5, t1: 32.5, html: card('KOMUTATOR', null, 'Belahan cincin yang menyentuh sikat <b style="color:#ff7a6a">+</b> menyala merah, yang menyentuh sikat <b style="color:#7aa2ff">−</b> menyala biru. Keduanya bertukar tiap setengah putaran.') },
+  { t0: 32.5, t1: 44, html: card('TANPA KOMUTATOR', null, 'Torsi = F × lengan. Saat kumparan tegak, gaya (vertikal) segaris dengan lengan putar (vertikal): torsi nol. Kumparan terkunci di posisi itu.') },
+  { t0: 44, t1: 58, html: card('2C · I = (V − ε) / R', ['Macet (ε = 0): I = 9/3 = 3 A', 'Berputar: I = (9 − 7,5)/3 = 0,5 A'], 'Panas I²R: 0,5² × 3 ≈ 0,8 W, sedangkan 3² × 3 = 27 W.') },
+  { t0: 58, t1: 72, html: card('2A · GAYA LORENTZ', ['B = 0,4 T, I = 5 A, L = 0,3 m', 'F = BIL sin θ = 0,60 × sin θ N'], 'θ = 30° memberi 0,3 N. Kawat sejajar medan (0°): gaya nol.') },
+  { t0: 76.5, t1: 98, html: card('4B · FLUKS DAN GGL', ['Φ = BA cos ωt', 'ε = −N dΦ/dt = NBAω sin ωt'], 'Saat Φ maksimum, ε nol. Saat Φ nol, ε maksimum.') },
+  { t0: 98, t1: 108, html: card('4A · GGL MAKSIMUM', ['ω = 2πf = 2π × 50 ≈ 314 rad/s', 'ε maks = NBAω', '= 120 × 0,5 × 0,025 × 314', '≈ 471 V'], null) },
+  { t0: 108, t1: 130, html: null, dyn: (t) => {
+      const n = rpmAt(t), p = polesAt(t), f = n * p / 120;
+      return card('4C · HITUNG LANGSUNG', [`f = n · p / 120`, `= ${n} × ${p} / 120`, `= ${fmt(f, 1)} Hz`], f === 50 ? 'Tepat 50 Hz, standar PLN.' : 'Di bawah 50 Hz. Governor menambah bahan bakar agar putaran kembali 1500 rpm.');
+    } },
+  { t0: 130, t1: 145, html: card('4D · kVA BUKAN kW', ['kW = kVA × faktor daya', '= 20 × 0,8 = 16 kW', 'Batas aman 80% = 12,8 kW'], null) },
+];
+
+const tile = (l, v, cls = '') => `<div class="tile ${cls}"><div class="l">${l}</div><div class="v">${v}</div></div>`;
+let BARS_STATE = { total: 0 };
+const HUDS = [
+  { t0: 44, t1: 58, dyn: (t) => {
+      const om = Math.abs(sample(omM, t)), eps = 7.5 * clamp(om / OM_RUN2, 0, 1), I = (9 - eps) / 3, P = I * I * 3;
+      return `<div class="tiles">${tile('GGL BALIK ε', fmt(eps, 1) + ' V')}${tile('ARUS I', fmt(I, 1) + ' A', I > 1 ? 'hot' : 'ok')}${tile('PANAS I²R', (P < 10 ? fmt(P, 1) : fmt(P, 0)) + ' W', P > 2 ? 'hot' : 'ok')}</div>`;
+    } },
+  { t0: 58, t1: 72, dyn: (t) => {
+      const th = lzTheta(t);
+      return `<div class="tiles">${tile('SUDUT θ', Math.round(th) + '°')}${tile('sin θ', fmt(Math.sin(th * Math.PI / 180), 2))}${tile('GAYA F', fmt(0.6 * Math.sin(th * Math.PI / 180), 2) + ' N', 'ok')}</div>`;
+    } },
+  { t0: 76.5, t1: 108, dyn: (t) => {
+      const sp = genSpeed(t);
+      return `<div class="tiles" style="grid-template-columns:1fr 1fr">${tile('KECEPATAN PUTAR', fmt(sp, 1) + '×')}${tile('TINGGI GELOMBANG ε', fmt(sp, 1) + '×', 'ok')}</div>`;
+    } },
+  { t0: 108, t1: 130, dyn: (t) => {
+      const n = rpmAt(t), p = polesAt(t), f = n * p / 120;
+      return `<div class="tiles">${tile('PUTARAN', n + ' rpm')}${tile('KUTUB', String(p))}${tile('FREKUENSI', fmt(f, 1) + ' Hz', f === 50 ? 'ok' : 'hot')}</div><div class="hudnote">Gerak rotor diperlambat agar terlihat.</div>`;
+    } },
+  { t0: 130, t1: 145, dyn: () => {
+      const tot = BARS_STATE.total, pct = tot / 16 * 100;
+      return `<div class="tiles">${tile('BEBAN', fmt(tot, 1) + ' kW')}${tile('DARI 16 kW', Math.round(pct) + '%', pct > 80 ? 'hot' : 'ok')}${tile('STATUS', pct > 80.01 ? 'Lewat' : 'Aman', pct > 80.01 ? 'hot' : 'ok')}</div>`;
+    } },
+];
+const GRAPHS = [
+  { t0: 76.5, t1: 108, kind: 'gen' },
+  { t0: 108.4, t1: 116.4, kind: 'rotor', s: 108.0 },
+  { t0: 116.9, t1: 124.4, kind: 'rotor', s: 116.5 },
+  { t0: 124.9, t1: 130, kind: 'rotor', s: 124.5 },
+];
+
+function itemAt(list, t) { for (const it of list) if (t >= it.t0 && t < it.t1) return it; return null; }
+function applyTrack(id, list, t, fade = 0.45) {
+  const el = document.getElementById(id);
+  const it = itemAt(list, t);
+  if (!it) { el.style.opacity = 0; return null; }
+  const html = it.dyn ? it.dyn(t) : it.html;
+  if (el._html !== html) { el.innerHTML = html; el._html = html; }
+  const o = clamp(Math.min((t - it.t0) / fade, (it.t1 - t) / fade));
+  el.style.opacity = o.toFixed(3);
+  el.style.transform = `translateY(${((1 - o) * 14).toFixed(1)}px)`;
+  return it;
+}
+
+// ---------------------------------------------------------------- graph
+const gctx = document.getElementById('graph').getContext('2d');
+function drawGraph(t, g) {
+  const Wc = 640, Hc = 262;
+  gctx.clearRect(0, 0, Wc, Hc);
+  const x0 = 60, x1 = Wc - 24, yMid = 142, amp = 92;
+  gctx.font = '600 18px Inter, sans-serif'; gctx.textBaseline = 'middle';
+  gctx.strokeStyle = 'rgba(255,255,255,.18)'; gctx.lineWidth = 1.5;
+  gctx.beginPath(); gctx.moveTo(x0, yMid); gctx.lineTo(x1, yMid); gctx.stroke();
+  gctx.beginPath(); gctx.moveTo(x0, yMid - amp - 6); gctx.lineTo(x0, yMid + amp + 6); gctx.stroke();
+  gctx.fillStyle = '#a3b3cc'; gctx.fillText('0', 36, yMid); gctx.fillText('waktu →', x1 - 78, yMid + amp + 14);
+  const win = 7;
+  const tStart = Math.max(t - win, g.kind === 'gen' ? 72 : g.s);
+  const X = (ts) => x1 - (t - ts) / win * (x1 - x0);
+  const N = 260;
+  const series = (fn, color, dash, width) => {
+    gctx.save(); gctx.strokeStyle = color; gctx.lineWidth = width; gctx.setLineDash(dash); gctx.lineJoin = 'round';
+    gctx.beginPath();
+    for (let i = 0; i <= N; i++) {
+      const ts = tStart + (t - tStart) * i / N;
+      const y = yMid - fn(ts) * amp;
+      if (i === 0) gctx.moveTo(X(ts), y); else gctx.lineTo(X(ts), y);
+    }
+    gctx.stroke(); gctx.restore();
+    const yv = yMid - fn(t) * amp;
+    gctx.fillStyle = color; gctx.beginPath(); gctx.arc(X(t), yv, 6, 0, TAU); gctx.fill();
+  };
+  if (g.kind === 'gen') {
+    series((ts) => -Math.sin(sample(phiG, ts)) * 0.48, '#5fd3ff', [10, 8], 3);
+    series((ts) => (sample(omG, ts) / OMG1) * Math.cos(sample(phiG, ts)) * 0.48, '#ff9f43', [], 4);
+    gctx.fillStyle = '#ff9f43'; gctx.fillText('ε  GGL', x0 + 14, 22);
+    gctx.fillStyle = '#5fd3ff'; gctx.fillText('Φ  fluks (putus-putus)', x0 + 110, 22);
+  } else {
+    series((ts) => {
+      const p = polesAt(ts), f = rpmAt(ts) * p / 120;
+      return (f / 50) * Math.sin((p / 2) * sample(thR, ts)) * 0.82;
+    }, '#ff9f43', [], 4);
+    gctx.fillStyle = '#ff9f43'; gctx.fillText('ε  GGL di kumparan stator', x0 + 14, 22);
+  }
+}
+
+// ---------------------------------------------------------------- Lorentz angle schedule
+function lzTheta(t) {
+  let th = 90;
+  th = lerp(th, 30, smooth(62, 64.5, t));
+  th = lerp(th, 0, smooth(66.6, 68.8, t));
+  th = lerp(th, 90, smooth(70.2, 71.8, t));
+  return th;
+}
+
+// ---------------------------------------------------------------- main render
+const _v1 = new THREE.Vector3(), _v2 = new THREE.Vector3(), _dir = new THREE.Vector3();
+const inR = (t, a, b) => t >= a && t < b;
+
+function renderAt(t) {
+  const motorTime = t < 58;
+  const lzTime = inR(t, 58, 72);
+  const genTime = inR(t, 72, 108) || t >= 145;
+  const rotorTime = inR(t, 108, 130);
+  const barsTime = inR(t, 130, 145);
+
+  magnetRig.visible = motorTime || lzTime || genTime;
+  armature.visible = motorTime || genTime;
+  const slipMode = genTime || inR(t, 32.6, 44);
+  commGroup.visible = commBrushes.visible = motorTime && !slipMode;
+  slipGroup.visible = slipBrushes.visible = slipMode;
+  batteryRig.visible = motorTime;
+  wiresComm.visible = motorTime && !slipMode;
+  wiresSlipBatt.visible = motorTime && slipMode;
+  lampRig.visible = genTime;
+  lorentz.visible = lzTime;
+  rotorRig.visible = rotorTime;
+  barsRig.visible = barsTime;
+  labB.visible = !lzTime;
+
+  // ----- coil state
+  let phi, s, flow, Ivis = 0.5, heat = 0;
+  if (motorTime) {
+    phi = sample(phiM, t); s = sampleI(sM, t); flow = sample(flowM, t);
+    const om = sample(omM, t);
+    if (t >= 44) { Ivis = motorI(om); heat = clamp((Ivis * Ivis * 3 - 0.75) / 26); }
+  } else {
+    phi = sample(phiG, t); flow = sample(flowG, t);
+  }
+  rotorSpin.rotation.z = phi;
+  coilMat.emissiveIntensity = heat * 1.1;
+  coilMat.color.setRGB(lerp(0.85, 1.0, heat), lerp(0.54, 0.35, heat), lerp(0.32, 0.2, heat));
+  for (let i = 0; i < dots.length; i++) pathPoint(i / dots.length + flow * 0.35, dots[i].position).setY(0.13);
+
+  // commutator glow: half A (local +x) touches the + brush (right, world angle 0) when cos φ > 0
+  const aOnPlus = Math.cos(phi) >= 0;
+  const commGlow = inR(t, 22.5, 32.6) ? 1 : 0.35;
+  halfA_mat.emissive.set(aOnPlus ? 0xff3a2a : 0x2a6aff); halfA_mat.emissiveIntensity = 0.55 * commGlow;
+  halfB_mat.emissive.set(aOnPlus ? 0x2a6aff : 0xff3a2a); halfB_mat.emissiveIntensity = 0.55 * commGlow;
+
+  // brake
+  brake.visible = motorTime && t >= HOLD_T - 0.9;
+  if (brake.visible) {
+    const k = smooth(HOLD_T - 0.6, HOLD_T, t);
+    brakeTop.position.y = lerp(1.6, 0.24, k); brakeBot.position.y = lerp(-1.6, -0.24, k);
+    brakeLabel.material.opacity = smooth(HOLD_T - 0.3, HOLD_T + 0.3, t);
+  }
+
+  // force arrows (motor)
+  motorArrows.visible = motorTime && t > 5.5;
+  if (motorArrows.visible) {
+    const c = Math.cos(phi), sn = Math.sin(phi);
+    const len = t >= 44 ? 0.6 * Math.pow(Ivis / 0.5, 0.5) : 0.95;
+    _v1.set(R * c, R * sn, 0); _v2.set(-R * c, -R * sn, 0);
+    setArrow(fA, _v1, _dir.set(0, -s, 0), len);
+    setArrow(fB, _v2, _dir.set(0, s, 0), len);
+    fLabA.position.set(_v1.x + 0.32, _v1.y - s * (len + 0.25), 0);
+    fLabB.position.set(_v2.x + 0.32, _v2.y + s * (len + 0.25), 0);
+  }
+  // lever arms
+  armGroup.visible = inR(t, 32.6, 44);
+  if (armGroup.visible) {
+    const c = Math.cos(phi), sn = Math.sin(phi);
+    for (const [m, sg] of [[armA, 1], [armB, -1]]) {
+      m.position.set(sg * R * c / 2, sg * R * sn / 2, 0.02);
+      m.scale.set(1, R, 1);
+      m.quaternion.setFromUnitVectors(UP, _dir.set(sg * c, sg * sn, 0));
+    }
+    armLabel.position.set(R * c * 0.55 + 0.55, R * sn * 0.55 + 0.1, 0.4);
+    armMat.opacity = 0.75 * smooth(33, 34.5, t);
+    armLabel.material.opacity = smooth(37.5, 38.5, t);
+  }
+
+  // field lines
+  const fieldFlow = t * 0.28;
+  const hiMode = genTime && t >= 76.5 && t < 145 ? 1 : 0;
+  const rs = Math.abs(Math.sin(phi)) * R;
+  for (const fl of fieldLines) {
+    for (let k = 0; k < 2; k++) {
+      const u = (fl.phase + k * 0.5 + fieldFlow) % 1;
+      fl.cones[k].position.x = -2.2 + u * 4.4;
+    }
+    const through = hiMode && Math.abs(fl.y) < rs - 0.02 && Math.abs(fl.z) < L / 2;
+    fl.mat.color.copy(through ? FIELD_HI : FIELD_BASE);
+    fl.cmat.color.copy(through ? FIELD_HI : FIELD_BASE);
+    fl.mat.opacity = through ? 0.95 : (hiMode ? 0.18 : 0.3);
+    fl.cmat.opacity = through ? 1 : (hiMode ? 0.4 : 0.7);
+  }
+
+  // generator extras
+  velArrows.visible = genTime && t >= 76.5 && t < 145;
+  const eps = genTime ? (sample(omG, t) / OMG1) * Math.cos(phi) : 0;
+  if (velArrows.visible) {
+    const c = Math.cos(phi), sn = Math.sin(phi), vl = 0.85 * genSpeed(t);
+    _v1.set(R * c, R * sn, 0.9); _v2.set(-R * c, -R * sn, 0.9);
+    setArrow(vA, _v1, _dir.set(-sn, c, 0), vl); setArrow(vB, _v2, _dir.set(sn, -c, 0), vl);
+    vLabA.position.set(_v1.x - sn * (vl + 0.25), _v1.y + c * (vl + 0.25), 1.1);
+    vLabB.position.set(_v2.x + sn * (vl + 0.25), _v2.y - c * (vl + 0.25), 1.1);
+  }
+  const tagsOn = genTime && t >= 84 && t < 108;
+  genTagMax.visible = genTagZero.visible = tagsOn;
+  if (tagsOn) {
+    genTagMax.material.opacity = smooth(0.9, 0.985, Math.abs(Math.sin(phi)));
+    genTagZero.material.opacity = smooth(0.9, 0.985, Math.abs(Math.cos(phi)));
+  }
+  const bright = genTime ? Math.abs(eps) / 2 : 0;
+  bulbMat.emissiveIntensity = 0.15 + bright * 3.2;
+  lampLight.intensity = bright * 6;
+
+  // ----- Lorentz
+  if (lzTime) {
+    const thd = lzTheta(t), th = thd * Math.PI / 180;
+    lzWire.rotation.y = -th;                  // local +x → (cos θ, 0, sin θ)
+    const lzFlow = (t * 0.6) % 1;
+    for (let i = 0; i < lzDots.length; i++) lzDots[i].position.x = -1.6 + ((i / lzDots.length + lzFlow) % 1) * 3.2;
+    const F = Math.sin(th);
+    setArrow(lzF, _v1.set(0, 0.08, 0), _dir.set(0, 1, 0), 2.2 * F);
+    lzFlabel.position.set(0.35, 0.3 + 2.2 * F, 0); lzFlabel.visible = F > 0.04;
+    lzIlabel.position.set(-2.1 * Math.cos(th), 0.45, -2.1 * Math.sin(th));
+    lzArc.geometry.dispose();
+    lzArc.geometry = new THREE.RingGeometry(0.78, 0.9, 48, 1, 0, Math.max(th, 0.001));
+    lzArc.rotation.x = Math.PI / 2;
+    const txt = `θ = ${Math.round(thd)}°`;
+    if (txt !== lzThetaText) {
+      if (lzThetaLabel) { lorentz.remove(lzThetaLabel); lzThetaLabel.material.map.dispose(); }
+      lzThetaLabel = makeLabel(txt, { color: '#f5b041', bg: 'rgba(10,16,30,.85)', h: 0.36, size: 50 });
+      lorentz.add(lzThetaLabel); lzThetaText = txt;
+    }
+    const ha = Math.max(th, 0.25) / 2;
+    lzThetaLabel.position.set(1.45 * Math.cos(ha) + 0.2, 0.5, 1.45 * Math.sin(ha) + 0.35);
+  }
+
+  // ----- rotor
+  if (rotorTime) {
+    const p = polesAt(t);
+    rotor4.visible = p === 4; rotor24.visible = p === 24;
+    const rot = p === 4 ? rotor4 : rotor24;
+    const th = sample(thR, t);
+    rot.rotation.z = -th;
+    for (const pl of rot.userData.poles) {
+      const d = Math.abs(wrapPi(pl.a - th - Math.PI / 2));
+      pl.mat.emissiveIntensity = Math.pow(clamp(1 - d / (Math.PI / p)), 2) * 0.9;
+    }
+  }
+
+  // ----- bars
+  if (barsTime) {
+    const grow = [smooth(130.8, 131.8, t), smooth(131.8, 132.8, t) * (1 - smooth(139.2, 140, t)), smooth(132.8, 134, t)];
+    let y = Y0, tot = 0;
+    loads.forEach((ld, i) => {
+      const h = Math.max(ld.kw * KW * grow[i], 0.001);
+      ld.mesh.scale.y = h; ld.mesh.position.y = y; ld.mesh.visible = grow[i] > 0.01;
+      ld.label.position.set(-2.2, y + h / 2, 0.4); ld.label.material.opacity = grow[i];
+      y += h; tot += ld.kw * grow[i];
+    });
+    BARS_STATE.total = tot;
+    const over = tot > 12.8 ? 1 : 0;
+    safePlaneMat.opacity = 0.14 + over * (0.22 + 0.1 * Math.sin(t * 7));
+    loads[2].mat.emissiveIntensity = over * 0.35;
+  }
+
+  // ----- camera
+  cameraAt(t);
+  camera.position.copy(_cp); camera.lookAt(_ct);
+
+  // ----- overlays
+  document.body.style.setProperty('--accent', t < 72 ? '#f5b041' : '#2dd4bf');
+  applyTrack('tag', TAGS, t);
+  applyTrack('legend', LEGENDS, t);
+  applyTrack('caption', CAPTIONS, t, 0.35);
+  applyTrack('card', CARDS, t);
+  applyTrack('hud', HUDS, t);
+  const g = applyTrack('graphWrap', GRAPHS, t);
+  if (g) drawGraph(t, g);
+  applyTrack('titlecard', [{ t0: 0, t1: 5.8, html: document.getElementById('titlecard').innerHTML }], t, 0.6);
+  applyTrack('endcard', [{ t0: 145.4, t1: 151, html: document.getElementById('endcard').innerHTML }], t, 0.7);
+
+  let fade = 1 - clamp(t / 0.7);
+  for (const c of CUTS) fade = Math.max(fade, 1 - Math.abs(t - c) / 0.45);
+  fade = Math.max(fade, clamp((t - (DURATION - 0.9)) / 0.9));
+  document.getElementById('fade').style.opacity = clamp(fade).toFixed(3);
+
+  renderer.render(scene, camera);
+}
+
+window.DURATION = DURATION;
+window.renderAt = renderAt;
+await document.fonts.ready;
+renderAt(0);
+window.READY = true;
+
+// live preview when opened normally in a browser
+if (!new URLSearchParams(location.search).has('render')) {
+  const params = new URLSearchParams(location.search);
+  const t0 = performance.now() / 1000 - (parseFloat(params.get('t')) || 0);
+  const loop = () => { renderAt((performance.now() / 1000 - t0) % DURATION); requestAnimationFrame(loop); };
+  loop();
+}
+</script>
+</body>
+</html>

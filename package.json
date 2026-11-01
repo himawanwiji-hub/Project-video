@@ -1,0 +1,23 @@
+{
+  "name": "project-video",
+  "version": "1.0.0",
+  "description": "Animasi 3D Fisika Listrik (Soal 2 Motor & Soal 4 Generator AC) yang dirender menjadi MP4",
+  "scripts": {
+    "render": "node video/render.js",
+    "stills": "node video/render.js --stills 15,40,53,64,90,120,137"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/himawanwiji-hub/Project-video.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/himawanwiji-hub/Project-video/issues"
+  },
+  "homepage": "https://github.com/himawanwiji-hub/Project-video#readme",
+  "dependencies": {
+    "three": "^0.169.0"
+  },
+  "private": true
+}
