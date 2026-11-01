@@ -6,7 +6,7 @@ Voice: espeak-ng + MBROLA Indonesian male voice (mb-id1):
 
 Steps:
     python3 video/voiceover.py plan [--keep]   # synthesize cues (--keep: use existing recordings), write video/timing.json (stretches the timeline to fit)
-    node video/render.js --out output/fisika-3d-soal-2-dan-4-dosen.mp4 --silent   # render the stretched video
+    node video/render.js --out output/parts/dosen-silent.mp4   # render the stretched video (no audio)
     python3 video/voiceover.py mux    # mix the cues and put them on the video
 
 Every cue is spoken at the same calm pace. If a cue does not fit in its window [t, end] of the authored
