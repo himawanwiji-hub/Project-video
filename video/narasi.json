@@ -1,0 +1,23 @@
+[
+  { "t": 0.6,   "end": 5.9,   "text": "Selamat pagi semuanya. Hari ini kita lihat motor dan generator, dalam tiga dimensi." },
+  { "t": 6.4,   "end": 16.3,  "text": "Coba perhatikan. Kumparan tembaga ini ada di antara kutub utara dan selatan, dan dialiri arus dari baterai sembilan volt. Nah, kedua sisinya dialiri arus yang berlawanan arah." },
+  { "t": 16.6,  "end": 22.4,  "text": "Akibatnya, satu sisi didorong ke atas, sisi yang lain ke bawah. Pasangan gaya inilah yang memutar kumparan." },
+  { "t": 22.7,  "end": 32.4,  "text": "Sekarang lihat komutatornya. Setiap setengah putaran, sikat pindah ke belahan cincin yang lain. Arusnya dibalik, sehingga dorongannya selalu searah." },
+  { "t": 32.8,  "end": 43.9,  "text": "Bagaimana kalau komutatornya kita lepas? Arus tidak dibalik lagi. Lihat, kumparannya berayun, lalu berhenti tegak. Di posisi ini gaya segaris dengan lengan putar, jadi torsinya nol." },
+  { "t": 44.3,  "end": 50.5,  "text": "Waktu berputar, kumparan ini juga menjadi generator kecil. Muncul ge ge el balik, sehingga arusnya hanya setengah ampere." },
+  { "t": 50.8,  "end": 57.8,  "text": "Sekarang porosnya kita tahan. Ge ge el balik hilang, arus naik jadi tiga ampere, dan panasnya naik tiga puluh enam kali. Itulah kenapa dinamo yang macet cepat panas." },
+  { "t": 58.5,  "end": 66.5,  "text": "Soal dua A, gaya Lorentz. Kawat tegak lurus medan, gayanya nol koma enam newton. Kita putar ke tiga puluh derajat, gayanya tinggal setengah, nol koma tiga newton." },
+  { "t": 66.8,  "end": 71.8,  "text": "Kalau kawat sejajar medan, gayanya nol. Jadi jangan lupa sin teta, ya." },
+  { "t": 72.6,  "end": 77.6,  "text": "Soal empat. Apa pun bahan bakarnya, tugasnya sama: memutar kumparan di dalam medan magnet." },
+  { "t": 77.9,  "end": 86.4,  "text": "Garis medan yang menembus kumparan saya beri warna kuning. Jumlahnya naik turun, itulah fluks. Tapi ingat, ge ge el ditentukan oleh seberapa cepat garis itu dipotong." },
+  { "t": 86.7,  "end": 92.0,  "text": "Saat kumparan tegak, fluksnya paling banyak, tapi sisinya bergerak sejajar garis. Ge ge el nya nol." },
+  { "t": 92.2,  "end": 97.9,  "text": "Saat kumparan mendatar, fluksnya nol, tapi garis dipotong paling cepat. Ge ge el nya maksimum." },
+  { "t": 98.3,  "end": 107.8, "text": "Kalau putarannya dipercepat dua kali, gelombang ge ge el juga dua kali lebih tinggi. Karena itulah omega ada di rumus. Untuk lima puluh hertz, hasilnya sekitar empat ratus tujuh puluh satu volt." },
+  { "t": 108.6, "end": 116.3, "text": "Sekarang frekuensi. Setiap sepasang kutub lewat di bawah kumparan stator, terbentuk satu gelombang. Empat kutub, seribu lima ratus er pe em, hasilnya lima puluh hertz." },
+  { "t": 117.0, "end": 124.3, "text": "Pe el te a berputar pelan, dua ratus lima puluh er pe em, jadi butuh dua puluh empat kutub. Hasilnya tetap lima puluh hertz." },
+  { "t": 125.0, "end": 129.9, "text": "Kalau genset turun ke seribu empat ratus tujuh puluh er pe em, frekuensinya ikut turun, empat puluh sembilan hertz." },
+  { "t": 130.6, "end": 135.0, "text": "Terakhir, genset dua puluh ka ve a, faktor daya nol koma delapan. Daya nyatanya enam belas kilowatt." },
+  { "t": 135.2, "end": 139.3, "text": "Bebannya tiga belas kilowatt, delapan puluh satu persen. Sudah lewat batas aman." },
+  { "t": 139.5, "end": 144.9, "text": "Matikan pompanya. Beban turun ke enam puluh tiga persen. Aman." },
+  { "t": 145.6, "end": 149.9, "text": "Jadi ingat, motor dan generator adalah mesin yang sama. Sampai jumpa minggu depan." }
+]

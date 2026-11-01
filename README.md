@@ -3,7 +3,9 @@
 Video animasi 3D (1920×1080, 30 fps, ±2,5 menit) yang dibuat ulang dari animasi 2D
 "Pembahasan UTS Fisika Listrik versi latihan, Teknik Mesin UMY". Isinya hanya **Soal 2** dan **Soal 4**.
 
-**Hasil:** [`output/fisika-3d-soal-2-dan-4.mp4`](output/fisika-3d-soal-2-dan-4.mp4)
+**Hasil:**
+- [`output/fisika-3d-soal-2-dan-4-dosen.mp4`](output/fisika-3d-soal-2-dan-4-dosen.mp4): **dengan suara dosen** (±3:52). Linimasa diregangkan agar narasi terdengar tenang.
+- [`output/fisika-3d-soal-2-dan-4.mp4`](output/fisika-3d-soal-2-dan-4.mp4): versi tanpa suara (2:30). Waktu di tabel bawah mengacu ke versi ini.
 
 ## Isi video
 
@@ -36,5 +38,21 @@ npm run stills                                  # gambar PNG untuk cek cepat →
   server lokal (misalnya `npx serve .` lalu buka `/video/scene.html`), animasinya diputar langsung
   di browser. Tambahkan `?t=60` untuk mulai dari detik ke-60.
 - `video/render.js`: merender setiap frame di Chromium headless dan meng-encode ke MP4 (H.264) lewat ffmpeg.
+
+### Suara dosen (voice-over)
+
+Naskahnya ada di `video/narasi.json` (waktu `t`/`end` mengacu ke linimasa asli 150 detik). Suara dibuat
+offline dengan espeak-ng + suara pria bahasa Indonesia MBROLA `id1`:
+
+```bash
+sudo apt-get install espeak-ng mbrola mbrola-id1
+python3 video/voiceover.py plan        # sintesis tiap kalimat → video/timing.json (bagian video yang perlu diregangkan)
+node video/render.js --out output/parts/dosen-silent.mp4
+python3 video/voiceover.py mux         # gabungkan suara → output/fisika-3d-soal-2-dan-4-dosen.mp4
+```
+
+`video/scene.html` membaca `video/timing.json`. Hapus atau ganti nama file itu untuk merender versi 150 detik tanpa
+peregangan. Kalau ingin memakai rekaman suara asli, rekam per kalimat sesuai `narasi.json`, simpan sebagai
+`output/vo/cueNN.wav`, lalu jalankan `plan` (dengan sintesis dilewati) dan `mux`.
 
 Animasi bersifat kualitatif; skala waktu dan ukuran disesuaikan agar mudah dilihat.
