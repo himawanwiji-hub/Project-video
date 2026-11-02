@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, initial-scale=1">
+<title>Arus 1 Fasa vs 3 Fasa</title>
+<style>
+  :root { --ink: #eaf0fa; --muted: #a3b3cc; --panel: rgba(9, 15, 29, 0.84); --line: rgba(255,255,255,.12);
+          --R: #ff5a4a; --S: #ffd23f; --T: #4aa8ff; --accent: #2dd4bf; }
+  html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: #070b16; color: var(--ink);
+    font-family: Inter, "DejaVu Sans", sans-serif; }
+  #stage { position: absolute; inset: 0;
+    background: radial-gradient(ellipse 45% 60% at 25% 35%, #18284a 0%, #0c1426 60%, #060a14 100%),
+                radial-gradient(ellipse 45% 60% at 75% 35%, #18284a 0%, transparent 70%); }
+  canvas#gl { position: absolute; inset: 0; width: 1920px; height: 1080px; }
+  #divider { position: absolute; left: 959px; top: 40px; bottom: 150px; width: 2px;
+    background: linear-gradient(transparent, rgba(255,255,255,.18) 15%, rgba(255,255,255,.18) 85%, transparent); }
+  .ov { position: absolute; opacity: 0; }
+  .side { position: absolute; top: 46px; width: 880px; }
+  .side .k { font-size: 18px; letter-spacing: .16em; font-weight: 700; color: var(--muted); }
+  .side .t { font-size: 54px; font-weight: 800; margin-top: 4px; letter-spacing: -.01em; }
+  .side .s { font-size: 22px; color: var(--muted); margin-top: 6px; }
+  #sideL { left: 40px; } #sideR { left: 1000px; }
+  .graph { position: absolute; top: 640px; width: 880px; height: 262px; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 12px; }
+  #gL { left: 40px; } #gR { left: 1000px; }
+  #caption { left: 40px; right: 40px; bottom: 30px; background: var(--panel); border-left: 6px solid var(--accent);
+    padding: 18px 28px; border-radius: 10px; font-size: 28px; line-height: 1.4; }
+  #slow { right: 44px; top: 600px; font-size: 16px; color: var(--muted); }
+  #titlecard, #endcard { left: 0; right: 0; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center;
+    padding: 0 160px; background: linear-gradient(90deg, rgba(6,10,20,.94) 0%, rgba(6,10,20,.75) 60%, rgba(6,10,20,.35) 100%); }
+  #titlecard .k, #endcard .k { font-size: 22px; letter-spacing: .2em; font-weight: 700; color: var(--accent); }
+  #titlecard h1, #endcard h1 { font-size: 96px; line-height: 1.05; margin: 22px 0 26px; letter-spacing: -.01em; }
+  #titlecard .s { font-size: 34px; color: var(--muted); max-width: 1150px; line-height: 1.4; }
+  table { border-collapse: collapse; font-size: 30px; margin-top: 10px; }
+  td, th { padding: 14px 34px 14px 0; text-align: left; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-size: 20px; letter-spacing: .12em; font-weight: 700; }
+  td.a { color: #ffb4a8; } td.b { color: #9fe8dc; }
+  #fade { position: absolute; inset: 0; background: #04070e; opacity: 0; }
+</style>
+<script type="importmap">
+  { "imports": { "three": "/node_modules/three/build/three.module.js", "three/addons/": "/node_modules/three/examples/jsm/" } }
+</script>
+</head>
+<body>
+<div id="stage"></div>
+<canvas id="gl" width="1920" height="1080"></canvas>
+<div id="divider"></div>
+
+<div id="sideL" class="side ov"><div class="k">GENERATOR</div><div class="t">1 FASA</div>
+  <div class="s">1 kumparan · 2 kabel (L + N) · 220 V · rumah</div></div>
+<div id="sideR" class="side ov"><div class="k">GENERATOR</div><div class="t">3 FASA</div>
+  <div class="s">3 kumparan berjarak 120° · 4 kabel (R, S, T + N) · 380 V · industri</div></div>
+
+<div id="gL" class="graph ov"><canvas width="880" height="262"></canvas></div>
+<div id="gR" class="graph ov"><canvas width="880" height="262"></canvas></div>
+<div id="caption" class="ov"></div>
+
+<div id="titlecard" class="ov">
+  <div class="k">LISTRIK AC · DILIHAT DALAM 3D</div>
+  <h1>Arus 1 fasa dan 3 fasa,<br>berdampingan</h1>
+  <div class="s">Generator yang sama, magnet yang sama, putaran yang sama. Bedanya hanya jumlah kumparan: satu, atau tiga yang berjarak 120°.</div>
+</div>
+<div id="endcard" class="ov">
+  <div class="k">RINGKASAN</div>
+  <h1 style="font-size:72px">1 fasa vs 3 fasa</h1>
+  <table>
+    <tr><th></th><th>1 FASA</th><th>3 FASA</th></tr>
+    <tr><td>Kumparan</td><td class="a">1</td><td class="b">3, berjarak 120°</td></tr>
+    <tr><td>Kabel</td><td class="a">L + N</td><td class="b">R, S, T + N</td></tr>
+    <tr><td>Tegangan</td><td class="a">220 V</td><td class="b">220 V ke netral · 380 V antar fasa</td></tr>
+    <tr><td>Daya</td><td class="a">naik-turun, sempat nol</td><td class="b">rata setiap saat</td></tr>
+    <tr><td>Arus netral</td><td class="a">sama dengan arus fasa</td><td class="b">≈ 0 (beban seimbang)</td></tr>
+    <tr><td>Dipakai di</td><td class="a">rumah, kos, toko kecil</td><td class="b">pabrik, motor besar, gedung</td></tr>
+  </table>
+</div>
+<div id="fade"></div>
+
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+const W = 1920, H = 1080, HALF = 960;
+const DURATION = 78;
+const TAU = Math.PI * 2;
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const lerp = (a, b, k) => a + (b - a) * k;
+const smooth = (a, b, x) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+
+// electrical cycle shown at 0.5 Hz (2 s per wave)
+const PERIOD = 2.0, OMEGA = TAU / PERIOD;
+const PH = [0, TAU / 3, 2 * TAU / 3];                     // R, S, T lag
+const PCOL = [0xff5a4a, 0xffd23f, 0x4aa8ff];
+const PCSS = ['#ff5a4a', '#ffd23f', '#4aa8ff'];
+const PNAME = ['R', 'S', 'T'];
+const volt = (t, k) => Math.sin(OMEGA * t - PH[k]);
+
+const canvas = document.getElementById('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H, false);
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
+renderer.setScissorTest(true);
+const env = new THREE.PMREMGenerator(renderer).fromScene(new RoomEnvironment(), 0.04).texture;
+
+const M = {
+  copper: () => new THREE.MeshStandardMaterial({ color: 0xd98a52, metalness: 0.85, roughness: 0.3, emissive: 0x000000 }),
+  steel: new THREE.MeshStandardMaterial({ color: 0x9aa4b1, metalness: 0.85, roughness: 0.35 }),
+  dark: new THREE.MeshStandardMaterial({ color: 0x232b3b, metalness: 0.3, roughness: 0.7 }),
+  base: new THREE.MeshStandardMaterial({ color: 0x1a2232, metalness: 0.1, roughness: 0.85 }),
+  yoke: new THREE.MeshStandardMaterial({ color: 0x3a4252, metalness: 0.7, roughness: 0.45 }),
+  north: new THREE.MeshStandardMaterial({ color: 0xd8473f, metalness: 0.25, roughness: 0.42 }),
+  south: new THREE.MeshStandardMaterial({ color: 0x3b6fd8, metalness: 0.25, roughness: 0.42 }),
+};
+function mesh(geo, mat, x = 0, y = 0, z = 0) { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); return m; }
+function makeLabel(text, { color = '#ffffff', bg = null, size = 64, h = 0.5, weight = 700, pad = 18 } = {}) {
+  const c = document.createElement('canvas'), ctx = c.getContext('2d');
+  const font = `${weight} ${size}px Inter, "DejaVu Sans", sans-serif`; ctx.font = font;
+  const w = Math.ceil(ctx.measureText(text).width) + pad * 2, hh = Math.ceil(size * 1.35) + pad;
+  c.width = w * 2; c.height = hh * 2; ctx.scale(2, 2);
+  if (bg) { ctx.fillStyle = bg; ctx.beginPath(); ctx.roundRect(1, 1, w - 2, hh - 2, hh / 2.6); ctx.fill(); }
+  ctx.font = font; ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(text, w / 2, hh / 2 + size * 0.04);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true }));
+  s.scale.set(h * w / hh, h, 1); s.renderOrder = 20; return s;
+}
+function roundedRect(hx, hz, y, cr, n = 6) {
+  const pts = [], corners = [[hx - cr, hz - cr, 0], [-hx + cr, hz - cr, Math.PI / 2], [-hx + cr, -hz + cr, Math.PI], [hx - cr, -hz + cr, 1.5 * Math.PI]];
+  for (const [cx, cz, a0] of corners) for (let k = 0; k <= n; k++) { const a = a0 + (k / n) * Math.PI / 2; pts.push(new THREE.Vector3(cx + cr * Math.cos(a), y, cz + cr * Math.sin(a))); }
+  return pts;
+}
+
+// ---------------------------------------------------------------- one generator + loads
+const GX = -1.7;                 // generator centre x
+function buildRig(nPhase) {
+  const scene = new THREE.Scene();
+  scene.environment = env;
+  scene.fog = new THREE.Fog(0x0c1426, 16, 34);
+  scene.add(new THREE.HemisphereLight(0xc4d6ff, 0x1a140c, 0.7));
+  const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(5, 9, 7); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x7fa4ff, 0.9); rim.position.set(-7, 4, -5); scene.add(rim);
+  const grid = new THREE.GridHelper(40, 40, 0x2a3b5c, 0x17233a); grid.position.y = -2.75;
+  grid.material.transparent = true; grid.material.opacity = 0.4; scene.add(grid);
+
+  scene.add(mesh(new THREE.BoxGeometry(8.4, 0.24, 5.2), M.base, 0.5, -2.6, 0));
+  scene.add(mesh(new THREE.BoxGeometry(3.2, 0.5, 1.6), M.dark, GX, -2.25, 0));
+
+  // stator ring
+  const shape = new THREE.Shape(); shape.absarc(0, 0, 2.25, 0, TAU, false);
+  const hole = new THREE.Path(); hole.absarc(0, 0, 1.78, 0, TAU, true); shape.holes.push(hole);
+  const sg = new THREE.ExtrudeGeometry(shape, { depth: 1.4, bevelEnabled: false, curveSegments: 72 }); sg.translate(0, 0, -0.7);
+  const stator = new THREE.Mesh(sg, new THREE.MeshStandardMaterial({ color: 0x8590a0, metalness: 0.7, roughness: 0.4, transparent: true, opacity: 0.28, depthWrite: false }));
+  stator.position.x = GX; scene.add(stator);
+
+  // rotor: a two-pole magnet (N half red, S half blue), N initially pointing +y
+  const rotor = new THREE.Group(); rotor.position.x = GX; scene.add(rotor);
+  const halfN = new THREE.CylinderGeometry(1.05, 1.05, 1.2, 40, 1, false, -Math.PI / 2, Math.PI); halfN.rotateX(Math.PI / 2);
+  const halfS = new THREE.CylinderGeometry(1.05, 1.05, 1.2, 40, 1, false, Math.PI / 2, Math.PI); halfS.rotateX(Math.PI / 2);
+  rotor.add(new THREE.Mesh(halfN, M.north), new THREE.Mesh(halfS, M.south));
+  const lu = makeLabel('U', { bg: '#d8473f', h: 0.4, size: 60, pad: 12 }); lu.position.set(0, 0.6, 0.75);
+  const ls = makeLabel('S', { bg: '#3b6fd8', h: 0.4, size: 60, pad: 12 }); ls.position.set(0, -0.6, 0.75);
+  rotor.add(lu, ls);
+  { const g = new THREE.CylinderGeometry(0.1, 0.1, 3.2, 16); g.rotateX(Math.PI / 2); scene.add(mesh(g, M.steel, GX, 0, 0.3)); }
+
+  // stator coils: phase k sits at angle a_k = 90° − k·120° (and its return side opposite)
+  const coils = [];
+  for (let k = 0; k < nPhase; k++) {
+    const mat = M.copper();
+    const a = Math.PI / 2 - PH[k];
+    for (const side of [0, Math.PI]) {
+      const g = new THREE.Group(); g.position.x = GX; g.rotation.z = a + side - Math.PI / 2;
+      for (let j = 0; j < 4; j++) {
+        const curve = new THREE.CatmullRomCurve3(roundedRect(0.34, 0.78, 1.5 + j * 0.065, 0.08), true, 'catmullrom', 0.05);
+        g.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 90, 0.03, 8, true), mat));
+      }
+      scene.add(g);
+    }
+    const lab = makeLabel(nPhase === 1 ? 'L' : PNAME[k], { bg: nPhase === 1 ? PCSS[0] : PCSS[k], color: k === 1 ? '#1a1300' : '#ffffff', h: 0.42, size: 60, pad: 12 });
+    lab.position.set(GX + 2.0 * Math.cos(a) + 0.35 * Math.cos(a + 0.9), 2.0 * Math.sin(a) + 0.35 * Math.sin(a + 0.9), 1.0); scene.add(lab);
+    coils.push({ mat, k: nPhase === 1 ? 0 : k });
+  }
+
+  // loads: lamps on stands at x = 3.0
+  const xs = nPhase === 1 ? [3.3] : [2.4, 3.3, 4.2];
+  const lamps = [];
+  xs.forEach((x, k) => {
+    const z = 0;
+    scene.add(mesh(new THREE.CylinderGeometry(0.28, 0.32, 0.16, 20), M.dark, x, -2.4, z));
+    scene.add(mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.8, 10), M.steel, x, -1.5, z));
+    scene.add(mesh(new THREE.CylinderGeometry(0.14, 0.17, 0.26, 18), M.steel, x, -0.48, z));
+    const bm = new THREE.MeshStandardMaterial({ color: 0x8f8a80, emissive: 0xffc34d, emissiveIntensity: 0, roughness: 0.15, transparent: true, opacity: 0.95 });
+    scene.add(mesh(new THREE.SphereGeometry(0.34, 26, 18), bm, x, -0.08, z));
+    const pl = new THREE.PointLight(0xffc34d, 0, 5, 1.6); pl.position.set(x, -0.08, z); scene.add(pl);
+    lamps.push({ bm, pl, k: nPhase === 1 ? 0 : k });
+  });
+
+  // wires: phase wires from the stator terminal to each lamp, one neutral back
+  const wires = [];
+  const dotGeo = new THREE.SphereGeometry(0.055, 10, 8);
+  const addWire = (pts, color, k, isN) => {
+    const curve = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)), false, 'catmullrom', 0.3);
+    scene.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 80, 0.035, 8, false),
+      new THREE.MeshStandardMaterial({ color, metalness: 0.2, roughness: 0.55 })));
+    const dm = new THREE.MeshBasicMaterial({ color: 0xffe9a0 });
+    const dots = []; for (let j = 0; j < 14; j++) { const d = new THREE.Mesh(dotGeo, dm); scene.add(d); dots.push(d); }
+    wires.push({ curve, dots, k, isN });
+  };
+  const tx = GX + 2.3;
+  scene.add(mesh(new THREE.BoxGeometry(0.4, 1.6, 0.9), M.dark, tx, -0.5, 0.2));
+  if (nPhase === 1) {
+    addWire([[tx + 0.2, 0.05, 0.3], [1.8, 0.75, 0.3], [3.0, 0.55, 0.15], [3.3, -0.45, 0]], PCOL[0], 0, false);
+    addWire([[tx + 0.2, -1.0, 0.3], [1.8, -1.9, 0.45], [3.0, -2.3, 0.4], [3.3, -2.35, 0.2]], 0x7fa6c9, 0, true);
+  } else {
+    xs.forEach((x, k) => addWire([[tx + 0.2, 0.15 - k * 0.3, 0.3], [1.3 + k * 0.3, 0.75 + k * 0.45, 0.3 - k * 0.12],
+      [x - 0.15, 0.6 + k * 0.4, 0.1], [x, -0.45, 0]], PCOL[k], k, false));
+    addWire([[tx + 0.2, -1.1, 0.3], [1.5, -2.0, 0.5], [2.4, -2.33, 0.4], [3.3, -2.35, 0.4], [4.2, -2.35, 0.4]], 0x7fa6c9, 0, true);
+  }
+  const nl = makeLabel('N', { bg: '#7fa6c9', color: '#0b1222', h: 0.36, size: 56, pad: 12 }); nl.position.set(1.4, -1.55, 0.8); scene.add(nl);
+
+  const camera = new THREE.PerspectiveCamera(36, HALF / H, 0.1, 100);
+  return { scene, camera, rotor, coils, lamps, wires, nPhase };
+}
+const rig1 = buildRig(1), rig3 = buildRig(3);
+
+// ---------------------------------------------------------------- per-frame update
+const _p = new THREE.Vector3();
+function updateRig(r, t) {
+  const theta = Math.PI / 2 - OMEGA * t;                 // N pole angle (clockwise)
+  r.rotor.rotation.z = theta - Math.PI / 2;
+  for (const c of r.coils) {
+    const v = volt(t, c.k);
+    c.mat.emissive.set(r.nPhase === 1 ? PCOL[0] : PCOL[c.k]);
+    c.mat.emissiveIntensity = 0.22 + Math.abs(v) * 0.9;
+  }
+  for (const l of r.lamps) {
+    const p = volt(t, l.k) ** 2;
+    l.bm.emissiveIntensity = 0.05 + p * 2.6; l.pl.intensity = p * 9;
+  }
+  for (const w of r.wires) {
+    // charge displacement q = ∫ i dt ∝ −cos(ωt − φ): dots shake back and forth (AC)
+    let q;
+    if (!w.isN) q = -Math.cos(OMEGA * t - PH[w.k]);
+    else if (r.nPhase === 1) q = Math.cos(OMEGA * t);     // neutral carries the full return current
+    else q = 0;                                           // balanced 3-phase: R + S + T = 0
+    const n = w.dots.length;
+    w.dots.forEach((d, j) => { const u = ((j + 0.5) / n + q * 0.045 + 1) % 1; w.curve.getPointAt(u, _p); d.position.copy(_p); });
+  }
+}
+
+// ---------------------------------------------------------------- graphs
+const MODES = [
+  { t0: 5.4, t1: 38, mode: 'volt' },
+  { t0: 38.4, t1: 50, mode: 'power' },
+  { t0: 50.4, t1: 61, mode: 'neutral' },
+  { t0: 61.4, t1: 71, mode: 'line' },
+];
+function drawGraph(ctx, nPhase, t, mode) {
+  const Wc = 880, Hc = 262;
+  ctx.clearRect(0, 0, Wc, Hc);
+  const cx = 128, cy = 140, R = 92;
+  const x0 = 262, x1 = Wc - 22, pxs = (x1 - x0) / (2 * PERIOD);   // two waves visible
+  const ks = nPhase === 1 ? [0] : [0, 1, 2];
+  const col = (k) => (nPhase === 1 ? PCSS[0] : PCSS[k]);
+  ctx.font = '700 17px Inter, sans-serif'; ctx.textBaseline = 'middle';
+  const title = { volt: 'TEGANGAN TIAP FASA', power: 'DAYA', neutral: 'ARUS DI KABEL NETRAL', line: 'TEGANGAN ANTAR KABEL' }[mode];
+  ctx.fillStyle = '#a3b3cc'; ctx.fillText(title, 22, 24);
+  ctx.font = '500 14px Inter, sans-serif'; ctx.textAlign = 'right'; ctx.fillText('diperlambat ±100×', Wc - 18, Hc - 16); ctx.textAlign = 'left';
+  ctx.font = '600 15px Inter, sans-serif'; ctx.fillText('fasor', cx - 20, Hc - 16); ctx.fillText('← baru   waktu   lama →', x0 + 8, Hc - 16);
+
+  // phasor circle
+  ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx - R - 6, cy); ctx.lineTo(x1, cy); ctx.stroke();
+  const amp = mode === 'line' ? 0.56 : 1;
+  for (const k of ks) {
+    const a = OMEGA * t - PH[k];
+    const px = cx + R * amp * Math.cos(a), py = cy - R * amp * Math.sin(a);
+    ctx.strokeStyle = col(k); ctx.fillStyle = col(k); ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py); ctx.stroke();
+    ctx.beginPath(); ctx.arc(px, py, 5, 0, TAU); ctx.fill();
+    if (mode === 'volt' || mode === 'line') {
+      ctx.save(); ctx.setLineDash([4, 5]); ctx.lineWidth = 1.5; ctx.globalAlpha = 0.6;
+      ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(x0, py); ctx.stroke(); ctx.restore();
+    }
+  }
+  const series = (fn, color, width, dash = [], base = cy, scale = R) => {
+    ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.setLineDash(dash); ctx.beginPath();
+    for (let x = x0; x <= x1; x += 3) { const ts = t - (x - x0) / pxs; const y = base - fn(ts) * scale; x === x0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+    ctx.stroke(); ctx.restore();
+    ctx.fillStyle = color; ctx.beginPath(); ctx.arc(x0, base - fn(t) * scale, 5.5, 0, TAU); ctx.fill();
+  };
+  const legend = (items) => { let x = 262; ctx.font = '700 16px Inter, sans-serif';
+    for (const [c, txt] of items) { ctx.fillStyle = c; ctx.fillRect(x, 18, 14, 14); ctx.fillText(txt, x + 20, 25); x += ctx.measureText(txt).width + 46; } };
+
+  if (mode === 'volt') {
+    for (const k of ks) series((ts) => volt(ts, k), col(k), 3.5);
+    legend(ks.map(k => [col(k), nPhase === 1 ? 'L' : PNAME[k]]));
+  } else if (mode === 'power') {
+    const base = Hc - 38, sc = 120;
+    ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.beginPath(); ctx.moveTo(x0, base); ctx.lineTo(x1, base); ctx.stroke();
+    if (nPhase === 1) {
+      series((ts) => volt(ts, 0) ** 2, '#ffffff', 4, [], base, sc);
+      series(() => 0.5, '#a3b3cc', 2, [8, 6], base, sc);
+      legend([['#ffffff', 'daya'], ['#a3b3cc', 'rata-rata']]);
+    } else {
+      for (const k of ks) series((ts) => volt(ts, k) ** 2 / 3, col(k), 2, [], base, sc);
+      series(() => 0.5, '#ffffff', 5, [], base, sc);
+      legend([['#ffffff', 'total R+S+T: rata'], [PCSS[0], 'R'], [PCSS[1], 'S'], [PCSS[2], 'T']]);
+    }
+  } else if (mode === 'neutral') {
+    for (const k of ks) series((ts) => volt(ts, k), col(k), 2, [5, 5]);
+    if (nPhase === 1) { series((ts) => volt(ts, 0), '#7fd3ff', 5); legend([['#7fd3ff', 'arus netral = arus fasa']]); }
+    else { series((ts) => volt(ts, 0) + volt(ts, 1) + volt(ts, 2), '#ffffff', 5); legend([['#ffffff', 'R + S + T = 0']]); }
+  } else {
+    if (nPhase === 1) { series((ts) => volt(ts, 0) * 0.56, col(0), 4); legend([[col(0), 'L–N: 220 V']]); }
+    else {
+      for (const k of ks) series((ts) => volt(ts, k) * 0.56, col(k), 2, [5, 5]);
+      series((ts) => (volt(ts, 0) - volt(ts, 1)) * 0.56, '#ffffff', 5);
+      legend([['#ffffff', 'R–S: 380 V'], [PCSS[0], 'R–N: 220 V']]);
+    }
+  }
+}
+const gctxL = document.querySelector('#gL canvas').getContext('2d');
+const gctxR = document.querySelector('#gR canvas').getContext('2d');
+
+// ---------------------------------------------------------------- timeline
+const CAPTIONS = [
+  [5.4, 16, 'Kiri: generator 1 fasa, satu kumparan, satu gelombang. Kanan: generator 3 fasa, tiga kumparan R, S, T yang dipasang berjarak 120°.'],
+  [16, 27, 'Magnet berputar melewati kumparan R, lalu S, lalu T. Tiap gelombang tertinggal sepertiga putaran (120°). Itulah urutan fasa R–S–T.'],
+  [27, 38, 'Titik di kabel bergerak maju-mundur: arus bolak-balik. Kumparan dan lampu paling terang saat tegangannya di puncak.'],
+  [38.4, 50, 'Daya 1 fasa naik-turun dan sempat nol dua kali tiap gelombang. Jumlah daya tiga fasa selalu rata, sehingga motor 3 fasa berputar halus tanpa getar.'],
+  [50.4, 61, 'Kabel netral 1 fasa membawa arus penuh. Pada 3 fasa yang seimbang, R + S + T = 0 setiap saat, jadi kabel netral hampir tidak dialiri arus.'],
+  [61.4, 71, 'Fasa ke netral: 220 V. Antara dua fasa (R–S): 220 × √3 ≈ 380 V. Rumah memakai 1 fasa; pabrik dan motor besar memakai 3 fasa.'],
+].map(([t0, t1, html]) => ({ t0, t1, html }));
+const CAM = [
+  [0, [5.5, 5.5, 22], [0.3, -2.4, 0]],
+  [5.4, [3.6, 4.2, 20.5], [0.3, -1.9, 0]],
+  [27, [2.4, 3.6, 20.5], [0.3, -1.9, 0]],
+  [38, [0.8, 3.2, 20.8], [0.3, -1.9, 0]],
+  [61, [3.2, 4.4, 20.5], [0.3, -1.9, 0]],
+  [78, [5.5, 5.5, 22], [0.3, -2.4, 0]],
+];
+const _cp = new THREE.Vector3(), _ct = new THREE.Vector3();
+function cameraAt(t) {
+  for (let i = 0; i < CAM.length - 1; i++) {
+    const a = CAM[i], b = CAM[i + 1];
+    if (t >= a[0] && t < b[0]) { const k = smooth(a[0], b[0], t);
+      _cp.set(...a[1].map((v, j) => lerp(v, b[1][j], k))); _ct.set(...a[2].map((v, j) => lerp(v, b[2][j], k))); return; }
+  }
+  _cp.set(...CAM[CAM.length - 1][1]); _ct.set(...CAM[CAM.length - 1][2]);
+}
+function fadeIn(el, t, t0, t1, f = 0.45) {
+  const o = clamp(Math.min((t - t0) / f, (t1 - t) / f));
+  el.style.opacity = o.toFixed(3); el.style.transform = `translateY(${((1 - o) * 12).toFixed(1)}px)`; return o;
+}
+const $ = (id) => document.getElementById(id);
+
+function renderAt(t) {
+  updateRig(rig1, t); updateRig(rig3, t);
+  cameraAt(t);
+  for (const r of [rig1, rig3]) { r.camera.position.copy(_cp); r.camera.lookAt(_ct); }
+  renderer.setViewport(0, 0, HALF, H); renderer.setScissor(0, 0, HALF, H); renderer.render(rig1.scene, rig1.camera);
+  renderer.setViewport(HALF, 0, HALF, H); renderer.setScissor(HALF, 0, HALF, H); renderer.render(rig3.scene, rig3.camera);
+
+  fadeIn($('sideL'), t, 4.8, 72); fadeIn($('sideR'), t, 4.8, 72); 
+  const cap = CAPTIONS.find(c => t >= c.t0 && t < c.t1);
+  if (cap) { if ($('caption')._h !== cap.html) { $('caption').innerHTML = cap.html; $('caption')._h = cap.html; } fadeIn($('caption'), t, cap.t0, cap.t1, 0.35); }
+  else $('caption').style.opacity = 0;
+  const m = MODES.find(m => t >= m.t0 && t < m.t1);
+  if (m) {
+    fadeIn($('gL'), t, m.t0, m.t1, 0.35); fadeIn($('gR'), t, m.t0, m.t1, 0.35);
+    drawGraph(gctxL, 1, t, m.mode); drawGraph(gctxR, 3, t, m.mode);
+  } else { $('gL').style.opacity = 0; $('gR').style.opacity = 0; }
+  fadeIn($('titlecard'), t, -1, 5.0, 0.6);
+  fadeIn($('endcard'), t, 71.6, 80, 0.7);
+  $('fade').style.opacity = clamp(Math.max(1 - t / 0.7, (t - (DURATION - 0.9)) / 0.9)).toFixed(3);
+}
+
+window.DURATION = DURATION;
+window.renderAt = renderAt;
+await document.fonts.ready;
+renderAt(0);
+window.READY = true;
+if (!new URLSearchParams(location.search).has('render')) {
+  const t0 = performance.now() / 1000 - (parseFloat(new URLSearchParams(location.search).get('t')) || 0);
+  const loop = () => { renderAt((performance.now() / 1000 - t0) % DURATION); requestAnimationFrame(loop); };
+  loop();
+}
+</script>
+</body>
+</html>

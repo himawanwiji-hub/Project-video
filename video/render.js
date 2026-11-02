@@ -4,6 +4,7 @@
 //   node video/render.js                              -> output/fisika-3d-soal-2-dan-4.mp4
 //   node video/render.js --start 0 --end 10 --out x.mp4
 //   node video/render.js --stills 3,12,40             -> PNG stills in output/stills/
+//   node video/render.js --page video/fasa.html --out output/arus-1-fasa-vs-3-fasa.mp4
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -16,6 +17,7 @@ const arg = (name, def) => { const i = argv.indexOf('--' + name); return i >= 0 
 const FPS = parseFloat(arg('fps', '30'));
 const OUT = path.resolve(ROOT, arg('out', 'output/fisika-3d-soal-2-dan-4.mp4'));
 const STILLS = arg('stills', null);
+const PAGE = arg('page', 'video/scene.html');
 
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.css': 'text/css' };
 function serve() {
@@ -37,7 +39,7 @@ function serve() {
   const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('[page]', m.text()); });
   page.on('pageerror', (e) => console.error('[pageerror]', e));
-  await page.goto(`http://127.0.0.1:${port}/video/scene.html?render=1`);
+  await page.goto(`http://127.0.0.1:${port}/${PAGE}?render=1`);
   await page.waitForFunction(() => window.READY === true, null, { timeout: 120000 });
   const duration = await page.evaluate(() => window.DURATION);
 
@@ -46,7 +48,7 @@ function serve() {
     fs.mkdirSync(dir, { recursive: true });
     for (const t of STILLS.split(',').map(Number)) {
       await page.evaluate((t) => window.renderAt(t), t);
-      const file = path.join(dir, `still_${String(t).replace('.', '_')}.png`);
+      const file = path.join(dir, `${path.basename(PAGE, '.html')}_${String(t).replace('.', '_')}.png`);
       await page.screenshot({ path: file });
       console.log('still', file);
     }

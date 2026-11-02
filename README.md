@@ -7,7 +7,17 @@ Video animasi 3D (1920×1080, 30 fps, ±2,5 menit) yang dibuat ulang dari animas
 - [`output/fisika-3d-soal-2-dan-4-dosen.mp4`](output/fisika-3d-soal-2-dan-4-dosen.mp4): **dengan suara dosen** (±3:52). Linimasa diregangkan agar narasi terdengar tenang.
 - [`output/fisika-3d-soal-2-dan-4.mp4`](output/fisika-3d-soal-2-dan-4.mp4): versi tanpa suara (2:30). Waktu di tabel bawah mengacu ke versi ini.
 
-## Isi video
+## Video lain: arus 1 fasa vs 3 fasa
+
+[`output/arus-1-fasa-vs-3-fasa.mp4`](output/arus-1-fasa-vs-3-fasa.mp4) (1:18, 1080p) membandingkan generator 1 fasa (kiri) dan
+3 fasa (kanan) berdampingan: urutan fasa R–S–T, arus bolak-balik di kabel, daya yang naik-turun vs rata,
+arus netral (R + S + T = 0), serta 220 V vs 380 V. Sumbernya `video/fasa.html`:
+
+```bash
+node video/render.js --page video/fasa.html --out output/arus-1-fasa-vs-3-fasa.mp4
+```
+
+## Isi video (Soal 2 dan 4)
 
 | Waktu | Bagian | Yang ditampilkan |
 |---|---|---|
