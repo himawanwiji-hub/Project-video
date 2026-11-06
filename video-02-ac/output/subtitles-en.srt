@@ -1,0 +1,115 @@
+1
+00:00:00,691 --> 00:00:03,024
+An air conditioner does not make cold air.
+
+2
+00:00:03,204 --> 00:00:04,222
+It moves heat.
+
+3
+00:00:04,415 --> 00:00:06,354
+It picks up heat inside your room,
+
+4
+00:00:06,394 --> 00:00:07,751
+and carries it outside.
+
+5
+00:00:08,713 --> 00:00:11,333
+The secret is a fluid called a refrigerant.
+
+6
+00:00:11,513 --> 00:00:14,354
+When a liquid evaporates, it absorbs heat.
+
+7
+00:00:14,534 --> 00:00:17,349
+When a vapor condenses, it releases heat.
+
+8
+00:00:17,515 --> 00:00:19,415
+An air conditioner uses both,
+
+9
+00:00:19,455 --> 00:00:20,539
+in a closed loop.
+
+10
+00:00:21,496 --> 00:00:23,296
+Step one: the compressor.
+
+11
+00:00:23,475 --> 00:00:25,792
+It squeezes low-pressure refrigerant vapor
+
+12
+00:00:25,832 --> 00:00:28,335
+into a hot, high-pressure gas.
+
+13
+00:00:29,289 --> 00:00:32,586
+Step two: the condenser, in the outdoor unit.
+
+14
+00:00:32,766 --> 00:00:35,698
+A fan blows outside air across the hot coil.
+
+15
+00:00:35,891 --> 00:00:37,703
+The gas releases its heat,
+
+16
+00:00:37,779 --> 00:00:40,399
+and condenses into a high-pressure liquid.
+
+17
+00:00:41,341 --> 00:00:43,675
+Step three: the expansion valve.
+
+18
+00:00:43,867 --> 00:00:46,292
+The liquid is forced through a narrow opening.
+
+19
+00:00:46,471 --> 00:00:48,206
+Its pressure drops suddenly,
+
+20
+00:00:48,268 --> 00:00:49,846
+and it becomes very cold.
+
+21
+00:00:50,788 --> 00:00:54,176
+Step four: the evaporator, in the indoor unit.
+
+22
+00:00:54,343 --> 00:00:57,562
+A fan pulls warm room air across the cold coil.
+
+23
+00:00:57,754 --> 00:01:00,908
+The refrigerant absorbs the heat and evaporates.
+
+24
+00:01:01,088 --> 00:01:02,523
+The air comes out cooler.
+
+25
+00:01:03,464 --> 00:01:05,498
+The vapor returns to the compressor,
+
+26
+00:01:05,548 --> 00:01:06,995
+and the cycle repeats.
+
+27
+00:01:07,175 --> 00:01:10,693
+Compress, condense, expand, evaporate.
+
+28
+00:01:10,899 --> 00:01:12,047
+Heat in from your room,
+
+29
+00:01:12,188 --> 00:01:13,805
+heat out to the outdoors.

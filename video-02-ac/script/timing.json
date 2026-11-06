@@ -1,0 +1,268 @@
+{
+ "total_seconds": 75.544,
+ "fps": 30,
+ "provider": "edge",
+ "scenes": [
+  {
+   "no": 1,
+   "id": "hook",
+   "start": 0.6,
+   "audio_seconds": 7.296,
+   "audio": "audio/scene_1.mp3",
+   "end": 8.596
+  },
+  {
+   "no": 2,
+   "id": "basics",
+   "start": 8.596,
+   "audio_seconds": 12.096,
+   "audio": "audio/scene_2.mp3",
+   "end": 21.392
+  },
+  {
+   "no": 3,
+   "id": "compressor",
+   "start": 21.392,
+   "audio_seconds": 7.08,
+   "audio": "audio/scene_3.mp3",
+   "end": 29.172
+  },
+  {
+   "no": 4,
+   "id": "condenser",
+   "start": 29.172,
+   "audio_seconds": 11.352,
+   "audio": "audio/scene_4.mp3",
+   "end": 41.224
+  },
+  {
+   "no": 5,
+   "id": "expansion",
+   "start": 41.224,
+   "audio_seconds": 8.76,
+   "audio": "audio/scene_5.mp3",
+   "end": 50.684
+  },
+  {
+   "no": 6,
+   "id": "evaporator",
+   "start": 50.684,
+   "audio_seconds": 11.976,
+   "audio": "audio/scene_6.mp3",
+   "end": 63.36
+  },
+  {
+   "no": 7,
+   "id": "summary",
+   "start": 63.36,
+   "audio_seconds": 10.584,
+   "audio": "audio/scene_7.mp3",
+   "end": 75.544
+  }
+ ],
+ "cues": [
+  {
+   "scene": 1,
+   "text": "An air conditioner does not make cold air.",
+   "start": 0.691,
+   "end": 3.024,
+   "i": 1
+  },
+  {
+   "scene": 1,
+   "text": "It moves heat.",
+   "start": 3.204,
+   "end": 4.222,
+   "i": 2
+  },
+  {
+   "scene": 1,
+   "text": "It picks up heat inside your room,",
+   "start": 4.415,
+   "end": 6.354,
+   "i": 3
+  },
+  {
+   "scene": 1,
+   "text": "and carries it outside.",
+   "start": 6.394,
+   "end": 7.751,
+   "i": 4
+  },
+  {
+   "scene": 2,
+   "text": "The secret is a fluid called a refrigerant.",
+   "start": 8.713,
+   "end": 11.333,
+   "i": 5
+  },
+  {
+   "scene": 2,
+   "text": "When a liquid evaporates, it absorbs heat.",
+   "start": 11.513,
+   "end": 14.354,
+   "i": 6
+  },
+  {
+   "scene": 2,
+   "text": "When a vapor condenses, it releases heat.",
+   "start": 14.534,
+   "end": 17.349,
+   "i": 7
+  },
+  {
+   "scene": 2,
+   "text": "An air conditioner uses both,",
+   "start": 17.515,
+   "end": 19.415,
+   "i": 8
+  },
+  {
+   "scene": 2,
+   "text": "in a closed loop.",
+   "start": 19.455,
+   "end": 20.539,
+   "i": 9
+  },
+  {
+   "scene": 3,
+   "text": "Step one: the compressor.",
+   "start": 21.496,
+   "end": 23.296,
+   "i": 10
+  },
+  {
+   "scene": 3,
+   "text": "It squeezes low-pressure refrigerant vapor",
+   "start": 23.475,
+   "end": 25.792,
+   "i": 11
+  },
+  {
+   "scene": 3,
+   "text": "into a hot, high-pressure gas.",
+   "start": 25.832,
+   "end": 28.335,
+   "i": 12
+  },
+  {
+   "scene": 4,
+   "text": "Step two: the condenser, in the outdoor unit.",
+   "start": 29.289,
+   "end": 32.586,
+   "i": 13
+  },
+  {
+   "scene": 4,
+   "text": "A fan blows outside air across the hot coil.",
+   "start": 32.766,
+   "end": 35.698,
+   "i": 14
+  },
+  {
+   "scene": 4,
+   "text": "The gas releases its heat,",
+   "start": 35.891,
+   "end": 37.703,
+   "i": 15
+  },
+  {
+   "scene": 4,
+   "text": "and condenses into a high-pressure liquid.",
+   "start": 37.779,
+   "end": 40.399,
+   "i": 16
+  },
+  {
+   "scene": 5,
+   "text": "Step three: the expansion valve.",
+   "start": 41.341,
+   "end": 43.675,
+   "i": 17
+  },
+  {
+   "scene": 5,
+   "text": "The liquid is forced through a narrow opening.",
+   "start": 43.867,
+   "end": 46.292,
+   "i": 18
+  },
+  {
+   "scene": 5,
+   "text": "Its pressure drops suddenly,",
+   "start": 46.471,
+   "end": 48.206,
+   "i": 19
+  },
+  {
+   "scene": 5,
+   "text": "and it becomes very cold.",
+   "start": 48.268,
+   "end": 49.846,
+   "i": 20
+  },
+  {
+   "scene": 6,
+   "text": "Step four: the evaporator, in the indoor unit.",
+   "start": 50.788,
+   "end": 54.176,
+   "i": 21
+  },
+  {
+   "scene": 6,
+   "text": "A fan pulls warm room air across the cold coil.",
+   "start": 54.343,
+   "end": 57.562,
+   "i": 22
+  },
+  {
+   "scene": 6,
+   "text": "The refrigerant absorbs the heat and evaporates.",
+   "start": 57.754,
+   "end": 60.908,
+   "i": 23
+  },
+  {
+   "scene": 6,
+   "text": "The air comes out cooler.",
+   "start": 61.088,
+   "end": 62.523,
+   "i": 24
+  },
+  {
+   "scene": 7,
+   "text": "The vapor returns to the compressor,",
+   "start": 63.464,
+   "end": 65.498,
+   "i": 25
+  },
+  {
+   "scene": 7,
+   "text": "and the cycle repeats.",
+   "start": 65.548,
+   "end": 66.995,
+   "i": 26
+  },
+  {
+   "scene": 7,
+   "text": "Compress, condense, expand, evaporate.",
+   "start": 67.175,
+   "end": 70.693,
+   "i": 27
+  },
+  {
+   "scene": 7,
+   "text": "Heat in from your room,",
+   "start": 70.899,
+   "end": 72.047,
+   "i": 28
+  },
+  {
+   "scene": 7,
+   "text": "heat out to the outdoors.",
+   "start": 72.188,
+   "end": 73.805,
+   "i": 29
+  }
+ ]
+}

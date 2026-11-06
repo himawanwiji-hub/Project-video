@@ -1,0 +1,73 @@
+{
+  "title": "How an Air Conditioner Works",
+  "voice": { "provider": "edge-tts", "edge_voice": "en-US-AndrewNeural", "rate": "-4%" },
+  "lead_in": 0.6,
+  "gap": 0.7,
+  "tail": 1.6,
+  "scenes": [
+    {
+      "no": 1, "id": "hook",
+      "phrases": [
+        "An air conditioner does not make cold air.",
+        "It moves heat.",
+        "It picks up heat inside your room,",
+        "and carries it outside."
+      ]
+    },
+    {
+      "no": 2, "id": "basics",
+      "phrases": [
+        "The secret is a fluid called a refrigerant.",
+        "When a liquid evaporates, it absorbs heat.",
+        "When a vapor condenses, it releases heat.",
+        "An air conditioner uses both,",
+        "in a closed loop."
+      ]
+    },
+    {
+      "no": 3, "id": "compressor",
+      "phrases": [
+        "Step one: the compressor.",
+        "It squeezes low-pressure refrigerant vapor",
+        "into a hot, high-pressure gas."
+      ]
+    },
+    {
+      "no": 4, "id": "condenser",
+      "phrases": [
+        "Step two: the condenser, in the outdoor unit.",
+        "A fan blows outside air across the hot coil.",
+        "The gas releases its heat,",
+        "and condenses into a high-pressure liquid."
+      ]
+    },
+    {
+      "no": 5, "id": "expansion",
+      "phrases": [
+        "Step three: the expansion valve.",
+        "The liquid is forced through a narrow opening.",
+        "Its pressure drops suddenly,",
+        "and it becomes very cold."
+      ]
+    },
+    {
+      "no": 6, "id": "evaporator",
+      "phrases": [
+        "Step four: the evaporator, in the indoor unit.",
+        "A fan pulls warm room air across the cold coil.",
+        "The refrigerant absorbs the heat and evaporates.",
+        "The air comes out cooler."
+      ]
+    },
+    {
+      "no": 7, "id": "summary",
+      "phrases": [
+        "The vapor returns to the compressor,",
+        "and the cycle repeats.",
+        "Compress, condense, expand, evaporate.",
+        "Heat in from your room,",
+        "heat out to the outdoors."
+      ]
+    }
+  ]
+}

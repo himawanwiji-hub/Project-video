@@ -1,0 +1,115 @@
+1
+00:00:00,691 --> 00:00:03,024
+AC tidak membuat udara dingin.
+
+2
+00:00:03,204 --> 00:00:04,222
+AC memindahkan panas.
+
+3
+00:00:04,415 --> 00:00:06,354
+AC mengambil panas di dalam kamarmu,
+
+4
+00:00:06,394 --> 00:00:07,751
+lalu membawanya ke luar.
+
+5
+00:00:08,713 --> 00:00:11,333
+Rahasianya adalah fluida bernama refrigeran.
+
+6
+00:00:11,513 --> 00:00:14,354
+Saat cairan menguap, ia menyerap panas.
+
+7
+00:00:14,534 --> 00:00:17,349
+Saat uap mengembun, ia melepaskan panas.
+
+8
+00:00:17,515 --> 00:00:19,415
+AC memakai keduanya,
+
+9
+00:00:19,455 --> 00:00:20,539
+dalam satu siklus tertutup.
+
+10
+00:00:21,496 --> 00:00:23,296
+Langkah satu: kompresor.
+
+11
+00:00:23,475 --> 00:00:25,792
+Kompresor memampatkan uap refrigeran bertekanan rendah
+
+12
+00:00:25,832 --> 00:00:28,335
+menjadi gas panas bertekanan tinggi.
+
+13
+00:00:29,289 --> 00:00:32,586
+Langkah dua: kondensor, di unit luar.
+
+14
+00:00:32,766 --> 00:00:35,698
+Kipas meniupkan udara luar melewati koil yang panas.
+
+15
+00:00:35,891 --> 00:00:37,703
+Gas melepaskan panasnya,
+
+16
+00:00:37,779 --> 00:00:40,399
+lalu mengembun menjadi cairan bertekanan tinggi.
+
+17
+00:00:41,341 --> 00:00:43,675
+Langkah tiga: katup ekspansi.
+
+18
+00:00:43,867 --> 00:00:46,292
+Cairan dipaksa melewati celah sempit.
+
+19
+00:00:46,471 --> 00:00:48,206
+Tekanannya turun mendadak,
+
+20
+00:00:48,268 --> 00:00:49,846
+dan cairan menjadi sangat dingin.
+
+21
+00:00:50,788 --> 00:00:54,176
+Langkah empat: evaporator, di unit dalam.
+
+22
+00:00:54,343 --> 00:00:57,562
+Kipas menarik udara kamar yang hangat melewati koil dingin.
+
+23
+00:00:57,754 --> 00:01:00,908
+Refrigeran menyerap panas itu dan menguap.
+
+24
+00:01:01,088 --> 00:01:02,523
+Udara yang keluar menjadi lebih sejuk.
+
+25
+00:01:03,464 --> 00:01:05,498
+Uap kembali ke kompresor,
+
+26
+00:01:05,548 --> 00:01:06,995
+lalu siklus berulang.
+
+27
+00:01:07,175 --> 00:01:10,693
+Kompresi, kondensasi, ekspansi, evaporasi.
+
+28
+00:01:10,899 --> 00:01:12,047
+Panas masuk dari kamarmu,
+
+29
+00:01:12,188 --> 00:01:13,805
+panas keluar ke udara luar.
