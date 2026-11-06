@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>How an AC Works (Short)</title>
+<style>
+  :root { --bg: #070d1a; --ink: #eef3fb; --muted: #93a3bd; --orange: #ff8a3d; --yellow: #ffc94a;
+          --lblue: #8fd3ff; --blue: #3d8bff; --line: rgba(255,255,255,.12); }
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #040c1a;
+    font-family: Inter, "DejaVu Sans", sans-serif; color: var(--ink); }
+  #bg { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 32% at 50% 40%, #0f1c38 0%, #081226 55%, #040c1a 100%); }
+  svg#dia { position: absolute; left: 0; top: 392px; width: 1080px; height: 820px; }
+  .ov { position: absolute; opacity: 0; }
+  #panel { left: 60px; top: 150px; width: 960px; }
+  #kicker { font-size: 26px; letter-spacing: .18em; font-weight: 700; color: var(--yellow); }
+  #title { font-size: 84px; font-weight: 800; line-height: 1.02; margin-top: 12px; letter-spacing: -.015em; }
+  #infoBox { left: 60px; top: 1236px; width: 960px; }
+  #info { background: rgba(14, 22, 42, .86); border: 1px solid var(--line); border-radius: 16px; padding: 20px 28px; }
+  #info .row { display: flex; gap: 16px; align-items: baseline; font-size: 33px; line-height: 1.32; margin: 5px 0; }
+  #info .row i { width: 14px; height: 14px; border-radius: 50%; flex: none; transform: translateY(-3px); }
+  #steps { left: 60px; top: 1500px; width: 960px; display: flex; gap: 12px; }
+  .chip { flex: 1; text-align: center; padding: 12px 6px; border-radius: 12px; border: 1px solid var(--line);
+    font-size: 24px; font-weight: 700; color: var(--muted); background: rgba(14,22,42,.7); }
+  .chip b { display: block; font-size: 16px; letter-spacing: .12em; color: var(--muted); margin-bottom: 2px; }
+  .chip.on { color: #0a1020; background: var(--yellow); border-color: var(--yellow); }
+  .chip.on b { color: #3a2a00; }
+  #legend { left: 60px; top: 1600px; width: 960px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; font-size: 22px; color: var(--muted); }
+  #legend span { display: flex; align-items: center; gap: 12px; }
+  #legend i { width: 30px; height: 9px; border-radius: 5px; }
+  #sub { left: 0; right: 0; top: 1716px; text-align: center; }
+  #sub span { display: inline-block; font-size: 42px; font-weight: 700; padding: 12px 28px; border-radius: 12px;
+    background: rgba(0, 0, 0, .66); white-space: nowrap; }
+  #fade { position: absolute; inset: 0; background: #040c1a; opacity: 1; }
+  /* frame from the user's template */
+  .fr { position: absolute; }
+  #f-red-t { left: 0; top: 0; width: 72px; height: 12px; background: #a61412; }
+  #f-grn-t { left: 72px; top: 0; width: 282px; height: 12px; background: #034726; }
+  #f-yel-t { left: 355px; top: 0; width: 725px; height: 36px; background: #fcc104; border-bottom-left-radius: 32px; }
+  #f-red-b { left: 0; top: 1908px; width: 72px; height: 12px; background: #a61412; }
+  #f-grn-b { left: 72px; top: 1908px; width: 282px; height: 12px; background: #034726; }
+  #f-yel-b { left: 355px; top: 1884px; width: 725px; height: 36px; background: #fcc104; border-top-left-radius: 32px; }
+  #f-logo { left: 862px; top: 52px; width: 174px; height: 64px; }
+</style>
+</head>
+<body>
+<div id="bg"></div>
+<svg id="dia" viewBox="20 68 1240 942" xmlns="http://www.w3.org/2000/svg"></svg>
+<div id="panel" class="ov"><div id="kicker"></div><div id="title"></div></div>
+<div id="infoBox" class="ov"><div id="info"></div></div>
+<div id="steps" class="ov"></div>
+<div id="legend" class="ov">
+  <span><i style="background:#ff8a3d"></i>High-pressure hot gas</span>
+  <span><i style="background:#ffc94a"></i>High-pressure liquid</span>
+  <span><i style="background:#8fd3ff"></i>Low-pressure cold mix</span>
+  <span><i style="background:#3d8bff"></i>Low-pressure vapor</span>
+</div>
+<div id="sub" class="ov"><span></span></div>
+<div id="fade"></div>
+<div id="f-red-t" class="fr"></div><div id="f-grn-t" class="fr"></div><div id="f-yel-t" class="fr"></div>
+<div id="f-red-b" class="fr"></div><div id="f-grn-b" class="fr"></div><div id="f-yel-b" class="fr"></div>
+<img id="f-logo" class="fr" src="assets/logo-teknik-mesin.png" alt="">
+
+<script type="module">
+const NS = 'http://www.w3.org/2000/svg';
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const smooth = (a, b, x) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const $ = (id) => document.getElementById(id);
+const svg = $('dia');
+function el(tag, attrs = {}, parent = svg) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  parent.appendChild(e); return e;
+}
+const timing = await (await fetch('script/timing.json', { cache: 'no-store' })).json();
+const DURATION = timing.total_seconds;
+const SC = Object.fromEntries(timing.scenes.map(s => [s.id, s]));
+const CUES = timing.cues;
+const cueT = (i) => CUES[i - 1].start;                 // start time of cue number i (1-based)
+
+// ---------------------------------------------------------------- colours
+const C = { orange: [255, 138, 61], yellow: [255, 201, 74], lblue: [143, 211, 255], blue: [61, 139, 255] };
+const mix = (a, b, k) => a.map((v, i) => Math.round(lerp(v, b[i], k)));
+const rgb = (c) => `rgb(${c[0]},${c[1]},${c[2]})`;
+
+// ---------------------------------------------------------------- loop geometry
+// Flow: compressor (bottom) -> right side up through the condenser -> top leftwards through the expansion valve
+//       -> left side down through the evaporator -> bottom back to the compressor.
+const L = 300, R = 1000, T = 250, B = 790, CX = 830, VX = 820;
+const COIL_W = 52, ROWS = 8, ROW_GAP = 50;
+const pts = [], marks = {};
+const add = (x, y) => pts.push([x, y]);
+add(CX + 60, B); add(R, B);
+add(R, 690); marks.condStart = pts.length - 1;
+for (let r = 0; r < ROWS; r++) { const y = 680 - r * ROW_GAP; const a = r % 2 ? R + COIL_W : R - COIL_W, b = r % 2 ? R - COIL_W : R + COIL_W; add(a, y); add(b, y); }
+add(R, 320); marks.condEnd = pts.length - 1;
+add(R, T); add(VX, T); marks.valve = pts.length - 1;
+add(L, T); add(L, 320); marks.evapStart = pts.length - 1;
+for (let r = 0; r < ROWS; r++) { const y = 330 + r * ROW_GAP; const a = r % 2 ? L + COIL_W : L - COIL_W, b = r % 2 ? L - COIL_W : L + COIL_W; add(a, y); add(b, y); }
+add(L, 700); marks.evapEnd = pts.length - 1;
+add(L, B); add(CX - 60, B);
+// cumulative arc length
+const cum = [0];
+for (let i = 1; i < pts.length; i++) cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+const LEN = cum[cum.length - 1] + Math.hypot(pts[0][0] - pts[pts.length - 1][0], 0) + 120;   // + path through the compressor
+const S = Object.fromEntries(Object.entries(marks).map(([k, i]) => [k, cum[i]]));
+function stateColor(s) {
+  if (s < S.condStart) return C.orange;
+  if (s < S.condEnd) return mix(C.orange, C.yellow, (s - S.condStart) / (S.condEnd - S.condStart));
+  if (s < S.valve) return C.yellow;
+  if (s < S.evapStart) return C.lblue;
+  if (s < S.evapEnd) return mix(C.lblue, C.blue, (s - S.evapStart) / (S.evapEnd - S.evapStart));
+  return C.blue;
+}
+function stateRadius(s) {
+  if (s < S.condStart) return 4.2;
+  if (s < S.condEnd) return lerp(4.2, 6.4, (s - S.condStart) / (S.condEnd - S.condStart));
+  if (s < S.valve) return 6.4;
+  if (s < S.evapStart) return 5.6;
+  if (s < S.evapEnd) return lerp(5.6, 4.2, (s - S.evapStart) / (S.evapEnd - S.evapStart));
+  return 4.2;
+}
+function pointAt(s) {
+  s = ((s % LEN) + LEN) % LEN;
+  if (s > cum[cum.length - 1]) {                       // inside the compressor: hidden
+    return null;
+  }
+  let i = 1; while (i < cum.length - 1 && cum[i] < s) i++;
+  const k = (s - cum[i - 1]) / ((cum[i] - cum[i - 1]) || 1);
+  return [lerp(pts[i - 1][0], pts[i][0], k), lerp(pts[i - 1][1], pts[i][1], k)];
+}
+
+// ---------------------------------------------------------------- static drawing
+const world = el('g');                                  // everything that zooms
+const defs = el('defs', {}, svg);
+const glow = el('filter', { id: 'glow', x: '-50%', y: '-50%', width: '200%', height: '200%' }, defs);
+el('feGaussianBlur', { stdDeviation: '7', result: 'b' }, glow);
+const fm = el('feMerge', {}, glow); el('feMergeNode', { in: 'b' }, fm); el('feMergeNode', { in: 'SourceGraphic' }, fm);
+
+// wall and zone labels
+const wallG = el('g', {}, world);
+el('line', { x1: 645, y1: 150, x2: 645, y2: 900, stroke: '#3a4a68', 'stroke-width': 6, 'stroke-dasharray': '18 12' }, wallG);
+const TXT_SCALE = 1.22;
+const txt = (x, y, s, size, fill, weight = 700, anchor = 'middle', parent = world, ls = '.14em') => {
+  const t = el('text', { x, y, 'font-size': size * TXT_SCALE, fill, 'font-weight': weight, 'text-anchor': anchor, 'letter-spacing': ls, 'font-family': 'Inter, sans-serif' }, parent);
+  t.textContent = s; return t;
+};
+txt(645, 128, 'WALL', 18, '#6d7f9f', 700, 'middle', wallG);
+txt(330, 128, 'INSIDE YOUR ROOM', 22, '#8fd3ff', 700, 'middle', wallG);
+txt(960, 128, 'OUTSIDE', 22, '#ff9d5c', 700, 'middle', wallG);
+
+// unit housings
+const unitIn = el('rect', { x: 190, y: 292, width: 330, height: 440, rx: 22, fill: 'rgba(143,211,255,.05)', stroke: 'rgba(143,211,255,.35)', 'stroke-width': 2, 'stroke-dasharray': '10 8' }, world);
+const unitOut = el('rect', { x: 760, y: 292, width: 400, height: 560, rx: 22, fill: 'rgba(255,138,61,.05)', stroke: 'rgba(255,138,61,.35)', 'stroke-width': 2, 'stroke-dasharray': '10 8' }, world);
+txt(445, 760, 'INDOOR UNIT', 17, '#7f93b5', 700, 'middle');
+txt(785, 324, 'OUTDOOR UNIT', 17, '#7f93b5', 700, 'start');
+
+// coil fins
+for (const [cx, lo, hi] of [[R, 300, 700], [L, 310, 710]]) {
+  for (let x = cx - COIL_W - 6; x <= cx + COIL_W + 6; x += 9) el('line', { x1: x, y1: lo, x2: x, y2: hi, stroke: '#22314f', 'stroke-width': 2 }, world);
+}
+// pipe: dark outline, then coloured segments
+const pathD = 'M' + pts.map(p => p.join(',')).join(' L');
+el('path', { d: pathD, fill: 'none', stroke: '#1a2640', 'stroke-width': 18, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, world);
+const pipeSegs = el('g', {}, world);
+for (let i = 1; i < pts.length; i++) {
+  const s0 = cum[i - 1], s1 = cum[i], n = Math.max(1, Math.round((s1 - s0) / 12));
+  for (let j = 0; j < n; j++) {
+    const a = j / n, b = (j + 1) / n, sm = lerp(s0, s1, (a + b) / 2);
+    el('line', { x1: lerp(pts[i - 1][0], pts[i][0], a), y1: lerp(pts[i - 1][1], pts[i][1], a), x2: lerp(pts[i - 1][0], pts[i][0], b) + 0.01,
+                 y2: lerp(pts[i - 1][1], pts[i][1], b), stroke: rgb(stateColor(sm)), 'stroke-width': 8, 'stroke-linecap': 'round', opacity: 0.55 }, pipeSegs);
+  }
+}
+// reveal mask for the "closed loop" moment
+const reveal = el('path', { d: pathD, fill: 'none', stroke: '#ffffff', 'stroke-width': 26, 'stroke-linejoin': 'round', opacity: 0,
+                            'stroke-dasharray': `${cum[cum.length - 1]} ${cum[cum.length - 1]}` }, world);
+
+// moving refrigerant particles
+const dotsG = el('g', {}, world);
+const NDOTS = Math.floor(LEN / 34);
+const dots = Array.from({ length: NDOTS }, () => el('circle', { r: 5, fill: '#fff' }, dotsG));
+
+// compressor
+const comp = el('g', { transform: `translate(${CX},${B})` }, world);
+el('rect', { x: -70, y: -58, width: 140, height: 116, rx: 26, fill: '#1d2a45', stroke: '#ff8a3d', 'stroke-width': 4 }, comp);
+el('rect', { x: -30, y: -40, width: 60, height: 80, rx: 8, fill: '#0f1729', stroke: '#5b6c8c', 'stroke-width': 2 }, comp);
+const piston = el('rect', { x: -26, y: -10, width: 52, height: 14, rx: 3, fill: '#c9d3e4' }, comp);
+const squeezeL = el('path', { d: 'M -112 0 l 26 -14 v 28 z', fill: '#ffc94a', opacity: 0 }, comp);
+const squeezeR = el('path', { d: 'M 112 0 l -26 -14 v 28 z', fill: '#ffc94a', opacity: 0 }, comp);
+const compLab = txt(CX, B + 96, 'COMPRESSOR', 20, '#ffd6b8', 700);
+
+// expansion valve (bow-tie symbol)
+const valve = el('g', { transform: `translate(${VX},${T})` }, world);
+el('path', { d: 'M -26 -22 L 0 0 L -26 22 Z M 26 -22 L 0 0 L 26 22 Z', fill: '#1d2a45', stroke: '#ffc94a', 'stroke-width': 4, 'stroke-linejoin': 'round' }, valve);
+el('line', { x1: 0, y1: 0, x2: 0, y2: -36, stroke: '#ffc94a', 'stroke-width': 4 }, valve);
+el('rect', { x: -14, y: -50, width: 28, height: 14, rx: 3, fill: '#ffc94a' }, valve);
+const valveLab = txt(VX, T - 70, 'EXPANSION VALVE', 20, '#ffe6a6', 700);
+const condLab = txt(R + 2, 735, 'CONDENSER', 20, '#ffd6b8', 700);
+const evapLab = txt(L, 290 + 0, 'EVAPORATOR', 20, '#cdeaff', 700);
+evapLab.setAttribute('y', 300 - 2 + 18 + 0); evapLab.setAttribute('x', L + 120);
+
+// fans
+function fan(x, y, col) {
+  const g = el('g', { transform: `translate(${x},${y})` }, world);
+  el('circle', { r: 44, fill: '#0f1729', stroke: col, 'stroke-width': 3 }, g);
+  const rot = el('g', {}, g);
+  for (let k = 0; k < 4; k++) el('path', { d: 'M 0 0 C 10 -12, 30 -14, 36 -4 C 26 2, 10 4, 0 0 Z', fill: col, opacity: .85, transform: `rotate(${k * 90})` }, rot);
+  el('circle', { r: 7, fill: col }, g);
+  return rot;
+}
+const fanIn = fan(455, 515, '#8fd3ff');
+const fanOut = fan(1105, 505, '#ff9d5c');
+
+// air arrows and heat waves
+function arrowRow(y, x0, x1, col, n = 3) {
+  const g = el('g', { opacity: 0 }, world);
+  const items = [];
+  for (let k = 0; k < n; k++) items.push(el('path', { d: 'M -22 -9 L 0 0 L -22 9', fill: 'none', stroke: col, 'stroke-width': 5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g));
+  return { g, items, y, x0, x1 };
+}
+const airIn = [430, 515, 600].map(y => arrowRow(y, 610, 520, '#ffb27a'));     // warm room air towards the indoor coil (moves left)
+const airCool = [430, 515, 600].map(y => arrowRow(y, 225, 120, '#8fd3ff'));  // cooled air leaving the coil (moves left)
+const airOutIn = [410, 505, 600].map(y => arrowRow(y, 820, 930, '#c7d2e4'));  // outside air entering the condenser
+const airHot = [410, 505, 600].map(y => arrowRow(y, 1150, 1215, '#ff8a3d')); // hot air leaving
+function heatWaves(x, y, dir, col) {
+  const g = el('g', { opacity: 0 }, world);
+  const w = []; for (let k = 0; k < 3; k++) w.push(el('path', { d: 'M 0 -26 q 12 9 0 18 q -12 9 0 18 q 12 9 0 18', fill: 'none', stroke: col, 'stroke-width': 4, 'stroke-linecap': 'round' }, g));
+  return { g, w, x, y, dir };
+}
+const heatOut = heatWaves(1200, 505, 1, '#ff8a3d');
+const heatInLab = txt(560, 690, 'HEAT IN', 22, '#ffb27a', 800, 'middle', world, '.12em');
+const heatOutLab = txt(1150, 700, 'HEAT OUT', 22, '#ff8a3d', 800, 'middle', world, '.12em');
+const coolLab = txt(150, 690, 'COOL AIR', 20, '#8fd3ff', 800, 'middle', world, '.12em');
+
+// pressure side labels
+const hpLab = txt(932, 230, 'HIGH PRESSURE', 16, '#ff9d5c', 700, 'middle');
+const lpLab = txt(470, 822, 'LOW PRESSURE', 16, '#6fb3ff', 700, 'middle');
+
+// big heat arrow for the hook
+const hook = el('g', { opacity: 0 }, svg);
+el('path', { d: 'M 360 960 L 960 960', stroke: '#ff8a3d', 'stroke-width': 0 }, hook);
+const hookArrow = el('path', { d: 'M 0 -34 L 330 -34 L 330 -64 L 420 0 L 330 64 L 330 34 L 0 34 Z', fill: 'rgba(255,138,61,.85)', filter: 'url(#glow)' }, hook);
+const hookText = txt(170, 12, 'HEAT', 40, '#1a0d00', 900, 'middle', hook, '.12em');
+
+// step number badges on the diagram
+const badge = (x, y, n) => { const g = el('g', { transform: `translate(${x},${y})`, opacity: 0 }, world);
+  el('circle', { r: 24, fill: '#ffc94a' }, g); txt(0, 9, String(n), 26, '#0a1020', 900, 'middle', g, '0'); return g; };
+const badges = [badge(CX - 110, B - 70, 1), badge(R + 95, 300, 2), badge(VX - 72, T - 32, 3), badge(L - 95, 320, 4)];
+
+// ---------------------------------------------------------------- panels per scene
+const PANEL = {
+  hook: { k: 'HOW IT WORKS', t: 'An air conditioner moves heat', rows: [['#8fd3ff', 'It does not make cold air'], ['#ff8a3d', 'Heat goes from your room to the outdoors']] },
+  basics: { k: 'THE KEY IDEA', t: 'Refrigerant', rows: [['#8fd3ff', 'Liquid evaporates: absorbs heat'], ['#ff8a3d', 'Vapor condenses: releases heat'], ['#ffc94a', 'One closed loop']] },
+  compressor: { k: 'STEP 1', t: 'Compressor', rows: [['#3d8bff', 'In: low-pressure vapor'], ['#ff8a3d', 'Out: hot, high-pressure gas']] },
+  condenser: { k: 'STEP 2', t: 'Condenser', rows: [['#93a3bd', 'Outdoor unit'], ['#ff8a3d', 'Gas releases heat to outside air'], ['#ffc94a', 'Gas condenses into a high-pressure liquid']] },
+  expansion: { k: 'STEP 3', t: 'Expansion valve', rows: [['#93a3bd', 'Narrow opening'], ['#ffc94a', 'Pressure drops suddenly'], ['#8fd3ff', 'Liquid becomes very cold']] },
+  evaporator: { k: 'STEP 4', t: 'Evaporator', rows: [['#93a3bd', 'Indoor unit'], ['#ffb27a', 'Absorbs heat from warm room air'], ['#3d8bff', 'Refrigerant evaporates'], ['#8fd3ff', 'Air comes out cooler']] },
+  summary: { k: 'SUMMARY', t: 'One continuous cycle', rows: [['#ffc94a', '1 Compress · 2 Condense'], ['#ffc94a', '3 Expand · 4 Evaporate'], ['#8fd3ff', 'Heat in from your room'], ['#ff8a3d', 'Heat out to the outdoors']] },
+};
+const STEP_OF = { compressor: 0, condenser: 1, expansion: 2, evaporator: 3, summary: -1 };
+$('steps').innerHTML = ['Compress', 'Condense', 'Expand', 'Evaporate'].map((s, i) => `<div class="chip"><b>STEP ${i + 1}</b>${s}</div>`).join('');
+const chips = [...document.querySelectorAll('.chip')];
+
+function sceneAt(t) { let cur = timing.scenes[0]; for (const s of timing.scenes) if (t >= s.start - 0.35) cur = s; return cur; }
+
+// ---------------------------------------------------------------- focus / zoom
+const FOCUS = { hook: [660, 520, 1.0], basics: [660, 520, 1.0], compressor: [CX, 700, 1.06], condenser: [R, 500, 1.05],
+                expansion: [VX, 330, 1.05], evaporator: [L + 60, 500, 1.05], summary: [660, 520, 1.0] };
+function camAt(t) {
+  // ease between scene focus points over 0.9 s at each scene start
+  let prev = FOCUS.hook, cur = FOCUS.hook, k = 1;
+  for (let i = 0; i < timing.scenes.length; i++) {
+    const s = timing.scenes[i];
+    if (t >= s.start - 0.4) { prev = i ? FOCUS[timing.scenes[i - 1].id] : FOCUS[s.id]; cur = FOCUS[s.id]; k = smooth(s.start - 0.4, s.start + 0.5, t); }
+  }
+  return [lerp(prev[0], cur[0], k), lerp(prev[1], cur[1], k), lerp(prev[2], cur[2], k)];
+}
+
+// ---------------------------------------------------------------- render
+let lastPanel = null, lastSub = null;
+const op = (e, v) => e.setAttribute('opacity', v.toFixed(3));
+function renderAt(t) {
+  const sc = sceneAt(t), id = sc.id;
+  // zoom about the focus point
+  const [fx, fy, z] = camAt(t);
+  world.setAttribute('transform', `translate(${fx} ${fy}) scale(${z}) translate(${-fx} ${-fy})`);
+
+  // emphasis: which parts are bright
+  const on = { comp: 1, cond: 1, valve: 1, evap: 1 };
+  if (['compressor', 'condenser', 'expansion', 'evaporator'].includes(id)) {
+    const fade = smooth(sc.start - 0.2, sc.start + 0.6, t);
+    for (const key of Object.keys(on)) on[key] = 1 - 0.6 * fade;
+    on[{ compressor: 'comp', condenser: 'cond', expansion: 'valve', evaporator: 'evap' }[id]] = 1;
+  }
+  if (id === 'basics') {   // evaporation cue -> evaporator, condensation cue -> condenser
+    const e = smooth(cueT(6) - 0.2, cueT(6) + 0.3, t) * (1 - smooth(cueT(7) - 0.2, cueT(7) + 0.3, t));
+    const c = smooth(cueT(7) - 0.2, cueT(7) + 0.3, t) * (1 - smooth(cueT(8) - 0.2, cueT(8) + 0.3, t));
+    if (e + c > 0.01) { on.comp = on.valve = 1 - 0.6 * (e + c); on.evap = 1 - 0.6 * c; on.cond = 1 - 0.6 * e; }
+  }
+  op(comp, on.comp); op(compLab, on.comp); op(valve, on.valve); op(valveLab, on.valve);
+  op(condLab, on.cond); op(evapLab, on.evap); op(unitIn, on.evap); op(unitOut, Math.max(on.cond, on.comp));
+  op(fanIn.parentNode, on.evap); op(fanOut.parentNode, on.cond);
+
+  // refrigerant particles
+  const speed = id === 'hook' ? 120 : id === 'summary' ? 240 : 170;
+  const flow = t * 170 + (id === 'summary' ? (t - SC.summary.start) * 70 : 0) - (id === 'hook' ? 0 : 0);
+  dots.forEach((d, j) => {
+    const s = j * (LEN / NDOTS) + flow;
+    const p = pointAt(s);
+    if (!p) { d.setAttribute('opacity', 0); return; }
+    const ss = ((s % LEN) + LEN) % LEN;
+    d.setAttribute('cx', p[0].toFixed(1)); d.setAttribute('cy', p[1].toFixed(1));
+    d.setAttribute('r', stateRadius(ss).toFixed(2)); d.setAttribute('fill', rgb(stateColor(ss)));
+    let o = 0.95;
+    const inCond = ss >= S.condStart && ss < S.condEnd, inEvap = ss >= S.evapStart && ss < S.evapEnd;
+    const inValve = ss >= S.condEnd && ss < S.evapStart, inComp = ss < S.condStart || ss >= S.evapEnd;
+    const zone = inCond ? on.cond : inEvap ? on.evap : inValve ? on.valve : on.comp;
+    d.setAttribute('opacity', (o * Math.max(0.45, zone)).toFixed(2));
+  });
+  pipeSegs.setAttribute('opacity', 1);
+
+  // closed-loop reveal during "in a closed loop"
+  const lr = smooth(cueT(8), cueT(9) + 0.9, t), lrOff = 1 - smooth(cueT(9) + 1.0, cueT(9) + 1.6, t);
+  reveal.setAttribute('stroke-dashoffset', (cum[cum.length - 1] * (1 - lr)).toFixed(1));
+  reveal.setAttribute('opacity', (id === 'basics' ? 0.22 * lrOff * (lr > 0 ? 1 : 0) : 0).toFixed(3));
+
+  // compressor animation
+  const pumping = id === 'compressor' ? 1 : 0.35;
+  piston.setAttribute('y', (-22 + 16 * Math.sin(t * (id === 'compressor' ? 9 : 4))).toFixed(1));
+  const sq = id === 'compressor' ? (0.5 + 0.5 * Math.sin(t * 6)) * smooth(cueT(11) - 0.2, cueT(11) + 0.4, t) : 0;
+  op(squeezeL, sq); op(squeezeR, sq);
+  squeezeL.setAttribute('transform', `translate(${(sq * 10).toFixed(1)} 0)`); squeezeR.setAttribute('transform', `translate(${(-sq * 10).toFixed(1)} 0)`);
+
+  // fans
+  fanIn.setAttribute('transform', `rotate(${(t * 260) % 360})`);
+  fanOut.setAttribute('transform', `rotate(${(t * 300) % 360})`);
+
+  // air streams
+  const airAmt = (show) => show ? 1 : 0;
+  const condAir = id === 'condenser' ? smooth(cueT(14) - 0.2, cueT(14) + 0.4, t) : (id === 'summary' || id === 'hook') ? 0.55 : 0;
+  const evapAir = id === 'evaporator' ? smooth(cueT(22) - 0.2, cueT(22) + 0.4, t) : (id === 'summary' || id === 'hook') ? 0.55 : 0;
+  const coolAir = id === 'evaporator' ? smooth(cueT(24) - 0.3, cueT(24) + 0.3, t) : (id === 'summary' || id === 'hook') ? 0.55 : 0;
+  const hotAir = id === 'condenser' ? smooth(cueT(15) - 0.2, cueT(15) + 0.4, t) : (id === 'summary' || id === 'hook') ? 0.55 : 0;
+  const drawRow = (row, amt) => {
+    op(row.g, amt);
+    row.items.forEach((a, k) => {
+      const u = ((t * 0.9 + k / row.items.length) % 1);
+      const x = lerp(row.x0, row.x1, u);
+      const dir = row.x1 < row.x0 ? 180 : 0;
+      a.setAttribute('transform', `translate(${x.toFixed(1)} ${row.y}) rotate(${dir})`);
+      a.setAttribute('opacity', (Math.sin(u * Math.PI)).toFixed(2));
+    });
+  };
+  airIn.forEach(r => drawRow(r, evapAir)); airCool.forEach(r => drawRow(r, coolAir));
+  airOutIn.forEach(r => drawRow(r, condAir)); airHot.forEach(r => drawRow(r, hotAir));
+  op(heatOut.g, hotAir);
+  heatOut.w.forEach((w, k) => { const u = (t * 0.7 + k / 3) % 1; w.setAttribute('transform', `translate(${heatOut.x + u * 40} ${heatOut.y + (k - 1) * 70})`); w.setAttribute('opacity', Math.sin(u * Math.PI).toFixed(2)); });
+  op(heatInLab, evapAir); op(heatOutLab, hotAir); op(coolLab, coolAir);
+  const sides = ['hook', 'basics'].includes(id) ? 0 : 1;
+  op(hpLab, sides * 0.9); op(lpLab, sides * 0.9);
+
+  // hook arrow: heat crossing the wall from inside to outside
+  const hk = id === 'hook' ? smooth(cueT(3) - 0.3, cueT(3) + 0.4, t) * (1 - smooth(sc.end - 0.9, sc.end - 0.2, t)) : 0;
+  const hx = lerp(330, 760, smooth(cueT(3), cueT(4) + 1.2, t));
+  hook.setAttribute('transform', `translate(${hx.toFixed(1)} 515)`); op(hook, hk);
+
+  // badges
+  badges.forEach((b, i) => {
+    const step = STEP_OF[id];
+    const v = id === 'summary' ? smooth(cueT(27) + i * 0.45, cueT(27) + i * 0.45 + 0.3, t) : step === i ? smooth(sc.start, sc.start + 0.5, t) : step > i ? 0.55 : 0;
+    op(b, v);
+  });
+
+  // overlays
+  const p = PANEL[id];
+  if (lastPanel !== id) {
+    $('kicker').textContent = p.k; $('title').textContent = p.t;
+    $('info').innerHTML = p.rows.map(([c, s]) => `<div class="row"><i style="background:${c}"></i><span>${s}</span></div>`).join('');
+    lastPanel = id;
+  }
+  const pin = smooth(sc.start - 0.3, sc.start + 0.3, t) * (1 - smooth(sc.end - 0.35, sc.end + 0.05, t));
+  const last = id === 'summary';
+  const po = last ? smooth(sc.start - 0.3, sc.start + 0.3, t) * (1 - smooth(DURATION - 1.0, DURATION - 0.4, t)) : pin;
+  $('panel').style.opacity = po.toFixed(3); $('panel').style.transform = `translateY(${((1 - po) * 16).toFixed(1)}px)`;
+  $('infoBox').style.opacity = po.toFixed(3); $('infoBox').style.transform = `translateY(${((1 - po) * 16).toFixed(1)}px)`;
+  const stepIdx = STEP_OF[id];
+  const stepsVis = stepIdx === undefined ? 0 : 1;
+  $('steps').style.opacity = (stepsVis * smooth(SC.compressor.start - 0.3, SC.compressor.start + 0.4, t) * (1 - smooth(DURATION - 1.0, DURATION - 0.4, t))).toFixed(3);
+  chips.forEach((c, i) => c.classList.toggle('on', stepIdx === i || (id === 'summary' && t >= cueT(27) + i * 0.45)));
+  $('legend').style.opacity = $('steps').style.opacity;
+
+  // subtitle
+  const cue = CUES.find(c => t >= c.start && t < c.end);
+  const subEl = $('sub');
+  if (cue) {
+    if (lastSub !== cue.i) {
+      const sp = subEl.firstChild; sp.style.fontSize = '42px'; sp.textContent = cue.text; lastSub = cue.i;
+      const w = sp.getBoundingClientRect().width; if (w > 1010) sp.style.fontSize = (42 * 1010 / w).toFixed(1) + 'px';
+    }
+    subEl.style.opacity = clamp(Math.min((t - cue.start) / 0.12, (cue.end - t) / 0.12)).toFixed(3);
+  } else subEl.style.opacity = 0;
+
+  $('fade').style.opacity = clamp(Math.max(1 - t / 0.5, (t - (DURATION - 0.6)) / 0.6)).toFixed(3);
+}
+
+window.DURATION = DURATION;
+window.renderAt = renderAt;
+await document.fonts.ready;
+renderAt(0);
+window.READY = true;
+if (!new URLSearchParams(location.search).has('render')) {
+  const t0 = performance.now() / 1000 - (parseFloat(new URLSearchParams(location.search).get('t')) || 0);
+  const loop = () => { renderAt((performance.now() / 1000 - t0) % DURATION); requestAnimationFrame(loop); };
+  loop();
+}
+</script>
+</body>
+</html>

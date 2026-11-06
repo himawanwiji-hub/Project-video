@@ -1,0 +1,302 @@
+{
+ "total_seconds": 92.624,
+ "fps": 30,
+ "provider": "edge-tts",
+ "voice": {
+  "provider": "edge-tts",
+  "edge_voice": "id-ID-ArdiNeural",
+  "rate": "-15%"
+ },
+ "scenes": [
+  {
+   "no": 1,
+   "id": "hook",
+   "start": 0.7,
+   "audio_seconds": 8.881,
+   "audio": "audio/scene_1.wav",
+   "end": 10.581
+  },
+  {
+   "no": 2,
+   "id": "basics",
+   "start": 10.581,
+   "audio_seconds": 14.678,
+   "audio": "audio/scene_2.wav",
+   "end": 26.259
+  },
+  {
+   "no": 3,
+   "id": "compressor",
+   "start": 26.259,
+   "audio_seconds": 9.193,
+   "audio": "audio/scene_3.wav",
+   "end": 36.451
+  },
+  {
+   "no": 4,
+   "id": "condenser",
+   "start": 36.451,
+   "audio_seconds": 12.775,
+   "audio": "audio/scene_4.wav",
+   "end": 50.226
+  },
+  {
+   "no": 5,
+   "id": "expansion",
+   "start": 50.226,
+   "audio_seconds": 10.723,
+   "audio": "audio/scene_5.wav",
+   "end": 61.95
+  },
+  {
+   "no": 6,
+   "id": "evaporator",
+   "start": 61.95,
+   "audio_seconds": 14.358,
+   "audio": "audio/scene_6.wav",
+   "end": 77.307
+  },
+  {
+   "no": 7,
+   "id": "summary",
+   "start": 77.307,
+   "audio_seconds": 13.516,
+   "audio": "audio/scene_7.wav",
+   "end": 92.624
+  }
+ ],
+ "cues": [
+  {
+   "scene": 1,
+   "text": "An air conditioner does not make cold air.",
+   "spoken": "AC tidak membuat udara dingin.",
+   "start": 0.7,
+   "end": 2.694,
+   "i": 1
+  },
+  {
+   "scene": 1,
+   "text": "It moves heat.",
+   "spoken": "AC memindahkan panas.",
+   "start": 3.224,
+   "end": 4.905,
+   "i": 2
+  },
+  {
+   "scene": 1,
+   "text": "It picks up heat inside your room,",
+   "spoken": "AC mengambil panas dari dalam ruangan,",
+   "start": 5.435,
+   "end": 7.828,
+   "i": 3
+  },
+  {
+   "scene": 1,
+   "text": "and carries it outside.",
+   "spoken": "lalu membuangnya ke luar.",
+   "start": 8.058,
+   "end": 9.701,
+   "i": 4
+  },
+  {
+   "scene": 2,
+   "text": "The secret is a fluid called a refrigerant.",
+   "spoken": "Rahasianya ada pada fluida bernama refrigeran.",
+   "start": 10.581,
+   "end": 13.748,
+   "i": 5
+  },
+  {
+   "scene": 2,
+   "text": "When a liquid evaporates, it absorbs heat.",
+   "spoken": "Saat cairan menguap, ia menyerap panas.",
+   "start": 14.278,
+   "end": 17.167,
+   "i": 6
+  },
+  {
+   "scene": 2,
+   "text": "When a vapor condenses, it releases heat.",
+   "spoken": "Saat uap mengembun, ia melepaskan panas.",
+   "start": 17.697,
+   "end": 20.77,
+   "i": 7
+  },
+  {
+   "scene": 2,
+   "text": "An air conditioner uses both,",
+   "spoken": "AC memanfaatkan keduanya,",
+   "start": 21.3,
+   "end": 23.322,
+   "i": 8
+  },
+  {
+   "scene": 2,
+   "text": "in a closed loop.",
+   "spoken": "dalam satu siklus tertutup.",
+   "start": 23.552,
+   "end": 25.379,
+   "i": 9
+  },
+  {
+   "scene": 3,
+   "text": "Step one: the compressor.",
+   "spoken": "Langkah pertama: kompresor.",
+   "start": 26.259,
+   "end": 28.763,
+   "i": 10
+  },
+  {
+   "scene": 3,
+   "text": "It squeezes low-pressure refrigerant vapor",
+   "spoken": "Kompresor memampatkan uap refrigeran bertekanan rendah",
+   "start": 29.293,
+   "end": 32.548,
+   "i": 11
+  },
+  {
+   "scene": 3,
+   "text": "into a hot, high-pressure gas.",
+   "spoken": "menjadi gas panas bertekanan tinggi.",
+   "start": 33.078,
+   "end": 35.571,
+   "i": 12
+  },
+  {
+   "scene": 4,
+   "text": "Step two: the condenser, in the outdoor unit.",
+   "spoken": "Langkah kedua: kondensor, di unit luar.",
+   "start": 36.451,
+   "end": 40.038,
+   "i": 13
+  },
+  {
+   "scene": 4,
+   "text": "A fan blows outside air across the hot coil.",
+   "spoken": "Kipas meniupkan udara luar melewati koil yang panas.",
+   "start": 40.568,
+   "end": 43.832,
+   "i": 14
+  },
+  {
+   "scene": 4,
+   "text": "The gas releases its heat,",
+   "spoken": "Gas melepaskan panasnya,",
+   "start": 44.362,
+   "end": 46.178,
+   "i": 15
+  },
+  {
+   "scene": 4,
+   "text": "and condenses into a high-pressure liquid.",
+   "spoken": "lalu mengembun menjadi cairan bertekanan tinggi.",
+   "start": 46.408,
+   "end": 49.346,
+   "i": 16
+  },
+  {
+   "scene": 5,
+   "text": "Step three: the expansion valve.",
+   "spoken": "Langkah ketiga: katup ekspansi.",
+   "start": 50.226,
+   "end": 53.018,
+   "i": 17
+  },
+  {
+   "scene": 5,
+   "text": "The liquid is forced through a narrow opening.",
+   "spoken": "Cairan dipaksa melewati celah sempit.",
+   "start": 53.548,
+   "end": 55.862,
+   "i": 18
+  },
+  {
+   "scene": 5,
+   "text": "Its pressure drops suddenly,",
+   "spoken": "Tekanannya turun secara tiba-tiba,",
+   "start": 56.392,
+   "end": 58.644,
+   "i": 19
+  },
+  {
+   "scene": 5,
+   "text": "and it becomes very cold.",
+   "spoken": "dan cairan menjadi sangat dingin.",
+   "start": 58.874,
+   "end": 61.07,
+   "i": 20
+  },
+  {
+   "scene": 6,
+   "text": "Step four: the evaporator, in the indoor unit.",
+   "spoken": "Langkah keempat: evaporator, di unit dalam.",
+   "start": 61.95,
+   "end": 65.814,
+   "i": 21
+  },
+  {
+   "scene": 6,
+   "text": "A fan pulls warm room air across the cold coil.",
+   "spoken": "Kipas menarik udara ruangan yang hangat melewati koil dingin.",
+   "start": 66.344,
+   "end": 69.826,
+   "i": 22
+  },
+  {
+   "scene": 6,
+   "text": "The refrigerant absorbs the heat and evaporates.",
+   "spoken": "Refrigeran menyerap panas itu, lalu menguap.",
+   "start": 70.356,
+   "end": 73.552,
+   "i": 23
+  },
+  {
+   "scene": 6,
+   "text": "The air comes out cooler.",
+   "spoken": "Udara yang keluar pun menjadi lebih sejuk.",
+   "start": 74.082,
+   "end": 76.427,
+   "i": 24
+  },
+  {
+   "scene": 7,
+   "text": "The vapor returns to the compressor,",
+   "spoken": "Uap kembali ke kompresor,",
+   "start": 77.307,
+   "end": 79.055,
+   "i": 25
+  },
+  {
+   "scene": 7,
+   "text": "and the cycle repeats.",
+   "spoken": "dan siklus pun berulang.",
+   "start": 79.285,
+   "end": 80.988,
+   "i": 26
+  },
+  {
+   "scene": 7,
+   "text": "Compress, condense, expand, evaporate.",
+   "spoken": "Kompresi, kondensasi, ekspansi, evaporasi.",
+   "start": 81.518,
+   "end": 86.519,
+   "i": 27
+  },
+  {
+   "scene": 7,
+   "text": "Heat in from your room,",
+   "spoken": "Panas diambil dari dalam ruangan,",
+   "start": 87.049,
+   "end": 89.243,
+   "i": 28
+  },
+  {
+   "scene": 7,
+   "text": "heat out to the outdoors.",
+   "spoken": "dan dibuang ke luar.",
+   "start": 89.473,
+   "end": 90.944,
+   "i": 29
+  }
+ ]
+}

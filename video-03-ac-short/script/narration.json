@@ -1,0 +1,173 @@
+{
+ "title": "Cara Kerja AC (Short 9:16)",
+ "voice": {
+  "provider": "edge-tts",
+  "edge_voice": "id-ID-ArdiNeural",
+  "rate": "-15%"
+ },
+ "pause_comma": 0.35,
+ "pause_sentence": 0.65,
+ "scene_gap": 1.0,
+ "lead_in": 0.7,
+ "tail": 1.8,
+ "scenes": [
+  {
+   "no": 1,
+   "id": "hook",
+   "phrases": [
+    [
+     "AC tidak membuat udara dingin.",
+     "An air conditioner does not make cold air."
+    ],
+    [
+     "AC memindahkan panas.",
+     "It moves heat."
+    ],
+    [
+     "AC mengambil panas dari dalam ruangan,",
+     "It picks up heat inside your room,"
+    ],
+    [
+     "lalu membuangnya ke luar.",
+     "and carries it outside."
+    ]
+   ]
+  },
+  {
+   "no": 2,
+   "id": "basics",
+   "phrases": [
+    [
+     "Rahasianya ada pada fluida bernama refrigeran.",
+     "The secret is a fluid called a refrigerant."
+    ],
+    [
+     "Saat cairan menguap, ia menyerap panas.",
+     "When a liquid evaporates, it absorbs heat."
+    ],
+    [
+     "Saat uap mengembun, ia melepaskan panas.",
+     "When a vapor condenses, it releases heat."
+    ],
+    [
+     "AC memanfaatkan keduanya,",
+     "An air conditioner uses both,"
+    ],
+    [
+     "dalam satu siklus tertutup.",
+     "in a closed loop."
+    ]
+   ]
+  },
+  {
+   "no": 3,
+   "id": "compressor",
+   "phrases": [
+    [
+     "Langkah pertama: kompresor.",
+     "Step one: the compressor."
+    ],
+    [
+     "Kompresor memampatkan uap refrigeran bertekanan rendah",
+     "It squeezes low-pressure refrigerant vapor"
+    ],
+    [
+     "menjadi gas panas bertekanan tinggi.",
+     "into a hot, high-pressure gas."
+    ]
+   ]
+  },
+  {
+   "no": 4,
+   "id": "condenser",
+   "phrases": [
+    [
+     "Langkah kedua: kondensor, di unit luar.",
+     "Step two: the condenser, in the outdoor unit."
+    ],
+    [
+     "Kipas meniupkan udara luar melewati koil yang panas.",
+     "A fan blows outside air across the hot coil."
+    ],
+    [
+     "Gas melepaskan panasnya,",
+     "The gas releases its heat,"
+    ],
+    [
+     "lalu mengembun menjadi cairan bertekanan tinggi.",
+     "and condenses into a high-pressure liquid."
+    ]
+   ]
+  },
+  {
+   "no": 5,
+   "id": "expansion",
+   "phrases": [
+    [
+     "Langkah ketiga: katup ekspansi.",
+     "Step three: the expansion valve."
+    ],
+    [
+     "Cairan dipaksa melewati celah sempit.",
+     "The liquid is forced through a narrow opening."
+    ],
+    [
+     "Tekanannya turun secara tiba-tiba,",
+     "Its pressure drops suddenly,"
+    ],
+    [
+     "dan cairan menjadi sangat dingin.",
+     "and it becomes very cold."
+    ]
+   ]
+  },
+  {
+   "no": 6,
+   "id": "evaporator",
+   "phrases": [
+    [
+     "Langkah keempat: evaporator, di unit dalam.",
+     "Step four: the evaporator, in the indoor unit."
+    ],
+    [
+     "Kipas menarik udara ruangan yang hangat melewati koil dingin.",
+     "A fan pulls warm room air across the cold coil."
+    ],
+    [
+     "Refrigeran menyerap panas itu, lalu menguap.",
+     "The refrigerant absorbs the heat and evaporates."
+    ],
+    [
+     "Udara yang keluar pun menjadi lebih sejuk.",
+     "The air comes out cooler."
+    ]
+   ]
+  },
+  {
+   "no": 7,
+   "id": "summary",
+   "phrases": [
+    [
+     "Uap kembali ke kompresor,",
+     "The vapor returns to the compressor,"
+    ],
+    [
+     "dan siklus pun berulang.",
+     "and the cycle repeats."
+    ],
+    [
+     "Kompresi, kondensasi, ekspansi, evaporasi.",
+     "Compress, condense, expand, evaporate."
+    ],
+    [
+     "Panas diambil dari dalam ruangan,",
+     "Heat in from your room,"
+    ],
+    [
+     "dan dibuang ke luar.",
+     "heat out to the outdoors."
+    ]
+   ]
+  }
+ ]
+}

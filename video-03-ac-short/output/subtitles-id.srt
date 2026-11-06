@@ -1,0 +1,115 @@
+1
+00:00:00,700 --> 00:00:02,694
+AC tidak membuat udara dingin.
+
+2
+00:00:03,224 --> 00:00:04,905
+AC memindahkan panas.
+
+3
+00:00:05,435 --> 00:00:07,828
+AC mengambil panas dari dalam ruangan,
+
+4
+00:00:08,058 --> 00:00:09,701
+lalu membuangnya ke luar.
+
+5
+00:00:10,581 --> 00:00:13,748
+Rahasianya ada pada fluida bernama refrigeran.
+
+6
+00:00:14,278 --> 00:00:17,167
+Saat cairan menguap, ia menyerap panas.
+
+7
+00:00:17,697 --> 00:00:20,770
+Saat uap mengembun, ia melepaskan panas.
+
+8
+00:00:21,300 --> 00:00:23,322
+AC memanfaatkan keduanya,
+
+9
+00:00:23,552 --> 00:00:25,379
+dalam satu siklus tertutup.
+
+10
+00:00:26,259 --> 00:00:28,763
+Langkah pertama: kompresor.
+
+11
+00:00:29,293 --> 00:00:32,548
+Kompresor memampatkan uap refrigeran bertekanan rendah
+
+12
+00:00:33,078 --> 00:00:35,571
+menjadi gas panas bertekanan tinggi.
+
+13
+00:00:36,451 --> 00:00:40,038
+Langkah kedua: kondensor, di unit luar.
+
+14
+00:00:40,568 --> 00:00:43,832
+Kipas meniupkan udara luar melewati koil yang panas.
+
+15
+00:00:44,362 --> 00:00:46,178
+Gas melepaskan panasnya,
+
+16
+00:00:46,408 --> 00:00:49,346
+lalu mengembun menjadi cairan bertekanan tinggi.
+
+17
+00:00:50,226 --> 00:00:53,018
+Langkah ketiga: katup ekspansi.
+
+18
+00:00:53,548 --> 00:00:55,862
+Cairan dipaksa melewati celah sempit.
+
+19
+00:00:56,392 --> 00:00:58,644
+Tekanannya turun secara tiba-tiba,
+
+20
+00:00:58,874 --> 00:01:01,070
+dan cairan menjadi sangat dingin.
+
+21
+00:01:01,950 --> 00:01:05,814
+Langkah keempat: evaporator, di unit dalam.
+
+22
+00:01:06,344 --> 00:01:09,826
+Kipas menarik udara ruangan yang hangat melewati koil dingin.
+
+23
+00:01:10,356 --> 00:01:13,552
+Refrigeran menyerap panas itu, lalu menguap.
+
+24
+00:01:14,082 --> 00:01:16,427
+Udara yang keluar pun menjadi lebih sejuk.
+
+25
+00:01:17,307 --> 00:01:19,055
+Uap kembali ke kompresor,
+
+26
+00:01:19,285 --> 00:01:20,988
+dan siklus pun berulang.
+
+27
+00:01:21,518 --> 00:01:26,519
+Kompresi, kondensasi, ekspansi, evaporasi.
+
+28
+00:01:27,049 --> 00:01:29,243
+Panas diambil dari dalam ruangan,
+
+29
+00:01:29,473 --> 00:01:30,944
+dan dibuang ke luar.

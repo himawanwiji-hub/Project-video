@@ -5,6 +5,7 @@
 //   node video/render.js --start 0 --end 10 --out x.mp4
 //   node video/render.js --stills 3,12,40             -> PNG stills in output/stills/
 //   node video/render.js --page video/fasa.html --out output/arus-1-fasa-vs-3-fasa.mp4
+//   node video/render.js --page video-03-ac-short/scene.html --width 1080 --height 1920 --out x.mp4   (9:16)
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
@@ -18,6 +19,7 @@ const FPS = parseFloat(arg('fps', '30'));
 const OUT = path.resolve(ROOT, arg('out', 'output/fisika-3d-soal-2-dan-4.mp4'));
 const STILLS = arg('stills', null);
 const PAGE = arg('page', 'video/scene.html');
+const VW = parseInt(arg('width', '1920')), VH = parseInt(arg('height', '1080'));
 
 const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.css': 'text/css' };
 function serve() {
@@ -36,7 +38,7 @@ function serve() {
   const srv = await serve();
   const port = srv.address().port;
   const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
-  const page = await browser.newPage({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: 1 });
+  const page = await browser.newPage({ viewport: { width: VW, height: VH }, deviceScaleFactor: 1 });
   page.on('console', (m) => { if (m.type() === 'error' || m.type() === 'warning') console.log('[page]', m.text()); });
   page.on('pageerror', (e) => console.error('[pageerror]', e));
   await page.goto(`http://127.0.0.1:${port}/${PAGE}?render=1`);

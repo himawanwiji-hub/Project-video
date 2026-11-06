@@ -1,0 +1,108 @@
+#!/usr/bin/env python3
+"""
+tts_phrases.py - Narasi frasa demi frasa (edge-tts) -> audio/scene_N.wav + timing.json + scenes.json.
+
+Pakai:  python3 tools/tts_phrases.py --dir video-03-ac-short
+
+narration.json: tiap adegan berisi daftar [teks_diucapkan, teks_subtitle]. Setiap frasa disintesis
+terpisah, keheningan di awal/akhir dipotong, lalu frasa disambung dengan jeda tetap (koma / akhir
+kalimat). Karena posisi tiap frasa di audio diketahui persis, subtitle (bahasa apa pun) selalu
+sinkron dengan suara. Jeda dan rate di narration.json mengatur tempo bicara.
+"""
+import argparse
+import asyncio
+import json
+import os
+import subprocess
+import wave
+from pathlib import Path
+
+import numpy as np
+
+SR = 44100
+
+
+async def synth(text, voice, rate, out):
+    import certifi
+    ca = "/root/.ccr/ca-bundle.crt"
+    if os.path.exists(ca):                     # the session proxy re-signs TLS; trust its CA
+        certifi.where = lambda: ca
+    import edge_tts
+    proxy = os.environ.get("HTTPS_PROXY") or os.environ.get("https_proxy")
+    await edge_tts.Communicate(text, voice, rate=rate, proxy=proxy).save(str(out))
+
+
+def decode(path):
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", str(path), "-ac", "1", "-ar", str(SR), "-f", "s16le", "-"],
+                         capture_output=True, check=True).stdout
+    return np.frombuffer(raw, dtype=np.int16).astype(np.float32) / 32768
+
+
+def trim(x, thr=0.012, pre=0.03, post=0.08):
+    """Cut leading/trailing silence; keep a few ms so consonants are not clipped."""
+    win = int(0.01 * SR)
+    env = np.convolve(np.abs(x), np.ones(win) / win, mode="same")
+    idx = np.where(env > thr)[0]
+    if not len(idx):
+        return x
+    a, b = max(0, idx[0] - int(pre * SR)), min(len(x), idx[-1] + int(post * SR))
+    return x[a:b]
+
+
+def write_wav(path, x):
+    with wave.open(str(path), "wb") as w:
+        w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
+        w.writeframes((np.clip(x, -1, 1) * 32767).astype(np.int16).tobytes())
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--dir", default=".")
+    ap.add_argument("--reuse", action="store_true", help="pakai ulang audio/phrases/*.mp3 yang sudah ada")
+    a = ap.parse_args()
+    base = Path(a.dir)
+    cfg = json.loads((base / "script" / "narration.json").read_text(encoding="utf-8"))
+    v = cfg["voice"]
+    pdir = base / "audio" / "phrases"; pdir.mkdir(parents=True, exist_ok=True)
+
+    scenes, cues = [], []
+    t = float(cfg.get("lead_in", 0.6))
+    for sc in cfg["scenes"]:
+        parts, pos = [], 0.0
+        for k, (spoken, sub) in enumerate(sc["phrases"]):
+            mp3 = pdir / f"s{sc['no']}_{k + 1:02d}.mp3"
+            if not (a.reuse and mp3.exists()):
+                asyncio.run(synth(spoken, v["edge_voice"], v.get("rate", "+0%"), mp3))
+            x = trim(decode(mp3))
+            dur = len(x) / SR
+            cues.append({"scene": sc["no"], "text": sub, "spoken": spoken,
+                         "start": round(t + pos, 3), "end": round(t + pos + dur + 0.12, 3)})
+            parts.append(x); pos += dur
+            if k + 1 < len(sc["phrases"]):
+                gap = cfg["pause_comma"] if spoken.rstrip().endswith((",", ":")) else cfg["pause_sentence"]
+                parts.append(np.zeros(int(gap * SR), np.float32)); pos += gap
+        audio = np.concatenate(parts)
+        write_wav(base / "audio" / f"scene_{sc['no']}.wav", audio)
+        dur = len(audio) / SR
+        scenes.append({"no": sc["no"], "id": sc["id"], "start": round(t, 3), "audio_seconds": round(dur, 3),
+                       "audio": f"audio/scene_{sc['no']}.wav"})
+        print(f"adegan {sc['no']}: {dur:5.2f} dtk, {len(sc['phrases'])} frasa")
+        t += dur + float(cfg.get("scene_gap", 0.8))
+    total = round(t - float(cfg.get("scene_gap", 0.8)) + float(cfg.get("tail", 1.5)), 3)
+
+    for i, sc in enumerate(scenes):
+        sc["end"] = scenes[i + 1]["start"] if i + 1 < len(scenes) else total
+    for i, c in enumerate(cues):
+        nxt = cues[i + 1]["start"] - 0.04 if i + 1 < len(cues) else total
+        c["end"] = round(min(c["end"], nxt), 3); c["i"] = i + 1
+
+    (base / "script" / "timing.json").write_text(json.dumps(
+        {"total_seconds": total, "fps": 30, "provider": "edge-tts", "voice": v, "scenes": scenes, "cues": cues},
+        indent=1, ensure_ascii=False), encoding="utf-8")
+    (base / "script" / "scenes.json").write_text(json.dumps(
+        {"total_seconds": total, "scenes": [{"no": s["no"], "start": s["start"]} for s in scenes]}, indent=1), encoding="utf-8")
+    print(f"total {total:.2f} dtk, {len(cues)} cue")
+
+
+if __name__ == "__main__":
+    main()
