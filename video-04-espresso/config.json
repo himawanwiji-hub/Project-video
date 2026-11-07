@@ -1,0 +1,20 @@
+{
+  "_catatan": "Ubah angka di sini lalu jalankan ulang: python3 tools/tts_phrases.py --dir video-04-espresso && render. Narasi, subtitle, dan teks layar ikut berubah.",
+  "dose": 18,
+  "yield": 36,
+  "ratio": "1:2",
+  "ratio_spoken": "satu banding dua",
+  "time_min": 25,
+  "time_max": 30,
+  "pressure_bar": 9,
+  "temp_c": 93,
+  "roast": "medium-dark",
+  "colors": {
+    "hook": "#FFE3CF",
+    "dose": "#FFC6C6",
+    "grind": "#FFF6B6",
+    "tamp": "#ADF0C7",
+    "extract": "#ADF0C7",
+    "end": "#DEDAFF"
+  }
+}

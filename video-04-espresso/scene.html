@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, initial-scale=1">
+<title>Cara Membuat Espresso</title>
+<style>
+  :root { --ink: #2b1a12; --coffee: #6b3e26; --dark: #3b2416; --crema: #d9a54b; }
+  html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; font-family: Inter, "DejaVu Sans", sans-serif; color: var(--ink); }
+  #bg { position: absolute; inset: 0; }
+  #glow { position: absolute; inset: 0; background: radial-gradient(ellipse 70% 38% at 50% 36%, rgba(255,255,255,.55), rgba(255,255,255,0) 70%); }
+  svg#art { position: absolute; left: 0; top: 262px; width: 1080px; height: 760px; }
+  .ov { position: absolute; opacity: 0; }
+  #step { left: 60px; right: 60px; top: 120px; display: flex; justify-content: center; }
+  #step .pill { display: inline-flex; align-items: center; gap: 22px; background: rgba(255,255,255,.78); border-radius: 999px;
+    padding: 18px 40px 18px 18px; box-shadow: 0 8px 30px rgba(60,30,10,.12); }
+  #step .num { width: 86px; height: 86px; border-radius: 50%; background: var(--dark); color: #fff; font-size: 46px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; }
+  #step .txt { font-size: 58px; font-weight: 800; letter-spacing: -.01em; white-space: nowrap; }
+  #hookTitle { left: 60px; right: 60px; top: 130px; text-align: center; font-size: 104px; line-height: 1.0; font-weight: 900; letter-spacing: -.02em; }
+  #key { left: 40px; right: 40px; top: 1010px; text-align: center; }
+  #key .big { font-size: 180px; font-weight: 900; line-height: 1; letter-spacing: -.03em; color: var(--dark); white-space: nowrap; }
+  #key .big small { font-size: 110px; }
+  #key .cap { font-size: 42px; font-weight: 700; margin-top: 10px; color: var(--coffee); }
+  #chips { left: 30px; right: 30px; top: 1290px; display: flex; flex-wrap: nowrap; justify-content: center; gap: 12px; }
+  #chips span { font-size: 31px; font-weight: 700; background: rgba(255,255,255,.72); border-radius: 999px; padding: 11px 22px; white-space: nowrap; }
+  #chips span.on { background: var(--dark); color: #fff; }
+  #sub { left: 30px; right: 30px; top: 1400px; text-align: center; }
+  #sub span { display: inline-block; font-size: 50px; font-weight: 800; color: #fff; background: rgba(43,26,18,.88);
+    padding: 16px 32px; border-radius: 18px; white-space: nowrap; }
+  #cta { left: 60px; right: 60px; top: 1262px; display: flex; justify-content: center; gap: 22px; }
+  #cta .b { font-size: 46px; font-weight: 800; padding: 22px 40px; border-radius: 999px; }
+  #cta .sub { background: #e0262b; color: #fff; }
+  #cta .try { background: var(--dark); color: #fff; }
+  #fade { position: absolute; inset: 0; background: #fff; opacity: 0; }
+</style>
+</head>
+<body>
+<div id="bg"></div><div id="glow"></div>
+<svg id="art" viewBox="0 0 1080 760" xmlns="http://www.w3.org/2000/svg"></svg>
+<div id="hookTitle" class="ov">Espresso dalam<br>4 langkah</div>
+<div id="step" class="ov"><div class="pill"><div class="num"></div><div class="txt"></div></div></div>
+<div id="key" class="ov"><div class="big"></div><div class="cap"></div></div>
+<div id="chips" class="ov"></div>
+<div id="cta" class="ov"><div class="b sub">▶ Subscribe</div><div class="b try">Coba di rumah!</div></div>
+<div id="sub" class="ov"><span></span></div>
+<div id="fade"></div>
+
+<script type="module">
+const NS = 'http://www.w3.org/2000/svg';
+const clamp = (x, a = 0, b = 1) => Math.min(b, Math.max(a, x));
+const smooth = (a, b, x) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+const lerp = (a, b, k) => a + (b - a) * k;
+const $ = (id) => document.getElementById(id);
+const svg = $('art');
+function el(tag, attrs = {}, parent = svg) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  parent.appendChild(e); return e;
+}
+const CFG = await (await fetch('config.json', { cache: 'no-store' })).json();
+const timing = await (await fetch('script/timing.json', { cache: 'no-store' })).json();
+const DURATION = timing.total_seconds;
+const SC = Object.fromEntries(timing.scenes.map(s => [s.id, s]));
+const fmt = (x, d = 0) => x.toFixed(d).replace('.', ',');
+const hex = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+const C = { dark: '#3b2416', coffee: '#6b3e26', bean: '#5a321d', beanHi: '#7a4a2c', crema: '#d9a54b', steel: '#c9ced6', steelD: '#8d949e', ink: '#2b1a12' };
+
+// ---------------------------------------------------------------- reusable drawings
+function bean(parent, x, y, s = 1, rot = 0) {
+  const g = el('g', { transform: `translate(${x} ${y}) rotate(${rot}) scale(${s})` }, parent);
+  el('ellipse', { rx: 15, ry: 21, fill: C.bean }, g);
+  el('ellipse', { rx: 11, ry: 17, cx: -2, cy: -2, fill: C.beanHi, opacity: .35 }, g);
+  el('path', { d: 'M 0 -18 C -7 -6, 7 6, 0 18', fill: 'none', stroke: '#2a160b', 'stroke-width': 3, 'stroke-linecap': 'round' }, g);
+  return g;
+}
+function cup(parent, x, y, s = 1, fillId = null) {    // small espresso cup, origin = rim centre
+  const g = el('g', { transform: `translate(${x} ${y}) scale(${s})` }, parent);
+  el('ellipse', { cx: 0, cy: 118, rx: 150, ry: 26, fill: '#ffffff', stroke: '#d7d2cc', 'stroke-width': 4 }, g);   // saucer
+  el('path', { d: 'M 96 22 C 150 22, 150 92, 90 88', fill: 'none', stroke: '#ffffff', 'stroke-width': 18, 'stroke-linecap': 'round' }, g); // handle
+  el('path', { d: 'M 96 22 C 150 22, 150 92, 90 88', fill: 'none', stroke: '#d7d2cc', 'stroke-width': 4 }, g);
+  const body = el('path', { d: 'M -100 0 L 100 0 L 84 92 Q 80 112 60 112 L -60 112 Q -80 112 -84 92 Z', fill: '#ffffff', stroke: '#d7d2cc', 'stroke-width': 4 }, g);
+  return g;
+}
+function steam(parent, x, y) {
+  const g = el('g', { transform: `translate(${x} ${y})` }, parent);
+  const w = [-40, 0, 40].map(dx => el('path', { d: 'M 0 0 q 16 -22 0 -44 q -16 -22 0 -44', fill: 'none', stroke: '#ffffff', 'stroke-width': 9, 'stroke-linecap': 'round', opacity: .8, transform: `translate(${dx} 0)` }, g));
+  return { g, w };
+}
+function animSteam(st, t) {
+  st.w.forEach((p, k) => { const u = (t * 0.5 + k / 3) % 1; p.setAttribute('opacity', (Math.sin(u * Math.PI) * .85).toFixed(2));
+    p.setAttribute('transform', `translate(${(k - 1) * 40} ${(-u * 40).toFixed(1)})`); });
+}
+const groups = {};
+const G = (id) => (groups[id] = el('g', { opacity: 0 }));
+
+// ---------------------------------------------------------------- HOOK: cup + floating beans
+{
+  const g = G('hook');
+  const floaters = [[200, 130, 1.3, -20], [880, 170, 1.1, 30], [150, 560, 1.0, 50], [930, 520, 1.4, -40], [300, 680, .9, 10], [800, 690, 1.0, 70]];
+  g.beans = floaters.map(([x, y, s, r]) => ({ node: bean(g, x, y, s, r), x, y, s, r }));
+  const c = cup(g, 540, 380, 1.55);
+  el('ellipse', { cx: 0, cy: 6, rx: 94, ry: 18, fill: C.crema }, c);
+  el('ellipse', { cx: 0, cy: 6, rx: 70, ry: 12, fill: '#c48a36' }, c);
+  g.steam = steam(g, 540, 330);
+}
+
+// ---------------------------------------------------------------- DOSE: beans drop into a cup on a digital scale
+{
+  const g = G('dose');
+  el('rect', { x: 250, y: 600, width: 580, height: 110, rx: 26, fill: '#3a3f47' }, g);         // scale body
+  el('rect', { x: 290, y: 575, width: 500, height: 34, rx: 12, fill: '#c9ced6' }, g);           // platform
+  el('rect', { x: 400, y: 625, width: 280, height: 66, rx: 12, fill: '#0f1a14' }, g);           // display
+  g.disp = el('text', { x: 665, y: 674, 'font-size': 50, 'font-weight': 800, 'text-anchor': 'end', fill: '#7dff9e', 'font-family': 'Inter, sans-serif' }, g);
+  el('circle', { cx: 760, cy: 658, r: 16, fill: '#e0262b' }, g);
+  // glass (gelas kecil) on the platform, beans pile inside
+  el('path', { d: 'M 430 400 L 650 400 L 632 572 L 448 572 Z', fill: 'rgba(255,255,255,.45)', stroke: '#ffffff', 'stroke-width': 6 }, g);
+  g.pile = [];
+  for (let k = 0; k < 34; k++) {
+    const row = Math.floor(k / 7), col = k % 7;
+    g.pile.push(bean(g, 470 + col * 24 + (row % 2) * 12, 552 - row * 26, 0.8, (k * 47) % 180 - 90));
+  }
+  g.fall = Array.from({ length: 14 }, (_, k) => ({ node: bean(g, 0, 0, 0.9, 0), x: 480 + ((k * 37) % 120), phase: k / 14, rot: (k * 61) % 360 }));
+  el('path', { d: 'M 430 400 L 650 400', stroke: '#ffffff', 'stroke-width': 8, 'stroke-linecap': 'round' }, g);
+}
+
+// ---------------------------------------------------------------- GRIND: grinder with hopper, burr and powder
+{
+  const g = G('grind');
+  el('path', { d: 'M 400 60 L 680 60 L 600 250 L 480 250 Z', fill: 'rgba(255,255,255,.55)', stroke: '#ffffff', 'stroke-width': 6 }, g);  // hopper
+  g.hopper = [];
+  for (let k = 0; k < 18; k++) { const row = Math.floor(k / 6), col = k % 6;
+    g.hopper.push(bean(g, 455 + col * 34 + (row % 2) * 16 - row * 6, 220 - row * 40 + (row ? 0 : 0), 0.85, (k * 53) % 180)); }
+  el('rect', { x: 400, y: 250, width: 280, height: 330, rx: 34, fill: '#3a3f47' }, g);           // body
+  el('rect', { x: 430, y: 280, width: 220, height: 40, rx: 12, fill: '#2b2f35' }, g);
+  el('circle', { cx: 540, cy: 420, r: 78, fill: '#22262b' }, g);                                  // burr window
+  g.burr = el('g', { transform: 'translate(540 420)' }, g);
+  for (let k = 0; k < 10; k++) el('rect', { x: -7, y: -70, width: 14, height: 34, rx: 4, fill: '#c9ced6', transform: `rotate(${k * 36})` }, g.burr);
+  el('circle', { r: 26, fill: '#8d949e' }, g.burr);
+  el('rect', { x: 512, y: 580, width: 56, height: 46, rx: 8, fill: '#2b2f35' }, g);              // chute
+  // receiving cup with powder
+  el('path', { d: 'M 420 650 L 660 650 L 640 750 L 440 750 Z', fill: 'rgba(255,255,255,.5)', stroke: '#ffffff', 'stroke-width': 6 }, g);
+  g.powder = el('path', { d: '', fill: '#6b4430' }, g);
+  g.grains = Array.from({ length: 40 }, (_, k) => el('circle', { r: 4, fill: '#6b4430' }, g));
+}
+
+// ---------------------------------------------------------------- TAMP: portafilter, powder mound, levelling, tamper
+{
+  const g = G('tamp');
+  el('rect', { x: 690, y: 470, width: 330, height: 52, rx: 26, fill: '#2b2f35' }, g);             // handle
+  el('rect', { x: 640, y: 482, width: 70, height: 28, fill: '#8d949e' }, g);
+  el('path', { d: 'M 300 420 L 680 420 L 660 560 Q 650 590 620 590 L 360 590 Q 330 590 320 560 Z', fill: '#c9ced6', stroke: '#8d949e', 'stroke-width': 5 }, g);   // basket
+  el('rect', { x: 500, y: 590, width: 80, height: 40, rx: 8, fill: '#8d949e' }, g);              // spout
+  g.coffee = el('path', { d: '', fill: '#6b4430' }, g);
+  g.grains = Array.from({ length: 36 }, () => el('circle', { r: 5, fill: '#6b4430' }, g));
+  el('path', { d: 'M 300 420 L 680 420', stroke: '#8d949e', 'stroke-width': 10, 'stroke-linecap': 'round' }, g);  // rim
+  // distribution arrows
+  g.arrows = el('g', { opacity: 0 }, g);
+  el('path', { d: 'M 360 340 L 720 340 M 360 340 l 26 -18 M 360 340 l 26 18 M 720 340 l -26 -18 M 720 340 l -26 18', stroke: C.dark, 'stroke-width': 10, 'stroke-linecap': 'round', fill: 'none' }, g.arrows);
+  // tamper
+  g.tamper = el('g', {}, g);
+  el('rect', { x: 320, y: -46, width: 340, height: 46, rx: 10, fill: '#8d949e' }, g.tamper);
+  el('rect', { x: 470, y: -150, width: 40, height: 104, fill: '#5d646e' }, g.tamper);
+  el('rect', { x: 430, y: -260, width: 120, height: 120, rx: 56, fill: '#3b2416' }, g.tamper);
+  g.press = el('g', { opacity: 0 }, g);
+  for (const dx of [-120, 0, 120]) el('path', { d: `M ${490 + dx} 120 l 0 60 m -20 -22 l 20 22 l 20 -22`, stroke: C.dark, 'stroke-width': 9, fill: 'none', 'stroke-linecap': 'round' }, g.press);
+}
+
+// ---------------------------------------------------------------- EXTRACT: espresso machine, streams, cup on scale, gauge
+{
+  const g = G('extract');
+  el('rect', { x: 170, y: 20, width: 740, height: 440, rx: 40, fill: '#3a3f47' }, g);             // machine body
+  el('rect', { x: 170, y: 20, width: 740, height: 60, rx: 30, fill: '#2b2f35' }, g);
+  el('circle', { cx: 300, cy: 190, r: 74, fill: '#f4f1ea', stroke: '#8d949e', 'stroke-width': 8 }, g);   // pressure gauge
+  for (let k = 0; k <= 12; k++) { const a = (-210 + k * 20) * Math.PI / 180;
+    el('line', { x1: 300 + 58 * Math.cos(a), y1: 190 + 58 * Math.sin(a), x2: 300 + 68 * Math.cos(a), y2: 190 + 68 * Math.sin(a), stroke: '#3a3f47', 'stroke-width': k % 3 ? 3 : 5 }, g); }
+  g.needle = el('line', { x1: 300, y1: 190, x2: 300, y2: 138, stroke: '#e0262b', 'stroke-width': 7, 'stroke-linecap': 'round' }, g);
+  el('circle', { cx: 300, cy: 190, r: 10, fill: '#3a3f47' }, g);
+  g.bar = el('text', { x: 300, y: 300, 'font-size': 38, 'font-weight': 800, 'text-anchor': 'middle', fill: '#ffffff', 'font-family': 'Inter, sans-serif' }, g);
+  g.temp = el('text', { x: 780, y: 200, 'font-size': 52, 'font-weight': 800, 'text-anchor': 'middle', fill: '#ffd27a', 'font-family': 'Inter, sans-serif' }, g);
+  el('text', { x: 780, y: 248, 'font-size': 28, 'font-weight': 700, 'text-anchor': 'middle', fill: '#c9ced6', 'font-family': 'Inter, sans-serif' }, g).textContent = 'suhu air';
+  el('rect', { x: 470, y: 330, width: 140, height: 50, rx: 10, fill: '#8d949e' }, g);              // group head
+  el('rect', { x: 450, y: 380, width: 180, height: 56, rx: 16, fill: '#c9ced6' }, g);             // portafilter basket
+  el('rect', { x: 620, y: 392, width: 260, height: 34, rx: 17, fill: '#2b2f35' }, g);             // handle
+  el('rect', { x: 505, y: 436, width: 70, height: 30, rx: 6, fill: '#8d949e' }, g);               // spouts
+  g.streams = [522, 558].map(x => el('rect', { x: x - 6, y: 466, width: 12, height: 0, rx: 6, fill: '#7a4a24' }, g));
+  el('rect', { x: 210, y: 700, width: 660, height: 40, rx: 14, fill: '#2b2f35' }, g);             // drip tray / scale
+  // glass cup (see-through) with rising espresso
+  g.cupClip = el('clipPath', { id: 'cupclip' }, g);
+  el('path', { d: 'M 430 560 L 650 560 L 630 700 L 450 700 Z' }, g.cupClip);
+  g.liquid = el('rect', { x: 420, y: 700, width: 240, height: 0, fill: '#3b2416', 'clip-path': 'url(#cupclip)' }, g);
+  g.cremaL = el('rect', { x: 420, y: 700, width: 240, height: 0, fill: C.crema, 'clip-path': 'url(#cupclip)' }, g);
+  el('path', { d: 'M 430 560 L 650 560 L 630 700 L 450 700 Z', fill: 'rgba(255,255,255,.25)', stroke: '#ffffff', 'stroke-width': 6 }, g);
+}
+
+// ---------------------------------------------------------------- END: big cup with crema, sparkles
+{
+  const g = G('end');
+  const c = cup(g, 540, 330, 1.9);
+  el('ellipse', { cx: 0, cy: 6, rx: 94, ry: 18, fill: C.crema }, c);
+  el('ellipse', { cx: 0, cy: 6, rx: 66, ry: 11, fill: '#c48a36' }, c);
+  g.steam = steam(g, 540, 270);
+  g.spark = [[200, 160], [880, 200], [170, 520], [910, 520], [540, 60]].map(([x, y]) => {
+    const s = el('path', { d: 'M 0 -30 L 8 -8 L 30 0 L 8 8 L 0 30 L -8 8 L -30 0 L -8 -8 Z', fill: '#ffffff', transform: `translate(${x} ${y})` }, g);
+    return { s, x, y };
+  });
+}
+
+// ---------------------------------------------------------------- per-scene text
+const STEP = {
+  dose: [1, 'Step 1 - Dose'], grind: [2, 'Step 2 - Grinding'], tamp: [3, 'Step 3 - Distribusi / Tamping'], extract: [4, 'Step 4 - Ekstraksi'], end: ['✓', 'Hasil Akhir'],
+};
+const KEY = {
+  hook: [`${CFG.dose}<small> g</small> → ${CFG.yield}<small> g</small>`, 'biji kopi → espresso'],
+  dose: [`${CFG.dose}<small> g</small>`, `biji kopi · rasio ${CFG.ratio}`],
+  grind: ['Halus', `giling ${CFG.dose} g biji kopi`],
+  tamp: ['Rata &amp; padat', 'permukaan datar, tekanan mantap'],
+  extract: ['', `target ${CFG.time_min}–${CFG.time_max} detik · ${CFG.yield} g`],
+  end: ['Siap diminum!', `${CFG.dose} g → ${CFG.yield} g · ${CFG.time_min}–${CFG.time_max} detik`],
+};
+const CHIPS = {
+  hook: [], dose: [`Biji kopi ${CFG.roast}`, 'Timbangan digital', 'Gelas kecil'],
+  grind: ['Grinder', 'Gilingan halus'], tamp: ['Masukkan', 'Ratakan', 'Tamping'],
+  extract: [`± ${CFG.pressure_bar} bar`, `± ${CFG.temp_c} °C`, 'Crema keemasan'], end: [],
+};
+
+function sceneAt(t) { let cur = timing.scenes[0]; for (const s of timing.scenes) if (t >= s.start) cur = s; return cur; }
+let last = null, lastSub = null, lastKey = null;
+const vis = (t, s, inD = 0.45, outD = 0.35) => smooth(s.start, s.start + inD, t) * (1 - smooth(s.end - outD, s.end, t));
+
+function renderAt(t) {
+  const sc = sceneAt(t), id = sc.id, p = clamp((t - sc.start) / (sc.end - sc.start));
+  // background colour cross-fade at scene boundaries
+  const idx = timing.scenes.indexOf(sc), nxt = timing.scenes[idx + 1];
+  let col = hex(CFG.colors[id]);
+  if (nxt) col = col.map((v, i) => Math.round(lerp(v, hex(CFG.colors[nxt.id])[i], smooth(sc.end - 0.35, sc.end + 0.0001, t))));
+  $('bg').style.background = `rgb(${col.join(',')})`;
+
+  // scene groups: fade + gentle slide up on entry
+  for (const [gid, g] of Object.entries(groups)) {
+    const s = SC[gid]; const v = vis(t, s);
+    g.setAttribute('opacity', v.toFixed(3));
+    g.style.display = v < 0.001 ? 'none' : '';
+    g.setAttribute('transform', `translate(0 ${((1 - smooth(s.start, s.start + 0.5, t)) * 40).toFixed(1)})`);
+  }
+
+  // ---- hook
+  { const g = groups.hook; animSteam(g.steam, t);
+    g.beans.forEach((b, k) => b.node.setAttribute('transform', `translate(${b.x} ${(b.y + Math.sin(t * 1.6 + k) * 14).toFixed(1)}) rotate(${b.r + Math.sin(t + k) * 12}) scale(${b.s})`)); }
+
+  // ---- dose: weight 0 -> dose over the first 70 % of the scene
+  { const g = groups.dose, s = SC.dose;
+    const w = CFG.dose * smooth(s.start + 0.6, s.start + (s.end - s.start) * 0.72, t);
+    g.disp.textContent = `${fmt(w, 1)} g`;
+    const n = Math.round(g.pile.length * w / CFG.dose);
+    g.pile.forEach((b, k) => b.setAttribute('opacity', k < n ? 1 : 0));
+    const falling = w < CFG.dose - 0.05 && t > s.start + 0.4;
+    g.fall.forEach(f => { const u = (t * 0.9 + f.phase) % 1; const y = lerp(-40, 470 - 26 * Math.floor(n / 7), u);
+      f.node.setAttribute('transform', `translate(${f.x} ${y.toFixed(1)}) rotate(${f.rot + u * 200}) scale(.85)`); f.node.setAttribute('opacity', falling ? 1 : 0); }); }
+
+  // ---- grind: burr spins, hopper empties, powder fills
+  { const g = groups.grind, s = SC.grind, q = smooth(s.start + 0.6, s.end - 1.2, t);
+    g.burr.setAttribute('transform', `translate(540 420) rotate(${(t * 420) % 360})`);
+    const left = Math.round(g.hopper.length * (1 - q)); g.hopper.forEach((b, k) => b.setAttribute('opacity', k < left ? 1 : 0));
+    const h = 8 + 70 * q;
+    g.powder.setAttribute('d', `M 444 748 L 636 748 L ${636 - h * 0.18} ${748 - h} Q 540 ${748 - h - 26 * q} ${444 + h * 0.18} ${748 - h} Z`);
+    const on = q > 0.01 && q < 0.995;
+    g.grains.forEach((c, k) => { const u = (t * 1.3 + k / g.grains.length) % 1;
+      c.setAttribute('cx', (540 + Math.sin(k * 12.9) * 14).toFixed(1)); c.setAttribute('cy', lerp(626, 740 - h, u).toFixed(1)); c.setAttribute('opacity', on ? 1 : 0); }); }
+
+  // ---- tamp: fill (0-35 %), level (35-62 %), tamp (62-100 %)
+  { const g = groups.tamp, s = SC.tamp, L = s.end - s.start;
+    const fill = smooth(s.start + 0.4, s.start + L * 0.33, t), level = smooth(s.start + L * 0.38, s.start + L * 0.58, t);
+    const down = smooth(s.start + L * 0.62, s.start + L * 0.80, t), squash = smooth(s.start + L * 0.74, s.start + L * 0.84, t);
+    const top = 470 - 20 * fill + 14 * squash;                         // powder surface height
+    const dome = 70 * fill * (1 - level);
+    g.coffee.setAttribute('d', `M 330 560 Q 340 588 368 588 L 612 588 Q 640 588 650 560 L 662 ${top} Q 490 ${top - dome * 2} 318 ${top} Z`);
+    g.grains.forEach((c, k) => { const u = (t * 1.2 + k / g.grains.length) % 1;
+      c.setAttribute('cx', (400 + ((k * 53) % 180)).toFixed(1)); c.setAttribute('cy', lerp(150, top - dome * 0.8, u).toFixed(1));
+      c.setAttribute('opacity', fill > 0.02 && fill < 0.98 ? 1 : 0); });
+    g.arrows.setAttribute('opacity', (smooth(s.start + L * 0.36, s.start + L * 0.42, t) * (1 - smooth(s.start + L * 0.58, s.start + L * 0.62, t))).toFixed(2));
+    g.arrows.setAttribute('transform', `translate(${(Math.sin(t * 7) * 18).toFixed(1)} 0)`);
+    const ty = lerp(-320, top - 6, down) + (squash > 0 && squash < 1 ? 4 : 0);
+    g.tamper.setAttribute('transform', `translate(0 ${ty.toFixed(1)})`);
+    g.tamper.setAttribute('opacity', smooth(s.start + L * 0.58, s.start + L * 0.63, t).toFixed(2));
+    g.press.setAttribute('opacity', (smooth(s.start + L * 0.74, s.start + L * 0.78, t) * 0.9).toFixed(2));
+    g.press.setAttribute('transform', `translate(0 ${(Math.sin(t * 8) * 6).toFixed(1)})`);
+    const phase = t < s.start + L * 0.36 ? 0 : t < s.start + L * 0.6 ? 1 : 2;
+    document.querySelectorAll('#chips span').forEach((c, i) => id === 'tamp' && c.classList.toggle('on', i === phase)); }
+
+  // ---- extract: timer 0 -> time_max, weight 0 -> yield
+  let timer = 0, weight = 0;
+  { const g = groups.extract, s = SC.extract;
+    const t0 = s.start + 1.0, t1 = s.end - 1.2;
+    const q = clamp((t - t0) / (t1 - t0));
+    timer = CFG.time_max * q;
+    weight = CFG.yield * Math.pow(clamp((timer - 4) / (CFG.time_max - 4)), 1.15);
+    const ang = -210 + (CFG.pressure_bar / 12) * 240 * smooth(t0 - 0.4, t0 + 0.6, t);
+    const a = ang * Math.PI / 180; g.needle.setAttribute('x2', (300 + 52 * Math.cos(a)).toFixed(1)); g.needle.setAttribute('y2', (190 + 52 * Math.sin(a)).toFixed(1));
+    g.bar.textContent = `± ${CFG.pressure_bar} bar`; g.temp.textContent = `± ${CFG.temp_c}°C`;
+    const flowing = timer > 4 && q < 1;
+    g.streams.forEach((r, k) => { r.setAttribute('height', flowing ? (170 + Math.sin(t * 20 + k) * 4).toFixed(1) : 0);
+      r.setAttribute('fill', timer < 12 ? '#4a2a17' : '#a8692e'); });
+    const lev = 120 * weight / CFG.yield;
+    g.liquid.setAttribute('y', (700 - lev).toFixed(1)); g.liquid.setAttribute('height', lev.toFixed(1));
+    const cr = Math.min(lev, 6 + 18 * weight / CFG.yield);
+    g.cremaL.setAttribute('y', (700 - lev).toFixed(1)); g.cremaL.setAttribute('height', (weight > 0.5 ? cr : 0).toFixed(1)); }
+
+  // ---- end
+  { const g = groups.end; animSteam(g.steam, t);
+    g.spark.forEach((sp, k) => { const v = 0.5 + 0.5 * Math.sin(t * 3 + k * 1.7);
+      sp.s.setAttribute('transform', `translate(${sp.x} ${sp.y}) scale(${(0.6 + 0.5 * v).toFixed(2)}) rotate(${(t * 40 + k * 30) % 360})`); sp.s.setAttribute('opacity', v.toFixed(2)); }); }
+
+  // ---------------- overlays
+  const v = vis(t, sc);
+  if (last !== id) {
+    last = id;
+    if (STEP[id]) { $('step').querySelector('.num').textContent = STEP[id][0]; $('step').querySelector('.txt').textContent = STEP[id][1]; }
+    $('chips').innerHTML = CHIPS[id].map(c => `<span>${c}</span>`).join('');
+    $('key').querySelector('.cap').innerHTML = KEY[id][1];
+  }
+  const big = id === 'extract' ? `${fmt(timer, 0)}<small> s</small> · ${fmt(weight, 0)}<small> g</small>` : KEY[id][0];
+  if (big !== lastKey) { $('key').querySelector('.big').innerHTML = big; lastKey = big;
+    const b = $('key').querySelector('.big'); b.style.fontSize = ''; const w = b.scrollWidth; if (w > 1000) b.style.fontSize = (180 * 1000 / w).toFixed(0) + 'px'; }
+  $('step').style.opacity = (STEP[id] ? v : 0).toFixed(3);
+  $('step').style.transform = `translateY(${((1 - v) * -20).toFixed(1)}px)`;
+  const stepTxt = $('step').querySelector('.txt'); stepTxt.style.fontSize = '';
+  if (stepTxt.scrollWidth > 760) stepTxt.style.fontSize = (58 * 760 / stepTxt.scrollWidth).toFixed(1) + 'px';
+  $('hookTitle').style.opacity = (id === 'hook' ? v : 0).toFixed(3);
+  $('key').style.opacity = v.toFixed(3); $('key').style.transform = `scale(${(0.94 + 0.06 * v).toFixed(3)})`;
+  $('chips').style.opacity = (CHIPS[id].length ? v : 0).toFixed(3);
+  $('cta').style.opacity = (id === 'end' ? smooth(SC.end.start + 0.6, SC.end.start + 1.2, t) * (1 - smooth(DURATION - 0.4, DURATION, t)) : 0).toFixed(3);
+  if (id === 'end') { $('key').style.top = '985px'; } else { $('key').style.top = '1010px'; }
+
+  // subtitle (from the same cues as subtitle.srt)
+  const cue = timing.cues.find(c => t >= c.start && t < c.end);
+  const subEl = $('sub');
+  if (cue) {
+    if (lastSub !== cue.i) { const sp = subEl.firstChild; sp.style.fontSize = '50px'; sp.textContent = cue.text; lastSub = cue.i;
+      const w = sp.getBoundingClientRect().width; if (w > 1020) sp.style.fontSize = (50 * 1020 / w).toFixed(1) + 'px'; }
+    subEl.style.opacity = clamp(Math.min((t - cue.start) / 0.1, (cue.end - t) / 0.1)).toFixed(3);
+  } else subEl.style.opacity = 0;
+  $('fade').style.opacity = clamp(Math.max(1 - t / 0.35, (t - (DURATION - 0.35)) / 0.35)).toFixed(3);
+}
+
+window.DURATION = DURATION;
+window.renderAt = renderAt;
+await document.fonts.ready;
+renderAt(0);
+window.READY = true;
+if (!new URLSearchParams(location.search).has('render')) {
+  const t0 = performance.now() / 1000 - (parseFloat(new URLSearchParams(location.search).get('t')) || 0);
+  const loop = () => { renderAt((performance.now() / 1000 - t0) % DURATION); requestAnimationFrame(loop); };
+  loop();
+}
+</script>
+</body>
+</html>

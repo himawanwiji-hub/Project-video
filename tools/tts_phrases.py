@@ -8,6 +8,11 @@ narration.json: tiap adegan berisi daftar [teks_diucapkan, teks_subtitle]. Setia
 terpisah, keheningan di awal/akhir dipotong, lalu frasa disambung dengan jeda tetap (koma / akhir
 kalimat). Karena posisi tiap frasa di audio diketahui persis, subtitle (bahasa apa pun) selalu
 sinkron dengan suara. Jeda dan rate di narration.json mengatur tempo bicara.
+
+Opsional di narration.json:
+  "config": "config.json"   -> frasa boleh berisi {kunci} dan {kunci_w} (angka dibaca dalam kata Indonesia)
+  per adegan "min_seconds"  -> adegan berdurasi tetap minimal sekian detik; audio mulai "audio_offset"
+                               detik setelah adegan mulai, dan adegan diperpanjang bila narasinya lebih panjang
 """
 import argparse
 import asyncio
@@ -49,6 +54,30 @@ def trim(x, thr=0.012, pre=0.03, post=0.08):
     return x[a:b]
 
 
+SATUAN = ["nol", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas"]
+
+
+def kata(n):
+    """Angka bulat -> kata dalam bahasa Indonesia (0-999)."""
+    n = int(n)
+    if n < 12: return SATUAN[n]
+    if n < 20: return SATUAN[n - 10] + " belas"
+    if n < 100: return (SATUAN[n // 10] + " puluh" + (" " + SATUAN[n % 10] if n % 10 else "")).strip()
+    if n < 200: return "seratus" + (" " + kata(n - 100) if n > 100 else "")
+    return SATUAN[n // 100] + " ratus" + (" " + kata(n % 100) if n % 100 else "")
+
+
+def template_vars(base, cfg):
+    if "config" not in cfg:
+        return {}
+    conf = json.loads((base / cfg["config"]).read_text(encoding="utf-8"))
+    out = {k: v for k, v in conf.items() if not isinstance(v, (dict, list))}
+    for k, v in list(out.items()):
+        if isinstance(v, (int, float)) and float(v).is_integer():
+            out[k + "_w"] = kata(v)
+    return out
+
+
 def write_wav(path, x):
     with wave.open(str(path), "wb") as w:
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
@@ -63,11 +92,18 @@ def main():
     base = Path(a.dir)
     cfg = json.loads((base / "script" / "narration.json").read_text(encoding="utf-8"))
     v = cfg["voice"]
+    tv = template_vars(base, cfg)
+    for sc in cfg["scenes"]:
+        sc["phrases"] = [[p[0].format(**tv), p[1].format(**tv)] for p in sc["phrases"]]
     pdir = base / "audio" / "phrases"; pdir.mkdir(parents=True, exist_ok=True)
 
     scenes, cues = [], []
     t = float(cfg.get("lead_in", 0.6))
     for sc in cfg["scenes"]:
+        fixed = "min_seconds" in sc
+        vis_start = t
+        if fixed:
+            t = vis_start + float(cfg.get("audio_offset", 0.4))
         parts, pos = [], 0.0
         for k, (spoken, sub) in enumerate(sc["phrases"]):
             mp3 = pdir / f"s{sc['no']}_{k + 1:02d}.mp3"
@@ -84,11 +120,20 @@ def main():
         audio = np.concatenate(parts)
         write_wav(base / "audio" / f"scene_{sc['no']}.wav", audio)
         dur = len(audio) / SR
-        scenes.append({"no": sc["no"], "id": sc["id"], "start": round(t, 3), "audio_seconds": round(dur, 3),
-                       "audio": f"audio/scene_{sc['no']}.wav"})
-        print(f"adegan {sc['no']}: {dur:5.2f} dtk, {len(sc['phrases'])} frasa")
-        t += dur + float(cfg.get("scene_gap", 0.8))
-    total = round(t - float(cfg.get("scene_gap", 0.8)) + float(cfg.get("tail", 1.5)), 3)
+        entry = {"no": sc["no"], "id": sc["id"], "start": round(vis_start if fixed else t, 3), "audio_start": round(t, 3),
+                 "audio_seconds": round(dur, 3), "audio": f"audio/scene_{sc['no']}.wav"}
+        scenes.append(entry)
+        if fixed:
+            length = max(float(sc["min_seconds"]), (t - vis_start) + dur + float(cfg.get("scene_pad", 0.6)))
+            print(f"adegan {sc['no']}: audio {dur:5.2f} dtk, adegan {length:5.2f} dtk (min {sc['min_seconds']})")
+            t = vis_start + length
+        else:
+            print(f"adegan {sc['no']}: {dur:5.2f} dtk, {len(sc['phrases'])} frasa")
+            t += dur + float(cfg.get("scene_gap", 0.8))
+    if fixed:
+        total = round(t + float(cfg.get("tail", 0.0)), 3)
+    else:
+        total = round(t - float(cfg.get("scene_gap", 0.8)) + float(cfg.get("tail", 1.5)), 3)
 
     for i, sc in enumerate(scenes):
         sc["end"] = scenes[i + 1]["start"] if i + 1 < len(scenes) else total
@@ -100,7 +145,7 @@ def main():
         {"total_seconds": total, "fps": 30, "provider": "edge-tts", "voice": v, "scenes": scenes, "cues": cues},
         indent=1, ensure_ascii=False), encoding="utf-8")
     (base / "script" / "scenes.json").write_text(json.dumps(
-        {"total_seconds": total, "scenes": [{"no": s["no"], "start": s["start"]} for s in scenes]}, indent=1), encoding="utf-8")
+        {"total_seconds": total, "scenes": [{"no": s["no"], "start": s["audio_start"]} for s in scenes]}, indent=1), encoding="utf-8")
     print(f"total {total:.2f} dtk, {len(cues)} cue")
 
 

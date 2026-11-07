@@ -1,0 +1,196 @@
+{
+ "total_seconds": 58.161,
+ "fps": 30,
+ "provider": "edge-tts",
+ "voice": {
+  "provider": "edge-tts",
+  "edge_voice": "id-ID-GadisNeural",
+  "rate": "-6%"
+ },
+ "scenes": [
+  {
+   "no": 1,
+   "id": "hook",
+   "start": 0.0,
+   "audio_start": 0.45,
+   "audio_seconds": 5.082,
+   "audio": "audio/scene_1.wav",
+   "end": 6.082
+  },
+  {
+   "no": 2,
+   "id": "dose",
+   "start": 6.082,
+   "audio_start": 6.532,
+   "audio_seconds": 9.702,
+   "audio": "audio/scene_2.wav",
+   "end": 16.784
+  },
+  {
+   "no": 3,
+   "id": "grind",
+   "start": 16.784,
+   "audio_start": 17.234,
+   "audio_seconds": 9.035,
+   "audio": "audio/scene_3.wav",
+   "end": 26.82
+  },
+  {
+   "no": 4,
+   "id": "tamp",
+   "start": 26.82,
+   "audio_start": 27.27,
+   "audio_seconds": 8.919,
+   "audio": "audio/scene_4.wav",
+   "end": 36.82
+  },
+  {
+   "no": 5,
+   "id": "extract",
+   "start": 36.82,
+   "audio_start": 37.27,
+   "audio_seconds": 11.368,
+   "audio": "audio/scene_5.wav",
+   "end": 49.187
+  },
+  {
+   "no": 6,
+   "id": "end",
+   "start": 49.187,
+   "audio_start": 49.637,
+   "audio_seconds": 7.974,
+   "audio": "audio/scene_6.wav",
+   "end": 58.161
+  }
+ ],
+ "cues": [
+  {
+   "scene": 1,
+   "text": "Espresso sering pahit atau asam?",
+   "spoken": "Espresso sering pahit atau asam?",
+   "start": 0.45,
+   "end": 2.895,
+   "i": 1
+  },
+  {
+   "scene": 1,
+   "text": "Coba 4 langkah mudah ini.",
+   "spoken": "Coba empat langkah mudah ini.",
+   "start": 3.175,
+   "end": 5.652,
+   "i": 2
+  },
+  {
+   "scene": 2,
+   "text": "Pertama, timbang 18 gram biji kopi.",
+   "spoken": "Pertama, timbang delapan belas gram biji kopi.",
+   "start": 6.532,
+   "end": 10.498,
+   "i": 3
+  },
+  {
+   "scene": 2,
+   "text": "Ini dasar komposisi espresso kamu,",
+   "spoken": "Ini dasar komposisi espresso kamu,",
+   "start": 10.778,
+   "end": 13.655,
+   "i": 4
+  },
+  {
+   "scene": 2,
+   "text": "dengan rasio 1:2.",
+   "spoken": "dengan rasio satu banding dua.",
+   "start": 13.785,
+   "end": 16.354,
+   "i": 5
+  },
+  {
+   "scene": 3,
+   "text": "Kedua, giling biji kopi sampai halus.",
+   "spoken": "Kedua, giling biji kopi sampai halus.",
+   "start": 17.234,
+   "end": 20.955,
+   "i": 6
+  },
+  {
+   "scene": 3,
+   "text": "Gilingan yang pas membuat rasanya",
+   "spoken": "Gilingan yang pas membuat rasanya",
+   "start": 21.235,
+   "end": 23.688,
+   "i": 7
+  },
+  {
+   "scene": 3,
+   "text": "tidak terlalu pahit atau asam.",
+   "spoken": "tidak terlalu pahit atau asam.",
+   "start": 23.968,
+   "end": 26.39,
+   "i": 8
+  },
+  {
+   "scene": 4,
+   "text": "Ketiga, masukkan bubuk ke portafilter,",
+   "spoken": "Ketiga, masukkan bubuk ke portafilter,",
+   "start": 27.27,
+   "end": 30.765,
+   "i": 9
+  },
+  {
+   "scene": 4,
+   "text": "ratakan, lalu tamping",
+   "spoken": "ratakan, lalu tamping",
+   "start": 30.895,
+   "end": 33.464,
+   "i": 10
+  },
+  {
+   "scene": 4,
+   "text": "dengan tekanan mantap sampai rata.",
+   "spoken": "dengan tekanan mantap sampai rata.",
+   "start": 33.744,
+   "end": 36.309,
+   "i": 11
+  },
+  {
+   "scene": 5,
+   "text": "Keempat, pasang portafilter dan mulai ekstraksi.",
+   "spoken": "Keempat, pasang portafilter dan mulai ekstraksi.",
+   "start": 37.27,
+   "end": 41.489,
+   "i": 12
+  },
+  {
+   "scene": 5,
+   "text": "Dalam 25 sampai 30 detik,",
+   "spoken": "Dalam dua puluh lima sampai tiga puluh detik,",
+   "start": 41.769,
+   "end": 44.957,
+   "i": 13
+  },
+  {
+   "scene": 5,
+   "text": "kamu dapat sekitar 36 gram espresso.",
+   "spoken": "kamu dapat sekitar tiga puluh enam gram espresso.",
+   "start": 45.087,
+   "end": 48.757,
+   "i": 14
+  },
+  {
+   "scene": 6,
+   "text": "Selesai! Espresso siap diminum.",
+   "spoken": "Selesai! Espresso siap diminum.",
+   "start": 49.637,
+   "end": 53.532,
+   "i": 15
+  },
+  {
+   "scene": 6,
+   "text": "Coba di rumah, sesuaikan gilingannya sampai pas.",
+   "spoken": "Coba di rumah dan sesuaikan gilingannya sampai pas.",
+   "start": 53.812,
+   "end": 57.731,
+   "i": 16
+  }
+ ]
+}

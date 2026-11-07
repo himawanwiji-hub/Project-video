@@ -1,0 +1,35 @@
+{
+  "title": "Cara Membuat Espresso",
+  "config": "config.json",
+  "voice": { "provider": "edge-tts", "edge_voice": "id-ID-GadisNeural", "rate": "-6%" },
+  "pause_comma": 0.25,
+  "pause_sentence": 0.4,
+  "lead_in": 0.0,
+  "tail": 0.0,
+  "audio_offset": 0.45,
+  "scene_pad": 0.55,
+  "scenes": [
+    { "no": 1, "id": "hook", "min_seconds": 5, "phrases": [
+      ["Espresso sering pahit atau asam?", "Espresso sering pahit atau asam?"],
+      ["Coba empat langkah mudah ini.", "Coba 4 langkah mudah ini."] ] },
+    { "no": 2, "id": "dose", "min_seconds": 10, "phrases": [
+      ["Pertama, timbang {dose_w} gram biji kopi.", "Pertama, timbang {dose} gram biji kopi."],
+      ["Ini dasar komposisi espresso kamu,", "Ini dasar komposisi espresso kamu,"],
+      ["dengan rasio {ratio_spoken}.", "dengan rasio {ratio}."] ] },
+    { "no": 3, "id": "grind", "min_seconds": 10, "phrases": [
+      ["Kedua, giling biji kopi sampai halus.", "Kedua, giling biji kopi sampai halus."],
+      ["Gilingan yang pas membuat rasanya", "Gilingan yang pas membuat rasanya"],
+      ["tidak terlalu pahit atau asam.", "tidak terlalu pahit atau asam."] ] },
+    { "no": 4, "id": "tamp", "min_seconds": 10, "phrases": [
+      ["Ketiga, masukkan bubuk ke portafilter,", "Ketiga, masukkan bubuk ke portafilter,"],
+      ["ratakan, lalu tamping", "ratakan, lalu tamping"],
+      ["dengan tekanan mantap sampai rata.", "dengan tekanan mantap sampai rata."] ] },
+    { "no": 5, "id": "extract", "min_seconds": 11, "phrases": [
+      ["Keempat, pasang portafilter dan mulai ekstraksi.", "Keempat, pasang portafilter dan mulai ekstraksi."],
+      ["Dalam {time_min_w} sampai {time_max_w} detik,", "Dalam {time_min} sampai {time_max} detik,"],
+      ["kamu dapat sekitar {yield_w} gram espresso.", "kamu dapat sekitar {yield} gram espresso."] ] },
+    { "no": 6, "id": "end", "min_seconds": 6, "phrases": [
+      ["Selesai! Espresso siap diminum.", "Selesai! Espresso siap diminum."],
+      ["Coba di rumah dan sesuaikan gilingannya sampai pas.", "Coba di rumah, sesuaikan gilingannya sampai pas."] ] }
+  ]
+}
