@@ -78,6 +78,30 @@ def template_vars(base, cfg):
     return out
 
 
+def chunks(text, maxc):
+    """Split a subtitle into one-line pieces: prefer breaks after , ; : then the word nearest the middle."""
+    text = text.strip()
+    if len(text) <= maxc:
+        return [text]
+    words = text.split()
+    best, score = None, None
+    for i in range(1, len(words)):
+        a, b = " ".join(words[:i]), " ".join(words[i:])
+        sc = abs(len(a) - len(b)) - (25 if a.endswith((",", ";", ":")) else 0)
+        if score is None or sc < score:
+            best, score = i, sc
+    a, b = " ".join(words[:best]), " ".join(words[best:])
+    return chunks(a, maxc) + chunks(b, maxc)
+
+
+def split_words(text, n):
+    """Split text into n parts with roughly equal word counts (used for the same-timing second language)."""
+    w = text.split(); out, k = [], 0
+    for i in range(n):
+        m = round(len(w) * (i + 1) / n); out.append(" ".join(w[k:m])); k = m
+    return out
+
+
 def write_wav(path, x):
     with wave.open(str(path), "wb") as w:
         w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR)
@@ -94,7 +118,7 @@ def main():
     v = cfg["voice"]
     tv = template_vars(base, cfg)
     for sc in cfg["scenes"]:
-        sc["phrases"] = [[p[0].format(**tv), p[1].format(**tv)] for p in sc["phrases"]]
+        sc["phrases"] = [[x.format(**tv) if tv else x for x in p] for p in sc["phrases"]]
     pdir = base / "audio" / "phrases"; pdir.mkdir(parents=True, exist_ok=True)
 
     scenes, cues = [], []
@@ -105,13 +129,15 @@ def main():
         if fixed:
             t = vis_start + float(cfg.get("audio_offset", 0.4))
         parts, pos = [], 0.0
-        for k, (spoken, sub) in enumerate(sc["phrases"]):
+        for k, ph in enumerate(sc["phrases"]):
+            spoken, sub = ph[0], ph[1]
+            written = ph[2] if len(ph) > 2 else spoken      # teks narasi untuk subtitle bahasa asli (tanpa ejaan TTS)
             mp3 = pdir / f"s{sc['no']}_{k + 1:02d}.mp3"
             if not (a.reuse and mp3.exists()):
                 asyncio.run(synth(spoken, v["edge_voice"], v.get("rate", "+0%"), mp3))
             x = trim(decode(mp3))
             dur = len(x) / SR
-            cues.append({"scene": sc["no"], "text": sub, "spoken": spoken,
+            cues.append({"scene": sc["no"], "phrase": k + 1, "text": sub, "spoken": written, "tts": spoken,
                          "start": round(t + pos, 3), "end": round(t + pos + dur + 0.12, 3)})
             parts.append(x); pos += dur
             if k + 1 < len(sc["phrases"]):
@@ -129,14 +155,27 @@ def main():
             t = vis_start + length
         else:
             print(f"adegan {sc['no']}: {dur:5.2f} dtk, {len(sc['phrases'])} frasa")
-            t += dur + float(cfg.get("scene_gap", 0.8))
+            t += dur + float(sc.get("hold_after_s", cfg.get("scene_gap", 0.8)))
     if fixed:
         total = round(t + float(cfg.get("tail", 0.0)), 3)
     else:
-        total = round(t - float(cfg.get("scene_gap", 0.8)) + float(cfg.get("tail", 1.5)), 3)
+        total = round(t - float(cfg["scenes"][-1].get("hold_after_s", cfg.get("scene_gap", 0.8))) + float(cfg.get("tail", 1.5)), 3)
 
     for i, sc in enumerate(scenes):
         sc["end"] = scenes[i + 1]["start"] if i + 1 < len(scenes) else total
+    maxc = int(cfg.get("sub_max_chars", 0))
+    if maxc:                                   # long subtitles -> several one-line cues spread over the phrase
+        split = []
+        for c in cues:
+            parts = chunks(c["text"], maxc)
+            if len(parts) == 1:
+                split.append(c); continue
+            ids = split_words(c["spoken"], len(parts))
+            tot = sum(len(p) for p in parts); a = c["start"]
+            for k, (p, idt) in enumerate(zip(parts, ids)):
+                b = c["end"] if k == len(parts) - 1 else a + (c["end"] - c["start"]) * len(p) / tot
+                split.append({**c, "text": p, "spoken": idt, "start": round(a, 3), "end": round(b, 3)}); a = b
+        cues = split
     for i, c in enumerate(cues):
         nxt = cues[i + 1]["start"] - 0.04 if i + 1 < len(cues) else total
         c["end"] = round(min(c["end"], nxt), 3); c["i"] = i + 1

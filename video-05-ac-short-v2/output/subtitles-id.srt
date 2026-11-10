@@ -1,0 +1,191 @@
+1
+00:00:00,700 --> 00:00:02,707
+Ruangan terasa sejuk karena
+
+2
+00:00:02,747 --> 00:00:04,652
+pendingin ruangan, atau AC.
+
+3
+00:00:05,182 --> 00:00:07,272
+Tetapi dari mana dinginnya berasal?
+
+4
+00:00:08,652 --> 00:00:10,360
+Kalor adalah energi yang
+
+5
+00:00:10,400 --> 00:00:11,884
+berpindah karena beda suhu.
+
+6
+00:00:12,414 --> 00:00:14,382
+AC tidak menciptakan dingin.
+
+7
+00:00:14,912 --> 00:00:16,343
+AC memindahkan kalor dari
+
+8
+00:00:16,383 --> 00:00:17,796
+dalam ruangan ke luar.
+
+9
+00:00:19,176 --> 00:00:21,828
+Siklus AC punya empat
+
+10
+00:00:21,868 --> 00:00:23,090
+komponen: kompresor, kondensor,
+
+11
+00:00:23,130 --> 00:00:26,747
+katup ekspansi, dan evaporator.
+
+12
+00:00:27,277 --> 00:00:30,061
+Refrigeran, yaitu zat kerja,
+
+13
+00:00:30,101 --> 00:00:31,957
+mengalir melewati keempatnya.
+
+14
+00:00:33,337 --> 00:00:35,535
+Pertama, uap refrigeran bertekanan
+
+15
+00:00:35,575 --> 00:00:37,597
+rendah masuk ke kompresor.
+
+16
+00:00:38,127 --> 00:00:39,762
+Kompresor menaikkan tekanan dan
+
+17
+00:00:39,802 --> 00:00:41,630
+suhu uap menggunakan kerja.
+
+18
+00:00:43,010 --> 00:00:44,732
+Kedua, uap panas mengalir
+
+19
+00:00:44,772 --> 00:00:46,768
+ke kondensor di unit luar.
+
+20
+00:00:47,298 --> 00:00:49,190
+Uap melepas kalor ke udara
+
+21
+00:00:49,230 --> 00:00:50,857
+luar dan mengembun menjadi cair.
+
+22
+00:00:52,237 --> 00:00:53,758
+Ketiga, cairan
+
+23
+00:00:53,798 --> 00:00:55,620
+melewati katup ekspansi.
+
+24
+00:00:56,150 --> 00:00:58,223
+Tekanan turun, dan refrigeran menjadi campuran
+
+25
+00:00:58,263 --> 00:01:00,858
+cair dan uap yang dingin.
+
+26
+00:01:02,238 --> 00:01:04,409
+Keempat, campuran dingin itu masuk
+
+27
+00:01:04,449 --> 00:01:06,591
+ke evaporator di dalam ruangan.
+
+28
+00:01:07,121 --> 00:01:09,413
+Ia menyerap kalor dari
+
+29
+00:01:09,453 --> 00:01:10,551
+udara ruangan, lalu menguap.
+
+30
+00:01:11,931 --> 00:01:13,920
+Uap kembali ke kompresor,
+
+31
+00:01:13,960 --> 00:01:15,200
+dan siklus berulang.
+
+32
+00:01:15,730 --> 00:01:17,738
+Kalor terus diserap di dalam dan
+
+33
+00:01:17,778 --> 00:01:20,110
+dibuang di luar, sehingga ruangan sejuk.
+
+34
+00:01:21,490 --> 00:01:23,063
+Kalor tidak mengalir sendiri dari
+
+35
+00:01:23,103 --> 00:01:25,004
+tempat dingin ke tempat panas.
+
+36
+00:01:25,534 --> 00:01:27,922
+Karena itu kompresor membutuhkan kerja.
+
+37
+00:01:29,302 --> 00:01:31,665
+Ukuran kinerja AC disebut
+
+38
+00:01:31,705 --> 00:01:33,835
+koefisien kinerja, atau COP.
+
+39
+00:01:34,365 --> 00:01:36,161
+Nilainya adalah kalor yang
+
+40
+00:01:36,201 --> 00:01:38,098
+diserap dibagi kerja kompresor.
+
+41
+00:01:39,478 --> 00:01:41,463
+Jadi, kompresor menekan,
+
+42
+00:01:41,503 --> 00:01:43,488
+kondensor melepas kalor,
+
+43
+00:01:43,528 --> 00:01:45,369
+katup menurunkan tekanan, dan
+
+44
+00:01:45,409 --> 00:01:47,723
+evaporator menyerap kalor.
+
+45
+00:01:49,103 --> 00:01:50,788
+Ingin memahami cara kerja
+
+46
+00:01:50,828 --> 00:01:52,234
+mesin seperti ini lebih dalam?
+
+47
+00:01:52,764 --> 00:01:55,050
+Mari belajar di Teknik
+
+48
+00:01:55,090 --> 00:01:57,417
+Mesin, Universitas Muhammadiyah Yogyakarta.

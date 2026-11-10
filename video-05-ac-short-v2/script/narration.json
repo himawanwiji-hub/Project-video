@@ -1,0 +1,234 @@
+{
+ "title": "Dari Mana Dingin AC Berasal?",
+ "source": "scenes_source.json",
+ "status_naskah": "DRAFT_menunggu_dosen",
+ "voice": {
+  "provider": "edge-tts",
+  "edge_voice": "id-ID-ArdiNeural",
+  "rate": "-15%"
+ },
+ "pause_comma": 0.35,
+ "pause_sentence": 0.65,
+ "scene_gap": 1.5,
+ "lead_in": 0.7,
+ "tail": 1.8,
+ "scenes": [
+  {
+   "no": 1,
+   "id": "hook",
+   "role": "hook",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Ruangan terasa sejuk karena pendingin ruangan, atau a se.",
+     "The room feels cool thanks to the air conditioner, or AC.",
+     "Ruangan terasa sejuk karena pendingin ruangan, atau AC."
+    ],
+    [
+     "Tetapi dari mana dinginnya berasal?",
+     "But where does the cold actually come from?",
+     "Tetapi dari mana dinginnya berasal?"
+    ]
+   ]
+  },
+  {
+   "no": 2,
+   "id": "heat",
+   "role": "peta",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Kalor adalah energi yang berpindah karena beda suhu.",
+     "Heat is energy that moves because of a temperature difference.",
+     "Kalor adalah energi yang berpindah karena beda suhu."
+    ],
+    [
+     "A se tidak menciptakan dingin.",
+     "An AC does not create cold.",
+     "AC tidak menciptakan dingin."
+    ],
+    [
+     "A se memindahkan kalor dari dalam ruangan ke luar.",
+     "It moves heat from inside the room to the outside.",
+     "AC memindahkan kalor dari dalam ruangan ke luar."
+    ]
+   ]
+  },
+  {
+   "no": 3,
+   "id": "cycle",
+   "role": "peta",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Siklus a se punya empat komponen: kompresor, kondensor, katup ekspansi, dan evaporator.",
+     "An AC cycle has four components: the compressor, condenser, expansion valve, and evaporator.",
+     "Siklus AC punya empat komponen: kompresor, kondensor, katup ekspansi, dan evaporator."
+    ],
+    [
+     "Refrigeran, yaitu zat kerja, mengalir melewati keempatnya.",
+     "The refrigerant, the working fluid, flows through all four.",
+     "Refrigeran, yaitu zat kerja, mengalir melewati keempatnya."
+    ]
+   ]
+  },
+  {
+   "no": 4,
+   "id": "compressor",
+   "role": "langkah",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Pertama, uap refrigeran bertekanan rendah masuk ke kompresor.",
+     "First, low-pressure refrigerant vapor enters the compressor.",
+     "Pertama, uap refrigeran bertekanan rendah masuk ke kompresor."
+    ],
+    [
+     "Kompresor menaikkan tekanan dan suhu uap menggunakan kerja.",
+     "The compressor raises the vapor's pressure and temperature using work.",
+     "Kompresor menaikkan tekanan dan suhu uap menggunakan kerja."
+    ]
+   ]
+  },
+  {
+   "no": 5,
+   "id": "condenser",
+   "role": "langkah",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Kedua, uap panas mengalir ke kondensor di unit luar.",
+     "Second, the hot vapor flows to the condenser in the outdoor unit.",
+     "Kedua, uap panas mengalir ke kondensor di unit luar."
+    ],
+    [
+     "Uap melepas kalor ke udara luar dan mengembun menjadi cair.",
+     "The vapor releases heat to the outside air and condenses into a liquid.",
+     "Uap melepas kalor ke udara luar dan mengembun menjadi cair."
+    ]
+   ]
+  },
+  {
+   "no": 6,
+   "id": "expansion",
+   "role": "langkah",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Ketiga, cairan melewati katup ekspansi.",
+     "Third, the liquid passes through the expansion valve.",
+     "Ketiga, cairan melewati katup ekspansi."
+    ],
+    [
+     "Tekanan turun, dan refrigeran menjadi campuran cair dan uap yang dingin.",
+     "Pressure drops, and the refrigerant becomes a cold mixture of liquid and vapor.",
+     "Tekanan turun, dan refrigeran menjadi campuran cair dan uap yang dingin."
+    ]
+   ]
+  },
+  {
+   "no": 7,
+   "id": "evaporator",
+   "role": "langkah",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Keempat, campuran dingin itu masuk ke evaporator di dalam ruangan.",
+     "Fourth, that cold mixture enters the evaporator inside the room.",
+     "Keempat, campuran dingin itu masuk ke evaporator di dalam ruangan."
+    ],
+    [
+     "Ia menyerap kalor dari udara ruangan, lalu menguap.",
+     "It absorbs heat from the room air, then evaporates.",
+     "Ia menyerap kalor dari udara ruangan, lalu menguap."
+    ]
+   ]
+  },
+  {
+   "no": 8,
+   "id": "loop",
+   "role": "langkah",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Uap kembali ke kompresor, dan siklus berulang.",
+     "The vapor returns to the compressor, and the cycle repeats.",
+     "Uap kembali ke kompresor, dan siklus berulang."
+    ],
+    [
+     "Kalor terus diserap di dalam dan dibuang di luar, sehingga ruangan sejuk.",
+     "Heat keeps being absorbed inside and released outside, so the room stays cool.",
+     "Kalor terus diserap di dalam dan dibuang di luar, sehingga ruangan sejuk."
+    ]
+   ]
+  },
+  {
+   "no": 9,
+   "id": "secondlaw",
+   "role": "langkah",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Kalor tidak mengalir sendiri dari tempat dingin ke tempat panas.",
+     "Heat does not flow by itself from a cold place to a hot place.",
+     "Kalor tidak mengalir sendiri dari tempat dingin ke tempat panas."
+    ],
+    [
+     "Karena itu kompresor membutuhkan kerja.",
+     "That is why the compressor needs work.",
+     "Karena itu kompresor membutuhkan kerja."
+    ]
+   ]
+  },
+  {
+   "no": 10,
+   "id": "cop",
+   "role": "langkah",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Ukuran kinerja a se disebut koefisien kinerja, atau ko pe.",
+     "The measure of an AC's performance is called the coefficient of performance, or COP.",
+     "Ukuran kinerja AC disebut koefisien kinerja, atau COP."
+    ],
+    [
+     "Nilainya adalah kalor yang diserap dibagi kerja kompresor.",
+     "Its value is the heat absorbed divided by the compressor work.",
+     "Nilainya adalah kalor yang diserap dibagi kerja kompresor."
+    ]
+   ]
+  },
+  {
+   "no": 11,
+   "id": "summary",
+   "role": "ringkasan",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Jadi, kompresor menekan, kondensor melepas kalor, katup menurunkan tekanan, dan evaporator menyerap kalor.",
+     "So, the compressor squeezes, the condenser releases heat, the valve lowers pressure, and the evaporator absorbs heat.",
+     "Jadi, kompresor menekan, kondensor melepas kalor, katup menurunkan tekanan, dan evaporator menyerap kalor."
+    ]
+   ]
+  },
+  {
+   "no": 12,
+   "id": "cta",
+   "role": "cta",
+   "hold_after_s": 1.5,
+   "phrases": [
+    [
+     "Ingin memahami cara kerja mesin seperti ini lebih dalam?",
+     "Want to understand machines like this more deeply?",
+     "Ingin memahami cara kerja mesin seperti ini lebih dalam?"
+    ],
+    [
+     "Mari belajar di Teknik Mesin, Universitas Muhammadiyah Yogyakarta.",
+     "Come study Mechanical Engineering at Universitas Muhammadiyah Yogyakarta.",
+     "Mari belajar di Teknik Mesin, Universitas Muhammadiyah Yogyakarta."
+    ]
+   ]
+  }
+ ],
+ "sub_max_chars": 44
+}

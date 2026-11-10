@@ -1,0 +1,387 @@
+{
+ "video_id": "video-01-ac",
+ "status_naskah": "DRAFT_menunggu_dosen",
+ "topic": "Cara kerja AC (siklus kompresi uap)",
+ "judul_id": "Dari Mana Dingin AC Berasal?",
+ "judul_en": "Where Does an AC's Cold Come From?",
+ "deskripsi": "AC tidak menciptakan dingin: AC memindahkan kalor. Kenali empat komponen siklus kompresi uap: kompresor, kondensor, katup ekspansi, dan evaporator.",
+ "hashtags": [
+  "#TeknikMesin",
+  "#UMY",
+  "#AC",
+  "#Termodinamika",
+  "#Shorts"
+ ],
+ "bahasa_narasi": "id",
+ "bahasa_subtitle": "en",
+ "scenes": [
+  {
+   "no": 1,
+   "role": "hook",
+   "visual": "Ruangan sejuk dengan unit AC di dalam dan unit luar di luar; tanda tanya di dekat udara dingin",
+   "focus": [],
+   "lines": [
+    {
+     "id": "Ruangan terasa sejuk karena pendingin ruangan, atau AC.",
+     "tts": "Ruangan terasa sejuk karena pendingin ruangan, atau a se.",
+     "en": "The room feels cool thanks to the air conditioner, or AC."
+    },
+    {
+     "id": "Tetapi dari mana dinginnya berasal?",
+     "tts": "Tetapi dari mana dinginnya berasal?",
+     "en": "But where does the cold actually come from?"
+    }
+   ],
+   "claims": [],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 2,
+   "role": "peta",
+   "visual": "Panah kalor (warna panas, berlabel Kalor) bergerak dari dalam ruangan ke luar",
+   "focus": [
+    "panah_kalor"
+   ],
+   "lines": [
+    {
+     "id": "Kalor adalah energi yang berpindah karena beda suhu.",
+     "tts": "Kalor adalah energi yang berpindah karena beda suhu.",
+     "en": "Heat is energy that moves because of a temperature difference."
+    },
+    {
+     "id": "AC tidak menciptakan dingin.",
+     "tts": "A se tidak menciptakan dingin.",
+     "en": "An AC does not create cold."
+    },
+    {
+     "id": "AC memindahkan kalor dari dalam ruangan ke luar.",
+     "tts": "A se memindahkan kalor dari dalam ruangan ke luar.",
+     "en": "It moves heat from inside the room to the outside."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "Evaporator menyerap kalor dari ruang yang didinginkan; kondensor melepas kalor ke lingkungan yang lebih dingin",
+     "sumber": "Slide kuliah siklus refrigerasi uap (ch10), Worcester Polytechnic Institute: users.wpi.edu/~sullivan/ES3001/Lectures/ch10-jms2013.pdf"
+    },
+    {
+     "teks": "Evaporator menyerap kalor dari ruang yang didinginkan; kondensor melepas kalor ke lingkungan yang lebih dingin",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    },
+    {
+     "teks": "Definisi kalor sebagai energi yang berpindah karena beda suhu",
+     "sumber": "[MENUNGGU DOSEN] buku ajar rujukan, judul dan bab (Q5)"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 3,
+   "role": "peta",
+   "visual": "Skema siklus: empat kotak berlabel (kompresor, kondensor, katup ekspansi, evaporator) dihubungkan pipa; refrigeran mengalir",
+   "focus": [
+    "kompresor",
+    "kondensor",
+    "katup",
+    "evaporator"
+   ],
+   "lines": [
+    {
+     "id": "Siklus AC punya empat komponen: kompresor, kondensor, katup ekspansi, dan evaporator.",
+     "tts": "Siklus a se punya empat komponen: kompresor, kondensor, katup ekspansi, dan evaporator.",
+     "en": "An AC cycle has four components: the compressor, condenser, expansion valve, and evaporator."
+    },
+    {
+     "id": "Refrigeran, yaitu zat kerja, mengalir melewati keempatnya.",
+     "tts": "Refrigeran, yaitu zat kerja, mengalir melewati keempatnya.",
+     "en": "The refrigerant, the working fluid, flows through all four."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "Siklus kompresi uap terdiri dari kompresor, kondensor, katup ekspansi (throttling), dan evaporator",
+     "sumber": "Slide kuliah siklus refrigerasi uap (ch10), Worcester Polytechnic Institute: users.wpi.edu/~sullivan/ES3001/Lectures/ch10-jms2013.pdf"
+    },
+    {
+     "teks": "Siklus kompresi uap terdiri dari kompresor, kondensor, katup ekspansi (throttling), dan evaporator",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 4,
+   "role": "langkah",
+   "visual": "Sorot kompresor; pipa keluar berwarna panas; panah kerja masuk berlabel",
+   "focus": [
+    "kompresor"
+   ],
+   "lines": [
+    {
+     "id": "Pertama, uap refrigeran bertekanan rendah masuk ke kompresor.",
+     "tts": "Pertama, uap refrigeran bertekanan rendah masuk ke kompresor.",
+     "en": "First, low-pressure refrigerant vapor enters the compressor."
+    },
+    {
+     "id": "Kompresor menaikkan tekanan dan suhu uap menggunakan kerja.",
+     "tts": "Kompresor menaikkan tekanan dan suhu uap menggunakan kerja.",
+     "en": "The compressor raises the vapor's pressure and temperature using work."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "Kompresor menaikkan tekanan dan suhu uap dan membutuhkan kerja masuk",
+     "sumber": "Slide kuliah siklus refrigerasi uap (ch10), Worcester Polytechnic Institute: users.wpi.edu/~sullivan/ES3001/Lectures/ch10-jms2013.pdf"
+    },
+    {
+     "teks": "Kompresor menaikkan tekanan dan suhu uap dan membutuhkan kerja masuk",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 5,
+   "role": "langkah",
+   "visual": "Sorot kondensor; panah kalor keluar berlabel; uap menjadi cair",
+   "focus": [
+    "kondensor"
+   ],
+   "lines": [
+    {
+     "id": "Kedua, uap panas mengalir ke kondensor di unit luar.",
+     "tts": "Kedua, uap panas mengalir ke kondensor di unit luar.",
+     "en": "Second, the hot vapor flows to the condenser in the outdoor unit."
+    },
+    {
+     "id": "Uap melepas kalor ke udara luar dan mengembun menjadi cair.",
+     "tts": "Uap melepas kalor ke udara luar dan mengembun menjadi cair.",
+     "en": "The vapor releases heat to the outside air and condenses into a liquid."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "Pada kondensor uap panas melepas kalor ke lingkungan yang lebih dingin dan mengembun menjadi cair",
+     "sumber": "Slide kuliah siklus refrigerasi uap (ch10), Worcester Polytechnic Institute: users.wpi.edu/~sullivan/ES3001/Lectures/ch10-jms2013.pdf"
+    },
+    {
+     "teks": "Pada kondensor uap panas melepas kalor ke lingkungan yang lebih dingin dan mengembun menjadi cair",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    },
+    {
+     "teks": "Pada AC rumah tipe split, kompresor dan kondensor berada di unit luar, evaporator di unit dalam",
+     "sumber": "[MENUNGGU DOSEN] buku ajar rujukan, judul dan bab (Q5) (asumsi bagian 5 ringkasan)"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 6,
+   "role": "langkah",
+   "visual": "Sorot katup ekspansi; pipa keluar berwarna dingin; tekanan turun",
+   "focus": [
+    "katup"
+   ],
+   "lines": [
+    {
+     "id": "Ketiga, cairan melewati katup ekspansi.",
+     "tts": "Ketiga, cairan melewati katup ekspansi.",
+     "en": "Third, the liquid passes through the expansion valve."
+    },
+    {
+     "id": "Tekanan turun, dan refrigeran menjadi campuran cair dan uap yang dingin.",
+     "tts": "Tekanan turun, dan refrigeran menjadi campuran cair dan uap yang dingin.",
+     "en": "Pressure drops, and the refrigerant becomes a cold mixture of liquid and vapor."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "Katup ekspansi menurunkan tekanan ke tekanan evaporator pada entalpi tetap; keluarannya campuran cair dan uap",
+     "sumber": "Slide kuliah siklus refrigerasi uap (ch10), Worcester Polytechnic Institute: users.wpi.edu/~sullivan/ES3001/Lectures/ch10-jms2013.pdf"
+    },
+    {
+     "teks": "Katup ekspansi menurunkan tekanan ke tekanan evaporator pada entalpi tetap; keluarannya campuran cair dan uap",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 7,
+   "role": "langkah",
+   "visual": "Sorot evaporator; panah kalor masuk berlabel; campuran menguap",
+   "focus": [
+    "evaporator"
+   ],
+   "lines": [
+    {
+     "id": "Keempat, campuran dingin itu masuk ke evaporator di dalam ruangan.",
+     "tts": "Keempat, campuran dingin itu masuk ke evaporator di dalam ruangan.",
+     "en": "Fourth, that cold mixture enters the evaporator inside the room."
+    },
+    {
+     "id": "Ia menyerap kalor dari udara ruangan, lalu menguap.",
+     "tts": "Ia menyerap kalor dari udara ruangan, lalu menguap.",
+     "en": "It absorbs heat from the room air, then evaporates."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "Pada evaporator campuran cair dan uap menyerap kalor dari ruang yang didinginkan dan menguap",
+     "sumber": "Slide kuliah siklus refrigerasi uap (ch10), Worcester Polytechnic Institute: users.wpi.edu/~sullivan/ES3001/Lectures/ch10-jms2013.pdf"
+    },
+    {
+     "teks": "Pada evaporator campuran cair dan uap menyerap kalor dari ruang yang didinginkan dan menguap",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 8,
+   "role": "langkah",
+   "visual": "Aliran mengelilingi seluruh siklus berulang; panah kalor masuk dan keluar tetap tampil",
+   "focus": [
+    "kompresor",
+    "kondensor",
+    "katup",
+    "evaporator"
+   ],
+   "lines": [
+    {
+     "id": "Uap kembali ke kompresor, dan siklus berulang.",
+     "tts": "Uap kembali ke kompresor, dan siklus berulang.",
+     "en": "The vapor returns to the compressor, and the cycle repeats."
+    },
+    {
+     "id": "Kalor terus diserap di dalam dan dibuang di luar, sehingga ruangan sejuk.",
+     "tts": "Kalor terus diserap di dalam dan dibuang di luar, sehingga ruangan sejuk.",
+     "en": "Heat keeps being absorbed inside and released outside, so the room stays cool."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "Refrigeran bersirkulasi dalam siklus tertutup: evaporator, kompresor, kondensor, katup ekspansi",
+     "sumber": "Slide kuliah siklus refrigerasi uap (ch10), Worcester Polytechnic Institute: users.wpi.edu/~sullivan/ES3001/Lectures/ch10-jms2013.pdf"
+    },
+    {
+     "teks": "Refrigeran bersirkulasi dalam siklus tertutup: evaporator, kompresor, kondensor, katup ekspansi",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 9,
+   "role": "langkah",
+   "visual": "Dua kotak suhu: dingin dan panas; panah kalor ke arah panas dicoret tanpa kerja, lalu ditambah panah kerja kompresor",
+   "focus": [
+    "kompresor"
+   ],
+   "lines": [
+    {
+     "id": "Kalor tidak mengalir sendiri dari tempat dingin ke tempat panas.",
+     "tts": "Kalor tidak mengalir sendiri dari tempat dingin ke tempat panas.",
+     "en": "Heat does not flow by itself from a cold place to a hot place."
+    },
+    {
+     "id": "Karena itu kompresor membutuhkan kerja.",
+     "tts": "Karena itu kompresor membutuhkan kerja.",
+     "en": "That is why the compressor needs work."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "Pemindahan kalor dari ruang dingin ke lingkungan lebih panas membutuhkan kerja masuk (Q panas = Q dingin + kerja)",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    },
+    {
+     "teks": "Kalor tidak mengalir sendiri dari dingin ke panas (pernyataan Clausius)",
+     "sumber": "[MENUNGGU DOSEN] buku ajar rujukan, judul dan bab (Q5); rumusan satu kalimat menunggu Q2"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 10,
+   "role": "langkah",
+   "visual": "Panel rumus kata-kata: COP = kalor yang diserap dibagi kerja kompresor",
+   "focus": [
+    "kompresor",
+    "evaporator"
+   ],
+   "lines": [
+    {
+     "id": "Ukuran kinerja AC disebut koefisien kinerja, atau COP.",
+     "tts": "Ukuran kinerja a se disebut koefisien kinerja, atau ko pe.",
+     "en": "The measure of an AC's performance is called the coefficient of performance, or COP."
+    },
+    {
+     "id": "Nilainya adalah kalor yang diserap dibagi kerja kompresor.",
+     "tts": "Nilainya adalah kalor yang diserap dibagi kerja kompresor.",
+     "en": "Its value is the heat absorbed divided by the compressor work."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "COP pendingin = kalor yang diserap evaporator dibagi kerja kompresor",
+     "sumber": "Slide kuliah siklus refrigerasi uap (ch10), Worcester Polytechnic Institute: users.wpi.edu/~sullivan/ES3001/Lectures/ch10-jms2013.pdf"
+    },
+    {
+     "teks": "COP pendingin = kalor yang diserap evaporator dibagi kerja kompresor",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 11,
+   "role": "ringkasan",
+   "visual": "Skema lengkap dengan empat label; keempat komponen disorot berurutan",
+   "focus": [
+    "kompresor",
+    "kondensor",
+    "katup",
+    "evaporator"
+   ],
+   "lines": [
+    {
+     "id": "Jadi, kompresor menekan, kondensor melepas kalor, katup menurunkan tekanan, dan evaporator menyerap kalor.",
+     "tts": "Jadi, kompresor menekan, kondensor melepas kalor, katup menurunkan tekanan, dan evaporator menyerap kalor.",
+     "en": "So, the compressor squeezes, the condenser releases heat, the valve lowers pressure, and the evaporator absorbs heat."
+    }
+   ],
+   "claims": [
+    {
+     "teks": "Ringkasan empat proses siklus kompresi uap",
+     "sumber": "Slide kuliah siklus refrigerasi uap (ch10), Worcester Polytechnic Institute: users.wpi.edu/~sullivan/ES3001/Lectures/ch10-jms2013.pdf"
+    },
+    {
+     "teks": "Ringkasan empat proses siklus kompresi uap",
+     "sumber": "Artikel 'Vapor-compression Cycle - Refrigeration Cycle', nuclear-power.com/?p=18094"
+    }
+   ],
+   "hold_after_s": 1.5
+  },
+  {
+   "no": 12,
+   "role": "cta",
+   "visual": "Tanpa gambar teknik: kartu nama prodi",
+   "focus": [],
+   "lines": [
+    {
+     "id": "Ingin memahami cara kerja mesin seperti ini lebih dalam?",
+     "tts": "Ingin memahami cara kerja mesin seperti ini lebih dalam?",
+     "en": "Want to understand machines like this more deeply?"
+    },
+    {
+     "id": "Mari belajar di Teknik Mesin, Universitas Muhammadiyah Yogyakarta.",
+     "tts": "Mari belajar di Teknik Mesin, Universitas Muhammadiyah Yogyakarta.",
+     "en": "Come study Mechanical Engineering at Universitas Muhammadiyah Yogyakarta."
+    }
+   ],
+   "claims": [],
+   "hold_after_s": 1.5
+  }
+ ]
+}

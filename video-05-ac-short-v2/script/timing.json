@@ -1,0 +1,602 @@
+{
+ "total_seconds": 119.097,
+ "fps": 30,
+ "provider": "edge-tts",
+ "voice": {
+  "provider": "edge-tts",
+  "edge_voice": "id-ID-ArdiNeural",
+  "rate": "-15%"
+ },
+ "scenes": [
+  {
+   "no": 1,
+   "id": "hook",
+   "start": 0.7,
+   "audio_start": 0.7,
+   "audio_seconds": 6.452,
+   "audio": "audio/scene_1.wav",
+   "end": 8.652
+  },
+  {
+   "no": 2,
+   "id": "heat",
+   "start": 8.652,
+   "audio_start": 8.652,
+   "audio_seconds": 9.023,
+   "audio": "audio/scene_2.wav",
+   "end": 19.176
+  },
+  {
+   "no": 3,
+   "id": "cycle",
+   "start": 19.176,
+   "audio_start": 19.176,
+   "audio_seconds": 12.662,
+   "audio": "audio/scene_3.wav",
+   "end": 33.337
+  },
+  {
+   "no": 4,
+   "id": "compressor",
+   "start": 33.337,
+   "audio_start": 33.337,
+   "audio_seconds": 8.173,
+   "audio": "audio/scene_4.wav",
+   "end": 43.01
+  },
+  {
+   "no": 5,
+   "id": "condenser",
+   "start": 43.01,
+   "audio_start": 43.01,
+   "audio_seconds": 7.726,
+   "audio": "audio/scene_5.wav",
+   "end": 52.237
+  },
+  {
+   "no": 6,
+   "id": "expansion",
+   "start": 52.237,
+   "audio_start": 52.237,
+   "audio_seconds": 8.501,
+   "audio": "audio/scene_6.wav",
+   "end": 62.238
+  },
+  {
+   "no": 7,
+   "id": "evaporator",
+   "start": 62.238,
+   "audio_start": 62.238,
+   "audio_seconds": 8.193,
+   "audio": "audio/scene_7.wav",
+   "end": 71.931
+  },
+  {
+   "no": 8,
+   "id": "loop",
+   "start": 71.931,
+   "audio_start": 71.931,
+   "audio_seconds": 8.06,
+   "audio": "audio/scene_8.wav",
+   "end": 81.49
+  },
+  {
+   "no": 9,
+   "id": "secondlaw",
+   "start": 81.49,
+   "audio_start": 81.49,
+   "audio_seconds": 6.312,
+   "audio": "audio/scene_9.wav",
+   "end": 89.302
+  },
+  {
+   "no": 10,
+   "id": "cop",
+   "start": 89.302,
+   "audio_start": 89.302,
+   "audio_seconds": 8.675,
+   "audio": "audio/scene_10.wav",
+   "end": 99.478
+  },
+  {
+   "no": 11,
+   "id": "summary",
+   "start": 99.478,
+   "audio_start": 99.478,
+   "audio_seconds": 8.125,
+   "audio": "audio/scene_11.wav",
+   "end": 109.103
+  },
+  {
+   "no": 12,
+   "id": "cta",
+   "start": 109.103,
+   "audio_start": 109.103,
+   "audio_seconds": 8.195,
+   "audio": "audio/scene_12.wav",
+   "end": 119.097
+  }
+ ],
+ "cues": [
+  {
+   "scene": 1,
+   "phrase": 1,
+   "text": "The room feels cool thanks to",
+   "spoken": "Ruangan terasa sejuk karena",
+   "tts": "Ruangan terasa sejuk karena pendingin ruangan, atau a se.",
+   "start": 0.7,
+   "end": 2.707,
+   "i": 1
+  },
+  {
+   "scene": 1,
+   "phrase": 1,
+   "text": "the air conditioner, or AC.",
+   "spoken": "pendingin ruangan, atau AC.",
+   "tts": "Ruangan terasa sejuk karena pendingin ruangan, atau a se.",
+   "start": 2.747,
+   "end": 4.652,
+   "i": 2
+  },
+  {
+   "scene": 1,
+   "phrase": 2,
+   "text": "But where does the cold actually come from?",
+   "spoken": "Tetapi dari mana dinginnya berasal?",
+   "tts": "Tetapi dari mana dinginnya berasal?",
+   "start": 5.182,
+   "end": 7.272,
+   "i": 3
+  },
+  {
+   "scene": 2,
+   "phrase": 1,
+   "text": "Heat is energy that moves because",
+   "spoken": "Kalor adalah energi yang",
+   "tts": "Kalor adalah energi yang berpindah karena beda suhu.",
+   "start": 8.652,
+   "end": 10.36,
+   "i": 4
+  },
+  {
+   "scene": 2,
+   "phrase": 1,
+   "text": "of a temperature difference.",
+   "spoken": "berpindah karena beda suhu.",
+   "tts": "Kalor adalah energi yang berpindah karena beda suhu.",
+   "start": 10.4,
+   "end": 11.884,
+   "i": 5
+  },
+  {
+   "scene": 2,
+   "phrase": 2,
+   "text": "An AC does not create cold.",
+   "spoken": "AC tidak menciptakan dingin.",
+   "tts": "A se tidak menciptakan dingin.",
+   "start": 12.414,
+   "end": 14.382,
+   "i": 6
+  },
+  {
+   "scene": 2,
+   "phrase": 3,
+   "text": "It moves heat from inside",
+   "spoken": "AC memindahkan kalor dari",
+   "tts": "A se memindahkan kalor dari dalam ruangan ke luar.",
+   "start": 14.912,
+   "end": 16.343,
+   "i": 7
+  },
+  {
+   "scene": 2,
+   "phrase": 3,
+   "text": "the room to the outside.",
+   "spoken": "dalam ruangan ke luar.",
+   "tts": "A se memindahkan kalor dari dalam ruangan ke luar.",
+   "start": 16.383,
+   "end": 17.796,
+   "i": 8
+  },
+  {
+   "scene": 3,
+   "phrase": 1,
+   "text": "An AC cycle has four components:",
+   "spoken": "Siklus AC punya empat",
+   "tts": "Siklus a se punya empat komponen: kompresor, kondensor, katup ekspansi, dan evaporator.",
+   "start": 19.176,
+   "end": 21.828,
+   "i": 9
+  },
+  {
+   "scene": 3,
+   "phrase": 1,
+   "text": "the compressor,",
+   "spoken": "komponen: kompresor, kondensor,",
+   "tts": "Siklus a se punya empat komponen: kompresor, kondensor, katup ekspansi, dan evaporator.",
+   "start": 21.868,
+   "end": 23.09,
+   "i": 10
+  },
+  {
+   "scene": 3,
+   "phrase": 1,
+   "text": "condenser, expansion valve, and evaporator.",
+   "spoken": "katup ekspansi, dan evaporator.",
+   "tts": "Siklus a se punya empat komponen: kompresor, kondensor, katup ekspansi, dan evaporator.",
+   "start": 23.13,
+   "end": 26.747,
+   "i": 11
+  },
+  {
+   "scene": 3,
+   "phrase": 2,
+   "text": "The refrigerant, the working fluid,",
+   "spoken": "Refrigeran, yaitu zat kerja,",
+   "tts": "Refrigeran, yaitu zat kerja, mengalir melewati keempatnya.",
+   "start": 27.277,
+   "end": 30.061,
+   "i": 12
+  },
+  {
+   "scene": 3,
+   "phrase": 2,
+   "text": "flows through all four.",
+   "spoken": "mengalir melewati keempatnya.",
+   "tts": "Refrigeran, yaitu zat kerja, mengalir melewati keempatnya.",
+   "start": 30.101,
+   "end": 31.957,
+   "i": 13
+  },
+  {
+   "scene": 4,
+   "phrase": 1,
+   "text": "First, low-pressure refrigerant",
+   "spoken": "Pertama, uap refrigeran bertekanan",
+   "tts": "Pertama, uap refrigeran bertekanan rendah masuk ke kompresor.",
+   "start": 33.337,
+   "end": 35.535,
+   "i": 14
+  },
+  {
+   "scene": 4,
+   "phrase": 1,
+   "text": "vapor enters the compressor.",
+   "spoken": "rendah masuk ke kompresor.",
+   "tts": "Pertama, uap refrigeran bertekanan rendah masuk ke kompresor.",
+   "start": 35.575,
+   "end": 37.597,
+   "i": 15
+  },
+  {
+   "scene": 4,
+   "phrase": 2,
+   "text": "The compressor raises the vapor's",
+   "spoken": "Kompresor menaikkan tekanan dan",
+   "tts": "Kompresor menaikkan tekanan dan suhu uap menggunakan kerja.",
+   "start": 38.127,
+   "end": 39.762,
+   "i": 16
+  },
+  {
+   "scene": 4,
+   "phrase": 2,
+   "text": "pressure and temperature using work.",
+   "spoken": "suhu uap menggunakan kerja.",
+   "tts": "Kompresor menaikkan tekanan dan suhu uap menggunakan kerja.",
+   "start": 39.802,
+   "end": 41.63,
+   "i": 17
+  },
+  {
+   "scene": 5,
+   "phrase": 1,
+   "text": "Second, the hot vapor flows to",
+   "spoken": "Kedua, uap panas mengalir",
+   "tts": "Kedua, uap panas mengalir ke kondensor di unit luar.",
+   "start": 43.01,
+   "end": 44.732,
+   "i": 18
+  },
+  {
+   "scene": 5,
+   "phrase": 1,
+   "text": "the condenser in the outdoor unit.",
+   "spoken": "ke kondensor di unit luar.",
+   "tts": "Kedua, uap panas mengalir ke kondensor di unit luar.",
+   "start": 44.772,
+   "end": 46.768,
+   "i": 19
+  },
+  {
+   "scene": 5,
+   "phrase": 2,
+   "text": "The vapor releases heat to the outside",
+   "spoken": "Uap melepas kalor ke udara",
+   "tts": "Uap melepas kalor ke udara luar dan mengembun menjadi cair.",
+   "start": 47.298,
+   "end": 49.19,
+   "i": 20
+  },
+  {
+   "scene": 5,
+   "phrase": 2,
+   "text": "air and condenses into a liquid.",
+   "spoken": "luar dan mengembun menjadi cair.",
+   "tts": "Uap melepas kalor ke udara luar dan mengembun menjadi cair.",
+   "start": 49.23,
+   "end": 50.857,
+   "i": 21
+  },
+  {
+   "scene": 6,
+   "phrase": 1,
+   "text": "Third, the liquid passes",
+   "spoken": "Ketiga, cairan",
+   "tts": "Ketiga, cairan melewati katup ekspansi.",
+   "start": 52.237,
+   "end": 53.758,
+   "i": 22
+  },
+  {
+   "scene": 6,
+   "phrase": 1,
+   "text": "through the expansion valve.",
+   "spoken": "melewati katup ekspansi.",
+   "tts": "Ketiga, cairan melewati katup ekspansi.",
+   "start": 53.798,
+   "end": 55.62,
+   "i": 23
+  },
+  {
+   "scene": 6,
+   "phrase": 2,
+   "text": "Pressure drops, and the refrigerant",
+   "spoken": "Tekanan turun, dan refrigeran menjadi campuran",
+   "tts": "Tekanan turun, dan refrigeran menjadi campuran cair dan uap yang dingin.",
+   "start": 56.15,
+   "end": 58.223,
+   "i": 24
+  },
+  {
+   "scene": 6,
+   "phrase": 2,
+   "text": "becomes a cold mixture of liquid and vapor.",
+   "spoken": "cair dan uap yang dingin.",
+   "tts": "Tekanan turun, dan refrigeran menjadi campuran cair dan uap yang dingin.",
+   "start": 58.263,
+   "end": 60.858,
+   "i": 25
+  },
+  {
+   "scene": 7,
+   "phrase": 1,
+   "text": "Fourth, that cold mixture enters",
+   "spoken": "Keempat, campuran dingin itu masuk",
+   "tts": "Keempat, campuran dingin itu masuk ke evaporator di dalam ruangan.",
+   "start": 62.238,
+   "end": 64.409,
+   "i": 26
+  },
+  {
+   "scene": 7,
+   "phrase": 1,
+   "text": "the evaporator inside the room.",
+   "spoken": "ke evaporator di dalam ruangan.",
+   "tts": "Keempat, campuran dingin itu masuk ke evaporator di dalam ruangan.",
+   "start": 64.449,
+   "end": 66.591,
+   "i": 27
+  },
+  {
+   "scene": 7,
+   "phrase": 2,
+   "text": "It absorbs heat from the room air,",
+   "spoken": "Ia menyerap kalor dari",
+   "tts": "Ia menyerap kalor dari udara ruangan, lalu menguap.",
+   "start": 67.121,
+   "end": 69.413,
+   "i": 28
+  },
+  {
+   "scene": 7,
+   "phrase": 2,
+   "text": "then evaporates.",
+   "spoken": "udara ruangan, lalu menguap.",
+   "tts": "Ia menyerap kalor dari udara ruangan, lalu menguap.",
+   "start": 69.453,
+   "end": 70.551,
+   "i": 29
+  },
+  {
+   "scene": 8,
+   "phrase": 1,
+   "text": "The vapor returns to the compressor,",
+   "spoken": "Uap kembali ke kompresor,",
+   "tts": "Uap kembali ke kompresor, dan siklus berulang.",
+   "start": 71.931,
+   "end": 73.92,
+   "i": 30
+  },
+  {
+   "scene": 8,
+   "phrase": 1,
+   "text": "and the cycle repeats.",
+   "spoken": "dan siklus berulang.",
+   "tts": "Uap kembali ke kompresor, dan siklus berulang.",
+   "start": 73.96,
+   "end": 75.2,
+   "i": 31
+  },
+  {
+   "scene": 8,
+   "phrase": 2,
+   "text": "Heat keeps being absorbed inside and",
+   "spoken": "Kalor terus diserap di dalam dan",
+   "tts": "Kalor terus diserap di dalam dan dibuang di luar, sehingga ruangan sejuk.",
+   "start": 75.73,
+   "end": 77.738,
+   "i": 32
+  },
+  {
+   "scene": 8,
+   "phrase": 2,
+   "text": "released outside, so the room stays cool.",
+   "spoken": "dibuang di luar, sehingga ruangan sejuk.",
+   "tts": "Kalor terus diserap di dalam dan dibuang di luar, sehingga ruangan sejuk.",
+   "start": 77.778,
+   "end": 80.11,
+   "i": 33
+  },
+  {
+   "scene": 9,
+   "phrase": 1,
+   "text": "Heat does not flow by itself",
+   "spoken": "Kalor tidak mengalir sendiri dari",
+   "tts": "Kalor tidak mengalir sendiri dari tempat dingin ke tempat panas.",
+   "start": 81.49,
+   "end": 83.063,
+   "i": 34
+  },
+  {
+   "scene": 9,
+   "phrase": 1,
+   "text": "from a cold place to a hot place.",
+   "spoken": "tempat dingin ke tempat panas.",
+   "tts": "Kalor tidak mengalir sendiri dari tempat dingin ke tempat panas.",
+   "start": 83.103,
+   "end": 85.004,
+   "i": 35
+  },
+  {
+   "scene": 9,
+   "phrase": 2,
+   "text": "That is why the compressor needs work.",
+   "spoken": "Karena itu kompresor membutuhkan kerja.",
+   "tts": "Karena itu kompresor membutuhkan kerja.",
+   "start": 85.534,
+   "end": 87.922,
+   "i": 36
+  },
+  {
+   "scene": 10,
+   "phrase": 1,
+   "text": "The measure of an AC's performance is called",
+   "spoken": "Ukuran kinerja AC disebut",
+   "tts": "Ukuran kinerja a se disebut koefisien kinerja, atau ko pe.",
+   "start": 89.302,
+   "end": 91.665,
+   "i": 37
+  },
+  {
+   "scene": 10,
+   "phrase": 1,
+   "text": "the coefficient of performance, or COP.",
+   "spoken": "koefisien kinerja, atau COP.",
+   "tts": "Ukuran kinerja a se disebut koefisien kinerja, atau ko pe.",
+   "start": 91.705,
+   "end": 93.835,
+   "i": 38
+  },
+  {
+   "scene": 10,
+   "phrase": 2,
+   "text": "Its value is the heat absorbed",
+   "spoken": "Nilainya adalah kalor yang",
+   "tts": "Nilainya adalah kalor yang diserap dibagi kerja kompresor.",
+   "start": 94.365,
+   "end": 96.161,
+   "i": 39
+  },
+  {
+   "scene": 10,
+   "phrase": 2,
+   "text": "divided by the compressor work.",
+   "spoken": "diserap dibagi kerja kompresor.",
+   "tts": "Nilainya adalah kalor yang diserap dibagi kerja kompresor.",
+   "start": 96.201,
+   "end": 98.098,
+   "i": 40
+  },
+  {
+   "scene": 11,
+   "phrase": 1,
+   "text": "So, the compressor squeezes,",
+   "spoken": "Jadi, kompresor menekan,",
+   "tts": "Jadi, kompresor menekan, kondensor melepas kalor, katup menurunkan tekanan, dan evaporator menyerap kalor.",
+   "start": 99.478,
+   "end": 101.463,
+   "i": 41
+  },
+  {
+   "scene": 11,
+   "phrase": 1,
+   "text": "the condenser releases heat,",
+   "spoken": "kondensor melepas kalor,",
+   "tts": "Jadi, kompresor menekan, kondensor melepas kalor, katup menurunkan tekanan, dan evaporator menyerap kalor.",
+   "start": 101.503,
+   "end": 103.488,
+   "i": 42
+  },
+  {
+   "scene": 11,
+   "phrase": 1,
+   "text": "the valve lowers pressure,",
+   "spoken": "katup menurunkan tekanan, dan",
+   "tts": "Jadi, kompresor menekan, kondensor melepas kalor, katup menurunkan tekanan, dan evaporator menyerap kalor.",
+   "start": 103.528,
+   "end": 105.369,
+   "i": 43
+  },
+  {
+   "scene": 11,
+   "phrase": 1,
+   "text": "and the evaporator absorbs heat.",
+   "spoken": "evaporator menyerap kalor.",
+   "tts": "Jadi, kompresor menekan, kondensor melepas kalor, katup menurunkan tekanan, dan evaporator menyerap kalor.",
+   "start": 105.409,
+   "end": 107.723,
+   "i": 44
+  },
+  {
+   "scene": 12,
+   "phrase": 1,
+   "text": "Want to understand machines",
+   "spoken": "Ingin memahami cara kerja",
+   "tts": "Ingin memahami cara kerja mesin seperti ini lebih dalam?",
+   "start": 109.103,
+   "end": 110.788,
+   "i": 45
+  },
+  {
+   "scene": 12,
+   "phrase": 1,
+   "text": "like this more deeply?",
+   "spoken": "mesin seperti ini lebih dalam?",
+   "tts": "Ingin memahami cara kerja mesin seperti ini lebih dalam?",
+   "start": 110.828,
+   "end": 112.234,
+   "i": 46
+  },
+  {
+   "scene": 12,
+   "phrase": 2,
+   "text": "Come study Mechanical Engineering at",
+   "spoken": "Mari belajar di Teknik",
+   "tts": "Mari belajar di Teknik Mesin, Universitas Muhammadiyah Yogyakarta.",
+   "start": 112.764,
+   "end": 115.05,
+   "i": 47
+  },
+  {
+   "scene": 12,
+   "phrase": 2,
+   "text": "Universitas Muhammadiyah Yogyakarta.",
+   "spoken": "Mesin, Universitas Muhammadiyah Yogyakarta.",
+   "tts": "Mari belajar di Teknik Mesin, Universitas Muhammadiyah Yogyakarta.",
+   "start": 115.09,
+   "end": 117.417,
+   "i": 48
+  }
+ ]
+}

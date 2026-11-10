@@ -1,0 +1,191 @@
+1
+00:00:00,700 --> 00:00:02,707
+The room feels cool thanks to
+
+2
+00:00:02,747 --> 00:00:04,652
+the air conditioner, or AC.
+
+3
+00:00:05,182 --> 00:00:07,272
+But where does the cold actually come from?
+
+4
+00:00:08,652 --> 00:00:10,360
+Heat is energy that moves because
+
+5
+00:00:10,400 --> 00:00:11,884
+of a temperature difference.
+
+6
+00:00:12,414 --> 00:00:14,382
+An AC does not create cold.
+
+7
+00:00:14,912 --> 00:00:16,343
+It moves heat from inside
+
+8
+00:00:16,383 --> 00:00:17,796
+the room to the outside.
+
+9
+00:00:19,176 --> 00:00:21,828
+An AC cycle has four components:
+
+10
+00:00:21,868 --> 00:00:23,090
+the compressor,
+
+11
+00:00:23,130 --> 00:00:26,747
+condenser, expansion valve, and evaporator.
+
+12
+00:00:27,277 --> 00:00:30,061
+The refrigerant, the working fluid,
+
+13
+00:00:30,101 --> 00:00:31,957
+flows through all four.
+
+14
+00:00:33,337 --> 00:00:35,535
+First, low-pressure refrigerant
+
+15
+00:00:35,575 --> 00:00:37,597
+vapor enters the compressor.
+
+16
+00:00:38,127 --> 00:00:39,762
+The compressor raises the vapor's
+
+17
+00:00:39,802 --> 00:00:41,630
+pressure and temperature using work.
+
+18
+00:00:43,010 --> 00:00:44,732
+Second, the hot vapor flows to
+
+19
+00:00:44,772 --> 00:00:46,768
+the condenser in the outdoor unit.
+
+20
+00:00:47,298 --> 00:00:49,190
+The vapor releases heat to the outside
+
+21
+00:00:49,230 --> 00:00:50,857
+air and condenses into a liquid.
+
+22
+00:00:52,237 --> 00:00:53,758
+Third, the liquid passes
+
+23
+00:00:53,798 --> 00:00:55,620
+through the expansion valve.
+
+24
+00:00:56,150 --> 00:00:58,223
+Pressure drops, and the refrigerant
+
+25
+00:00:58,263 --> 00:01:00,858
+becomes a cold mixture of liquid and vapor.
+
+26
+00:01:02,238 --> 00:01:04,409
+Fourth, that cold mixture enters
+
+27
+00:01:04,449 --> 00:01:06,591
+the evaporator inside the room.
+
+28
+00:01:07,121 --> 00:01:09,413
+It absorbs heat from the room air,
+
+29
+00:01:09,453 --> 00:01:10,551
+then evaporates.
+
+30
+00:01:11,931 --> 00:01:13,920
+The vapor returns to the compressor,
+
+31
+00:01:13,960 --> 00:01:15,200
+and the cycle repeats.
+
+32
+00:01:15,730 --> 00:01:17,738
+Heat keeps being absorbed inside and
+
+33
+00:01:17,778 --> 00:01:20,110
+released outside, so the room stays cool.
+
+34
+00:01:21,490 --> 00:01:23,063
+Heat does not flow by itself
+
+35
+00:01:23,103 --> 00:01:25,004
+from a cold place to a hot place.
+
+36
+00:01:25,534 --> 00:01:27,922
+That is why the compressor needs work.
+
+37
+00:01:29,302 --> 00:01:31,665
+The measure of an AC's performance is called
+
+38
+00:01:31,705 --> 00:01:33,835
+the coefficient of performance, or COP.
+
+39
+00:01:34,365 --> 00:01:36,161
+Its value is the heat absorbed
+
+40
+00:01:36,201 --> 00:01:38,098
+divided by the compressor work.
+
+41
+00:01:39,478 --> 00:01:41,463
+So, the compressor squeezes,
+
+42
+00:01:41,503 --> 00:01:43,488
+the condenser releases heat,
+
+43
+00:01:43,528 --> 00:01:45,369
+the valve lowers pressure,
+
+44
+00:01:45,409 --> 00:01:47,723
+and the evaporator absorbs heat.
+
+45
+00:01:49,103 --> 00:01:50,788
+Want to understand machines
+
+46
+00:01:50,828 --> 00:01:52,234
+like this more deeply?
+
+47
+00:01:52,764 --> 00:01:55,050
+Come study Mechanical Engineering at
+
+48
+00:01:55,090 --> 00:01:57,417
+Universitas Muhammadiyah Yogyakarta.
